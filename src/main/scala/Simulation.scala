@@ -378,16 +378,18 @@ object Simulation {
     // val mesosWorkloadToSweep = "Batch"
     val mesosWorkloadToSweep = "Service"
 
+    val prefillLim = 0.85
+
     val runMonolithic = true
-    val runMesos = false
-    val runOmega = false
+    val runMesos = true
+    val runOmega = true
 
     //All sorting and picking policies
     val sortingPolicies = List[CellStateResourcesSorter](NoSorter,BasicLoadSorter)
     //val pickingPolicies = List[CellStateResourcesPicker] (RandomPicker)
     //val pickingPolicies = List[CellStateResourcesPicker] (BasicReversePickerCandidatePower)
-    //val pickingPolicies = List[CellStateResourcesPicker](RandomPicker, BasicReversePickerCandidatePower, new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.01))
-    val pickingPolicies = List[CellStateResourcesPicker](new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.07))
+    val pickingPolicies = List[CellStateResourcesPicker](BasicPicker, RandomPicker, BasicReversePicker, new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.07))
+    //val pickingPolicies = List[CellStateResourcesPicker](new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.07))
 
     //val pickingPolicies = List[CellStateResourcesPicker](BasicReversePickerCandidatePower)
     val powerOnPolicies = List[PowerOnPolicy](new ComposedPowerOnPolicy(DefaultPowerOnAction, NoPowerOnDecision))
@@ -465,22 +467,22 @@ object Simulation {
     val sweepGammaNormalLostFactor = true
     val sweepExponentialNormalLostFactor = true
     //Power Off
-    val runMaxLoadOff = true
+    val runMaxLoadOff = false
     val runMeanLoadOff = false
-    val runMinFreeCapacity = true
+    val runMinFreeCapacity = false
     val runMeanFreeCapacity = false
     val runMinFreeCapacityPonderated = false
     val runNeverOff = true
-    val runAlwzOff = true
-    val runRandom = true
-    val runGamma = true
-    val runExp = true
+    val runAlwzOff = false
+    val runRandom = false
+    val runGamma = false
+    val runExp = false
     val runExpNormal = false
     val runGammaNormal = false
 
     //PowerOn
-    val runNoPowerOn = false
-    val runDefault = true
+    val runNoPowerOn = true
+    val runDefault = false
     val runGammaNormalOn = false
     val runCombinedDefaultOrGammaNormal = false
     val runCombinedDefaultOrMargin = false
@@ -888,7 +890,7 @@ object Simulation {
     // val lambdaRange = fullLambdaRange
     val interArrivalScaleRange = 0.009 :: 0.01 :: 0.02 :: 0.1 :: 0.2 :: 1.0 :: Nil
     // val interArrivalScaleRange = lambdaRange.map(1/_)
-    val prefillCpuLim = Map("PrefillBatch" -> 0.55, "PrefillService" -> 0.55, "PrefillBatchService" -> 0.55)
+    val prefillCpuLim = Map("PrefillBatch" -> prefillLim, "PrefillService" -> prefillLim, "PrefillBatchService" -> prefillLim)
     val doLogging = false
     val timeout = 60.0 * 60.0 *10000.0 // In seconds.
 

@@ -295,6 +295,7 @@ class Experiment(
                         //Measurement stats
                         for(i <- 0 to simulator.measuredMachinesOn.length-1){
                           val measurement = ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement.newBuilder()
+                          measurement.setPower(simulator.measuredPower(i))
                           measurement.setCpuUtilization(simulator.measuredCpuUtilization(i))
                           measurement.setCpuTotallyIdle(simulator.measuredCpuTotallyIdle(i))
                           measurement.setCpuPartiallyIdle(simulator.measuredCpuPartiallyIdle(i))

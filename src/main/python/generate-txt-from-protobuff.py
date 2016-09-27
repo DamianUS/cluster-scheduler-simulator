@@ -186,7 +186,7 @@ for env in experiment_result_set.experiment_env:
 
 
                 output_strings[measurement_key] += \
-                    "%s%.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f\n" % (opt_extra_newline,
+                    "%s%.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f\n" % (opt_extra_newline,
                                                                                          measurement.cpuUtilization,
                                                                                          measurement.cpuTotallyIdle,
                                                                                          measurement.cpuPartiallyIdle,
@@ -198,7 +198,8 @@ for env in experiment_result_set.experiment_env:
                                                                                          measurement.machinesOff,
                                                                                          measurement.machinesOn,
                                                                                          measurement.machinesTurningOff,
-                                                                                         measurement.machinesTurningOn)
+                                                                                         measurement.machinesTurningOn,
+                                                                                         measurement.power)
 
             for workload_stat in exp_result.workload_stats:
                 #if workload_stat.workload_name == exp_result.sweep_workload:
@@ -283,7 +284,7 @@ for key_tuple, out_str in output_strings.iteritems():
     logging.info("Creating output file: %s" % outfile_name)
     outfile = open(outfile_name, "w")
     if "measurement" in outfile_name and outfile_name not in printed_headers:
-        outfile.write("%s%s %s %s %s %s %s %s %s %s %s %s %s\n" % (opt_extra_newline,
+        outfile.write("%s%s %s %s %s %s %s %s %s %s %s %s %s %s\n" % (opt_extra_newline,
                                                                                 "used_cpu",
                                                                                 "cpu_totally_idle",
                                                                                 "cpu_partially_idle",
@@ -295,7 +296,8 @@ for key_tuple, out_str in output_strings.iteritems():
                                                                                 "off",
                                                                                 "on",
                                                                                 "turning_off",
-                                                                                "turning_on"))
+                                                                                "turning_on",
+                                                                                "instant_power"))
     elif "scheduler_stats" in outfile_name and outfile_name not in printed_headers:
         outfile.write("%s%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s\n" % (opt_extra_newline,
                                                                                                                                                                                                                           "env.cell_name",

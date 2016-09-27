@@ -74,12 +74,37 @@ object Workloads {
   val exampleCellStateDesc = new CellStateDesc(numMachines = 10000,
     cpusPerMachine = 4,
     memPerMachine = 8)
-
-
+/*
+    //20%
+    val exampleWorkloadGeneratorBatch =
+    new ExpExpExpWorkloadGenerator(workloadName = "Batch".intern(),
+      initAvgJobInterarrivalTime = 40,
+      avgTasksPerJob = 180.0,
+      avgJobDuration = (90.0),
+      avgCpusPerTask = 0.3,
+      avgMemPerTask = 0.5)
+  val exampleWorkloadGeneratorService =
+    new ExpExpExpWorkloadGenerator(workloadName = "Service".intern(),
+      initAvgJobInterarrivalTime = 450,
+      avgTasksPerJob = 30.0,
+      avgJobDuration = (2000.0),
+      avgCpusPerTask = 0.5,
+      avgMemPerTask = 1.2)
+  val exampleWorkloadDesc = WorkloadDesc(cell = "example",
+    assignmentPolicy = "CMB_PBB",
+    workloadGenerators =
+      exampleWorkloadGeneratorBatch ::
+        exampleWorkloadGeneratorService :: Nil,
+    cellStateDesc = exampleCellStateDesc)
   /**
     * Set up WorkloadDescs, containing generators of workloads and
     * pre-fill workloads based on measurements of cells/workloads.
     */
+
+
+  */
+  /*
+    // 55%
   val exampleWorkloadGeneratorBatch =
     new ExpExpExpWorkloadGenerator(workloadName = "Batch".intern(),
       initAvgJobInterarrivalTime = 14,
@@ -100,6 +125,29 @@ object Workloads {
       exampleWorkloadGeneratorBatch ::
         exampleWorkloadGeneratorService :: Nil,
     cellStateDesc = exampleCellStateDesc)
+*/
+
+    // 85%
+    val exampleWorkloadGeneratorBatch =
+      new ExpExpExpWorkloadGenerator(workloadName = "Batch".intern(),
+        initAvgJobInterarrivalTime = 8,
+        avgTasksPerJob = 180.0,
+        avgJobDuration = (90.0),
+        avgCpusPerTask = 0.3,
+        avgMemPerTask = 0.5)
+    val exampleWorkloadGeneratorService =
+      new ExpExpExpWorkloadGenerator(workloadName = "Service".intern(),
+        initAvgJobInterarrivalTime = 90,
+        avgTasksPerJob = 30.0,
+        avgJobDuration = (2000.0),
+        avgCpusPerTask = 0.5,
+        avgMemPerTask = 1.2)
+    val exampleWorkloadDesc = WorkloadDesc(cell = "example",
+      assignmentPolicy = "CMB_PBB",
+      workloadGenerators =
+        exampleWorkloadGeneratorBatch ::
+          exampleWorkloadGeneratorService :: Nil,
+      cellStateDesc = exampleCellStateDesc)
 
 
   // example pre-fill workload generators.

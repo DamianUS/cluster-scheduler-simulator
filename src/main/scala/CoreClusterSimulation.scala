@@ -334,6 +334,7 @@ class ClusterSimulator(val cellState: CellState,
   var sumMachinesTurningOff = 0
   var measuredMachinesTurningOff: Array[Double] = Array[Double]()
   var totalMachinePowerStates = Seq[Array[Int]]()
+  var measuredPower: Array[Double] = Array[Double]()
   var sumMachinesOccupied = 0
   var sumCpuIdle = 0.0
   var sumMemIdle = 0.0
@@ -354,6 +355,15 @@ class ClusterSimulator(val cellState: CellState,
     val energyTurnOn = (sumMachinesTurningOn.toDouble / numMonitoringMeasurements.toDouble) * powerBooting * runtime
     val energyTurnOff = (sumMachinesTurningOff.toDouble / numMonitoringMeasurements.toDouble) * powerShutting * runtime
     energyOn + energyIdle + energyOff + energyTurnOff + energyTurnOn
+  }
+
+  def totalCurrentPower : Double = {
+    val powerOn = sumCpuUtilization * powerPerCpuOn
+    val powerIdle = (cellState.numMachines * cellState.cpusPerMachine - sumCpuUtilization) * powerPerCpuIdle
+    val powerOff = sumMachinesOff * powerTurnedOff
+    val powerTurnOn = sumMachinesTurningOn * powerBooting
+    val powerTurnOff = sumMachinesTurningOff * powerShutting
+    powerOn + powerIdle + powerOff + powerTurnOn + powerTurnOff
   }
 
   def totalCurrentEnergyConsumed : Double = {
@@ -515,6 +525,7 @@ class ClusterSimulator(val cellState: CellState,
     val memLocked = cellState.totalLockedMem
     val totallyIdleCpu = (numMachinesOn - numMachinesOccupied)*cellState.cpusPerMachine.toDouble / cellState.totalCpus.toDouble
     val totallyIdleMem = (numMachinesOn - numMachinesOccupied)*cellState.memPerMachine.toDouble / cellState.totalMem.toDouble
+    measuredPower = measuredPower :+ totalCurrentPower
     measuredCpuUtilization = measuredCpuUtilization :+ totalOccupiedCpus.toDouble / cellState.totalCpus.toDouble
     measuredCpuTotallyIdle = measuredCpuTotallyIdle :+ totallyIdleCpu
     measuredCpuPartiallyIdle = measuredCpuPartiallyIdle :+ (numMachinesOn * cellState.cpusPerMachine - totalOccupiedCpus - totallyIdleCpu).toDouble / cellState.totalCpus.toDouble
