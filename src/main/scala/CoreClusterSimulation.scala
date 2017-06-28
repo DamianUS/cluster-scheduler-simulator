@@ -358,12 +358,12 @@ class ClusterSimulator(val cellState: CellState,
   }
 
   def totalCurrentPower : Double = {
-    val powerOn = sumCpuUtilization * powerPerCpuOn
-    val powerIdle = (cellState.numMachines * cellState.cpusPerMachine - sumCpuUtilization) * powerPerCpuIdle
+    val powerOn = cellState.totalOccupiedCpus * powerPerCpuOn
+    val powerIdle = (cellState.numMachines * cellState.cpusPerMachine - cellState.totalOccupiedCpus) * powerPerCpuIdle
     val powerOff = sumMachinesOff * powerTurnedOff
     val powerTurnOn = sumMachinesTurningOn * powerBooting
     val powerTurnOff = sumMachinesTurningOff * powerShutting
-    powerOn + powerIdle + powerOff + powerTurnOn + powerTurnOff
+    (powerOn + powerIdle + powerOff + powerTurnOn + powerTurnOff).toDouble/1000000.0
   }
 
   def totalCurrentEnergyConsumed : Double = {

@@ -293,7 +293,7 @@ class Experiment(
                         experimentResult.setCellStateAvgMemLocked(
                           simulator.avgMemLocked / simulator.cellState.totalMem)
                         //Measurement stats
-                        for(i <- 0 to simulator.measuredMachinesOn.length-1){
+                        /*for(i <- 0 to simulator.measuredMachinesOn.length-1){
                           val measurement = ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement.newBuilder()
                           measurement.setPower(simulator.measuredPower(i))
                           measurement.setCpuUtilization(simulator.measuredCpuUtilization(i))
@@ -309,9 +309,25 @@ class Experiment(
                           measurement.setMachinesTurningOff(simulator.measuredMachinesTurningOff(i))
                           measurement.setMachinesTurningOn(simulator.measuredMachinesTurningOn(i))
                           experimentResult.addMeasurements(measurement)
-                        }
+                        }*/
 
 
+                        //LyonStats
+                        val essaisTachesArr = workloads(0).getJobs.filter(_.numTaskSchedulingAttempts > 0).map(j => j.numTaskSchedulingAttempts)
+                        val essaisArr = workloads(0).getJobs.filter(_.numSchedulingAttempts > 0).map(j => j.numSchedulingAttempts)
+                        val tasksArr = workloads(0).getJobs.filter(_.numSchedulingAttempts > 0).map(j => j.numTasks)
+
+                        val essaisTachesTotal = essaisTachesArr.sum
+                        val essaisTotal = essaisArr.sum
+
+                        val numJobsC = workloads(0).getJobs.size.toDouble
+
+                        val essaisAvg = essaisTotal / numJobsC
+
+                        val lyonStats = ExperimentResultSet.ExperimentEnv.ExperimentResult.Lyonstats.newBuilder()
+                        lyonStats.setEssaisAvg(essaisAvg)
+                        lyonStats.setEssaisTachesTotal(essaisTachesTotal)
+                        experimentResult.setLyonstats(lyonStats)
                         //EfficiencyStats
 
                         val efficiencyStats = ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.newBuilder()
@@ -524,6 +540,10 @@ class Experiment(
                         val numJobsScheduled = sortedWorkloads.map(workload => {
                           workload.getJobs.filter(_.numSchedulingAttempts > 0).length
                         }).mkString(" ")
+
+                        val coresPerSeconde = sortedWorkloads.map(workload => {
+                          workload.getJobs.filter(_.numSchedulingAttempts > 0).map(_.numTasks)
+                        })
 
                         // Sorted names of Schedulers.
                         val schedNames = sortedSchedulers.map(_.name).mkString(" ")

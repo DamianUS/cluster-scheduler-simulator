@@ -78,16 +78,16 @@ object Workloads {
     //20%
     val exampleWorkloadGeneratorBatch =
     new ExpExpExpWorkloadGenerator(workloadName = "Batch".intern(),
-      initAvgJobInterarrivalTime = 40,
-      avgTasksPerJob = 180.0,
-      avgJobDuration = (90.0),
+      initAvgJobInterarrivalTime = 50,
+      avgTasksPerJob = 50.0,
+      avgJobDuration = (60.0),
       avgCpusPerTask = 0.3,
       avgMemPerTask = 0.5)
   val exampleWorkloadGeneratorService =
     new ExpExpExpWorkloadGenerator(workloadName = "Service".intern(),
-      initAvgJobInterarrivalTime = 450,
-      avgTasksPerJob = 30.0,
-      avgJobDuration = (2000.0),
+      initAvgJobInterarrivalTime = 400,
+      avgTasksPerJob = 12.0,
+      avgJobDuration = (1500.0),
       avgCpusPerTask = 0.5,
       avgMemPerTask = 1.2)
   val exampleWorkloadDesc = WorkloadDesc(cell = "example",
@@ -100,23 +100,70 @@ object Workloads {
     * Set up WorkloadDescs, containing generators of workloads and
     * pre-fill workloads based on measurements of cells/workloads.
     */
-
-
-  */
-  /*
-    // 55%
+*/
+/*
+  // 35%
   val exampleWorkloadGeneratorBatch =
     new ExpExpExpWorkloadGenerator(workloadName = "Batch".intern(),
-      initAvgJobInterarrivalTime = 14,
-      avgTasksPerJob = 180.0,
-      avgJobDuration = (90.0),
+      initAvgJobInterarrivalTime = 30,
+      avgTasksPerJob = 55.0,
+      avgJobDuration = (65.0),
       avgCpusPerTask = 0.3,
       avgMemPerTask = 0.5)
   val exampleWorkloadGeneratorService =
     new ExpExpExpWorkloadGenerator(workloadName = "Service".intern(),
-      initAvgJobInterarrivalTime = 140,
-      avgTasksPerJob = 30.0,
-      avgJobDuration = (2000.0),
+      initAvgJobInterarrivalTime = 250,
+      avgTasksPerJob = 14.0,
+      avgJobDuration = (1600.0),
+      avgCpusPerTask = 0.5,
+      avgMemPerTask = 1.2)
+  val exampleWorkloadDesc = WorkloadDesc(cell = "example",
+    assignmentPolicy = "CMB_PBB",
+    workloadGenerators =
+      exampleWorkloadGeneratorBatch ::
+        exampleWorkloadGeneratorService :: Nil,
+    cellStateDesc = exampleCellStateDesc)
+
+*/
+
+  /*
+    // 50%
+  val exampleWorkloadGeneratorBatch =
+    new ExpExpExpWorkloadGenerator(workloadName = "Batch".intern(),
+      initAvgJobInterarrivalTime = 20,
+      avgTasksPerJob = 60.0,
+      avgJobDuration = (70.0),
+      avgCpusPerTask = 0.3,
+      avgMemPerTask = 0.5)
+  val exampleWorkloadGeneratorService =
+    new ExpExpExpWorkloadGenerator(workloadName = "Service".intern(),
+      initAvgJobInterarrivalTime = 170,
+      avgTasksPerJob = 15.0,
+      avgJobDuration = (1600.0),
+      avgCpusPerTask = 0.5,
+      avgMemPerTask = 1.2)
+  val exampleWorkloadDesc = WorkloadDesc(cell = "example",
+    assignmentPolicy = "CMB_PBB",
+    workloadGenerators =
+      exampleWorkloadGeneratorBatch ::
+        exampleWorkloadGeneratorService :: Nil,
+    cellStateDesc = exampleCellStateDesc)
+
+*/
+/*
+    // 60%
+  val exampleWorkloadGeneratorBatch =
+    new ExpExpExpWorkloadGenerator(workloadName = "Batch".intern(),
+      initAvgJobInterarrivalTime = 18,
+      avgTasksPerJob = 65.0,
+      avgJobDuration = (80.0),
+      avgCpusPerTask = 0.3,
+      avgMemPerTask = 0.5)
+  val exampleWorkloadGeneratorService =
+    new ExpExpExpWorkloadGenerator(workloadName = "Service".intern(),
+      initAvgJobInterarrivalTime = 155,
+      avgTasksPerJob = 16.0,
+      avgJobDuration = (1600.0),
       avgCpusPerTask = 0.5,
       avgMemPerTask = 1.2)
   val exampleWorkloadDesc = WorkloadDesc(cell = "example",
@@ -130,14 +177,14 @@ object Workloads {
     // 85%
     val exampleWorkloadGeneratorBatch =
       new ExpExpExpWorkloadGenerator(workloadName = "Batch".intern(),
-        initAvgJobInterarrivalTime = 8,
+        initAvgJobInterarrivalTime = 22,
         avgTasksPerJob = 180.0,
         avgJobDuration = (90.0),
         avgCpusPerTask = 0.3,
         avgMemPerTask = 0.5)
     val exampleWorkloadGeneratorService =
       new ExpExpExpWorkloadGenerator(workloadName = "Service".intern(),
-        initAvgJobInterarrivalTime = 90,
+        initAvgJobInterarrivalTime = 220,
         avgTasksPerJob = 30.0,
         avgJobDuration = (2000.0),
         avgCpusPerTask = 0.5,
@@ -148,6 +195,55 @@ object Workloads {
         exampleWorkloadGeneratorBatch ::
           exampleWorkloadGeneratorService :: Nil,
       cellStateDesc = exampleCellStateDesc)
+
+
+/*
+   // 50% mucho interarrival mucho consumo
+ val exampleWorkloadGeneratorBatch =
+   new ExpExpExpWorkloadGenerator(workloadName = "Batch".intern(),
+     initAvgJobInterarrivalTime = 80,
+     avgTasksPerJob = 100.0,
+     avgJobDuration = (150.0),
+     avgCpusPerTask = 0.3,
+     avgMemPerTask = 0.5)
+ val exampleWorkloadGeneratorService =
+   new ExpExpExpWorkloadGenerator(workloadName = "Service".intern(),
+     initAvgJobInterarrivalTime = 300,
+     avgTasksPerJob = 30.0,
+     avgJobDuration = (1600.0),
+     avgCpusPerTask = 0.5,
+     avgMemPerTask = 1.2)
+ val exampleWorkloadDesc = WorkloadDesc(cell = "example",
+   assignmentPolicy = "CMB_PBB",
+   workloadGenerators =
+     exampleWorkloadGeneratorBatch ::
+       exampleWorkloadGeneratorService :: Nil,
+   cellStateDesc = exampleCellStateDesc)
+*/
+/*
+    // 50% poco interarrival poco consumo
+  val exampleWorkloadGeneratorBatch =
+    new ExpExpExpWorkloadGenerator(workloadName = "Batch".intern(),
+      initAvgJobInterarrivalTime = 10,
+      avgTasksPerJob = 30.0,
+      avgJobDuration = (60.0),
+      avgCpusPerTask = 0.3,
+      avgMemPerTask = 0.5)
+  val exampleWorkloadGeneratorService =
+    new ExpExpExpWorkloadGenerator(workloadName = "Service".intern(),
+      initAvgJobInterarrivalTime = 120,
+      avgTasksPerJob = 10.0,
+      avgJobDuration = (1500.0),
+      avgCpusPerTask = 0.5,
+      avgMemPerTask = 1.2)
+  val exampleWorkloadDesc = WorkloadDesc(cell = "example",
+    assignmentPolicy = "CMB_PBB",
+    workloadGenerators =
+      exampleWorkloadGeneratorBatch ::
+        exampleWorkloadGeneratorService :: Nil,
+    cellStateDesc = exampleCellStateDesc)
+
+*/
 
 
   // example pre-fill workload generators.

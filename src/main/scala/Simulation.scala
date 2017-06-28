@@ -286,11 +286,8 @@ object Simulation {
     val fullPickinessRange: List[Double] = (0.00 to 0.75 by 0.05).toList
 
 
-    val medConstantRange: List[Double] = 0.01 :: 0.05 :: 0.1 :: 0.5 ::
-      1.0 :: 5.0 :: 10.0 :: 50.0 ::
-      100.0 :: Nil
-    val medPerTaskRange: List[Double] = 0.001 :: 0.005 :: 0.01 :: 0.05 ::
-      0.1 :: 0.5 :: 1.0 :: Nil
+    val medConstantRange: List[Double] = 0.1 :: 1.0 :: 10.0:: Nil
+    val medPerTaskRange: List[Double] = 0.01 :: 0.1 :: 1.0 :: Nil
 
     val medLambdaRange: List[Double] = 0.01 :: 0.05 :: 0.1 :: 0.5 :: Nil
 
@@ -328,7 +325,7 @@ object Simulation {
 
     // ------------------Omega------------------
     val numOmegaServiceSchedsRange = Seq(1)
-    val numOmegaBatchSchedsRange = Seq(1)
+    val numOmegaBatchSchedsRange = Seq(4)
 
     val omegaSimulatorSetups =
       for (numOmegaServiceScheds <- numOmegaServiceSchedsRange;
@@ -339,9 +336,9 @@ object Simulation {
           //conflictMode <- Seq("sequence-numbers", "resource-fit");
           conflictMode <- Seq("resource-fit");
           //conflictMode <- Seq("sequence-numbers");
-          //transactionMode <- Seq("all-or-nothing")) yield {
+          transactionMode <- Seq("all-or-nothing")) yield {
           //transactionMode <- Seq("all-or-nothing", "incremental")) yield {
-          transactionMode <- Seq("incremental")) yield {
+          //transactionMode <- Seq("incremental")) yield {
             new OmegaSimulatorDesc(
               generateOmegaSchedulerDescs(numOmegaServiceScheds,
                 numOmegaBatchScheds),
@@ -363,24 +360,24 @@ object Simulation {
       }
 
     // ------------------Mesos------------------
-    // val mesosSimulatorDesc = mesosSimulator4BatchDesc
-    val mesosSimulatorDesc = mesosSimulator1BatchDesc
+    val mesosSimulatorDesc = mesosSimulator4BatchDesc
+    //val mesosSimulatorDesc = mesosSimulator1BatchDesc
 
-    // val mesosSchedulerWorkloadMap = mesos4BatchSchedulerWorkloadMap
-    val mesosSchedulerWorkloadMap = mesos1BatchSchedulerWorkloadMap
+     val mesosSchedulerWorkloadMap = mesos4BatchSchedulerWorkloadMap
+    //val mesosSchedulerWorkloadMap = mesos1BatchSchedulerWorkloadMap
 
-    // val mesosSchedWorkloadsToSweep = Map("MesosBatch" -> List("Batch"),
-    //                                      "MesosBatch-2" -> List("Batch"),
-    //                                      "MesosBatch-3" -> List("Batch"),
-    //                                      "MesosBatch-4" -> List("Batch"))
-    val mesosSchedWorkloadsToSweep = Map("MesosService" -> List("Service"))
+     val mesosSchedWorkloadsToSweep = Map("MesosBatch" -> List("Batch"),
+                                         "MesosBatch-2" -> List("Batch"),
+                                          "MesosBatch-3" -> List("Batch"),
+                                          "MesosBatch-4" -> List("Batch"))
+    //val mesosSchedWorkloadsToSweep = Map("MesosService" -> List("Service"))
 
     // val mesosWorkloadToSweep = "Batch"
     val mesosWorkloadToSweep = "Service"
 
-    val prefillLim = 0.85
+    val prefillLim = 0.5
 
-    val runMonolithic = true
+    val runMonolithic = false
     val runMesos = true
     val runOmega = true
 
@@ -388,8 +385,8 @@ object Simulation {
     val sortingPolicies = List[CellStateResourcesSorter](NoSorter,BasicLoadSorter)
     //val pickingPolicies = List[CellStateResourcesPicker] (RandomPicker)
     //val pickingPolicies = List[CellStateResourcesPicker] (BasicReversePickerCandidatePower)
-    val pickingPolicies = List[CellStateResourcesPicker](BasicPicker, RandomPicker, BasicReversePicker, new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.07))
-    //val pickingPolicies = List[CellStateResourcesPicker](new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.07))
+    val pickingPolicies = List[CellStateResourcesPicker](new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.05))
+    //val pickingPolicies = List[CellStateResourcesPicker](new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.05))
 
     //val pickingPolicies = List[CellStateResourcesPicker](BasicReversePickerCandidatePower)
     val powerOnPolicies = List[PowerOnPolicy](new ComposedPowerOnPolicy(DefaultPowerOnAction, NoPowerOnDecision))
@@ -429,24 +426,24 @@ object Simulation {
     val defaultOnDistributionThreshold = 0.5
 */
     val distributionWindowRange = (25 :: 50 :: 100 :: Nil)
-    val defaultWindowSize = 100
+    val defaultWindowSize = 25
 
     val exponentialOffDistributionThresholdRange = (0.1 :: 0.3 :: 0.5 :: 0.7 :: 0.9 :: Nil)
     val exponentialOnDistributionThresholdRange = (0.2 :: 0.5 :: 0.8 ::Nil)
-    val defaultExponentialOffDistributionThreshold = 0.05
+    val defaultExponentialOffDistributionThreshold = 0.3
     val defaultExponentialOnDistributionThreshold = 0.5
 
     val gammaOffDistributionThresholdRange = (0.1 :: 0.3 :: 0.5 :: 0.7 :: 0.9 ::Nil)
     val gammaOnDistributionThresholdRange = (0.2 :: 0.5 :: 0.8 ::Nil)
-    val defaultGammaOffDistributionThreshold = 0.05
+    val defaultGammaOffDistributionThreshold = 0.9
     val defaultGammaOnDistributionThreshold = 0.5
 
     val dataCenterLostFactorRange = (0.15 :: 0.2 :: 0.25 :: 0.3 :: Nil)
     val dataCenterLostFactorDefault = 0.2
 
-    val sweepMaxLoadOffRange = true
+    val sweepMaxLoadOffRange = false
     val sweepMeanLoadOffRange = false
-    val sweepMinFreeCapacityRange = true
+    val sweepMinFreeCapacityRange = false
     val sweepFreeCapacityRangeOn = false
     val sweepMeanFreeCapacityRange = false
     val sweepMinFreeCapacityPonderatedRange = false
@@ -458,14 +455,14 @@ object Simulation {
     val sweepExponentialNormalNormalThreshold = false
     val sweepdNormalThreshold = false
     val sweepdOnNormalThreshold = false
-    val sweepDistributionThreshold = true // Gamma Off distribution threshold
+    val sweepDistributionThreshold = false // Gamma Off distribution threshold
     val sweepOnDistributionThreshold = false
-    val sweepWindowSize = true
+    val sweepWindowSize = false
     val sweepOnWindowSize = false
     val sweepGammaLostFactor = true
-    val sweepExponentialLostFactor = true
-    val sweepGammaNormalLostFactor = true
-    val sweepExponentialNormalLostFactor = true
+    val sweepExponentialLostFactor = false
+    val sweepGammaNormalLostFactor = false
+    val sweepExponentialNormalLostFactor = false
     //Power Off
     val runMaxLoadOff = false
     val runMeanLoadOff = false

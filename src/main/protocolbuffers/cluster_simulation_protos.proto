@@ -59,6 +59,7 @@ message ExperimentResultSet {
       optional double per_task_think_time = 12;
       optional EfficiencyStats efficiency_stats = 15;
       repeated Measurement measurements = 16;
+      optional Lyonstats lyonstats = 17;
       // Next field number: 15
 
       // Workload-level stats.
@@ -175,6 +176,11 @@ message ExperimentResultSet {
         optional double mpuLocked = 11;
         optional double memLocked = 12;
         optional double power = 13;
+      }
+
+      message Lyonstats {
+        optional double essaisAvg = 1;
+        optional int64 essaisTachesTotal = 2;
       }
     }
   }
