@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/efficiency-cluster-scheduler-simulator.iml" filepath="$PROJECT_DIR$/.idea/modules/efficiency-cluster-scheduler-simulator.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/efficiency-cluster-scheduler-simulator-build.iml" filepath="$PROJECT_DIR$/.idea/modules/efficiency-cluster-scheduler-simulator-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/cluster-scheduler-simulator.iml" filepath="$PROJECT_DIR$/.idea/modules/cluster-scheduler-simulator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/cluster-scheduler-simulator-build.iml" filepath="$PROJECT_DIR$/.idea/modules/cluster-scheduler-simulator-build.iml" />
     </modules>
   </component>
 </project>
