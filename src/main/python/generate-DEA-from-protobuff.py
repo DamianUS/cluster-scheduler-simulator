@@ -125,7 +125,7 @@ for env in experiment_result_set.experiment_env:
                                                              10000,
                                                              exp_result.efficiency_stats.total_power_off_number,
                                                              env.run_time * exp_result.cell_state_avg_cpu_utilization,
-                                                             exp_result.efficiency_stats.total_energy_saved/3600000,
+                                                             exp_result.efficiency_stats.total_energy_consumed/3600000,
                                                              workload_stat.avg_job_queue_times_till_fully_scheduled)
 
 
@@ -144,7 +144,7 @@ for key_tuple, out_str in output_strings.iteritems():
                                            "#Recursos",
                                            "#Apagados",
                                            "Computacion(s)",
-                                           "Ahorro(kWh)",
+                                           "Consumo(kWh)",
                                            "Tiempo-en-cola(s)"))
         printed_headers.append(outfile_name)
     outfile.write(out_str)
