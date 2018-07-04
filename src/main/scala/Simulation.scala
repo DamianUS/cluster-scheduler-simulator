@@ -68,7 +68,7 @@ object Simulation {
       }
     }
     val pp = new ParseParms(helpString)
-    pp.parm("--thread-pool-size", "4").rex("^\\d*") // optional_arg
+    pp.parm("--thread-pool-size", "1").rex("^\\d*") // optional_arg
     pp.parm("--random-seed").rex("^\\d*") // optional_arg
 
     var inputArgs = Map[String, String]()
@@ -223,7 +223,7 @@ object Simulation {
     /**
      * Set up a simulatorDesc-s.
      */
-    val globalRunTime = 86400.0 / 4
+    val globalRunTime = 86400.0 / 48
     //val globalRunTime = 86400.0 * 30 // 1 Day
     val monolithicSimulatorDesc =
       new MonolithicSimulatorDesc(Array(monolithicSchedulerDesc),
@@ -309,7 +309,10 @@ object Simulation {
      * we want to use.
      */
     var allWorkloadDescs = List[WorkloadDesc]()
-    allWorkloadDescs ::= exampleGeneratedWorkloadPrefillDesc
+    //Este es el que estaba
+    //allWorkloadDescs ::= exampleGeneratedWorkloadPrefillDesc
+    //Nuevo
+    allWorkloadDescs = workloadGenerators
     //allWorkloadDescs ::= exampleWorkloadPrefillDesc
 
     // Prefills jobs based on prefill trace, draws job and task stats from
@@ -334,8 +337,8 @@ object Simulation {
 
     // ------------------Omega------------------
     val numOmegaServiceSchedsRange = Seq(1)
-    //val numOmegaBatchSchedsRange = Seq(4)
-    val numOmegaBatchSchedsRange = Seq(1)
+    val numOmegaBatchSchedsRange = Seq(4)
+    //val numOmegaBatchSchedsRange = Seq(1)
 
     val omegaSimulatorSetups =
       for (numOmegaServiceScheds <- numOmegaServiceSchedsRange;
@@ -370,11 +373,11 @@ object Simulation {
       }
 
     // ------------------Mesos------------------
-      //val mesosSimulatorDesc = mesosSimulator4BatchDesc
-    val mesosSimulatorDesc = mesosSimulator1BatchDesc
+    val mesosSimulatorDesc = mesosSimulator4BatchDesc
+    //val mesosSimulatorDesc = mesosSimulator1BatchDesc
 
-    // val mesosSchedulerWorkloadMap = mesos4BatchSchedulerWorkloadMap
-    val mesosSchedulerWorkloadMap = mesos1BatchSchedulerWorkloadMap
+    val mesosSchedulerWorkloadMap = mesos4BatchSchedulerWorkloadMap
+    //val mesosSchedulerWorkloadMap = mesos1BatchSchedulerWorkloadMap
 
     // val mesosSchedWorkloadsToSweep = Map("MesosBatch" -> List("Batch"),
     //                                      "MesosBatch-2" -> List("Batch"),
@@ -392,7 +395,7 @@ object Simulation {
     val runOmega = true
 
 
-    val runStackelberg = true
+    val runStackelberg = false
 
     //All sorting and picking policies
     val sortingPolicies = List[CellStateResourcesSorter](NoSorter,BasicLoadSorter)
@@ -504,22 +507,22 @@ object Simulation {
     val sweepGammaNormalLostFactor = true
     val sweepExponentialNormalLostFactor = true
     //Power Off
-    val runMaxLoadOff = true
+    val runMaxLoadOff = false
     val runMeanLoadOff = false
-    val runMinFreeCapacity = true
+    val runMinFreeCapacity = false
     val runMeanFreeCapacity = false
     val runMinFreeCapacityPonderated = false
     val runNeverOff = true
-    val runAlwzOff = true
-    val runRandom = true
-    val runGamma = true
-    val runExp = true
+    val runAlwzOff = false
+    val runRandom = false
+    val runGamma = false
+    val runExp = false
     val runExpNormal = false
     val runGammaNormal = false
 
     //PowerOn
-    val runNoPowerOn = false
-    val runDefault = true
+    val runNoPowerOn = true
+    val runDefault = false
     val runGammaNormalOn = false
     val runCombinedDefaultOrGammaNormal = false
     val runCombinedDefaultOrMargin = false
@@ -925,8 +928,8 @@ object Simulation {
     //var security3Range = (60.0 :: 120.0 :: 240.0 :: Nil) //seconds added to tasks of this security level
     var security3Range = (360.0 :: 1080.0 :: Nil) //seconds added to tasks of this security level
     security3Range = (0.0 :: Nil) //disable
-    val constantRange = (0.1 :: 1.0 :: Nil)
-    //val constantRange = (1.0 :: Nil)
+    //val constantRange = (0.1 :: 1.0 :: Nil)
+    val constantRange = (1.0 :: Nil)
     //val constantRange = (0.1 :: 1.0 :: 10.0 :: Nil)
     //val constantRange = medConstantRange
     // val constantRange = fullConstantRange
@@ -938,7 +941,7 @@ object Simulation {
     // val lambdaRange = fullLambdaRange
     val interArrivalScaleRange = 0.009 :: 0.01 :: 0.02 :: 0.1 :: 0.2 :: 1.0 :: Nil
     // val interArrivalScaleRange = lambdaRange.map(1/_)
-    val prefillRange = (0.3 :: 0.4 :: Nil)
+    val prefillRange = (0.25 to 0.8 by 0.05).toList
     var prefillCpuLim = List[Map[String, Double]]()
     for (prefillPerc <- prefillRange) {
       val newPrefill = Map("PrefillBatch" -> prefillPerc, "PrefillService" -> prefillPerc, "PrefillBatchService" -> prefillPerc)
@@ -995,14 +998,19 @@ object Simulation {
         experDir.toString,
         dateTimeStamp,
         "vary_" + sweepDimensions.mkString("_"),
-        wlDescs.map(i => {
+        /*wlDescs.map(i => {
           i.cell + i.assignmentPolicy +
             (if (i.prefillWorkloadGenerators.length > 0) {
               "_prefilled"
             } else {
               ""
             })
-        }).mkString("_"),
+        }).mkString("_"),*/
+        wlDescs(0).cell + wlDescs(0).assignmentPolicy + (if (wlDescs(0).prefillWorkloadGenerators.length > 0) {
+          "_prefilled"
+        } else {
+          ""
+        }),
         globalRunTime)
     println("outputDirName is %s".format(outputDirName))
 

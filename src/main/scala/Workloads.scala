@@ -72,13 +72,12 @@ object Workloads {
     * numbers are provided as an example. Enter numbers based on your
     * own clusters instead.
     */
-  val numMach = 1000
+  val numMach = 10000
   val machinesPerformance = Array.fill[Double](numMach)(Random.nextDouble() * (1.5) + 0.5)
   //val machinesSecurity = Array.fill[Int](numMach)(Random.nextInt(4))
   val machinesSecurity = Array.fill[Int](numMach)(4) //Every machine has the highest level so it can execute every task. We need to disable the performance penalty of the security
   val machinesEnergy = Array.fill[Double](numMach)(Random.nextDouble() * (1.5) + 0.5)
-  val machineHeterogeneity = true
-  val tasksHeterogeneity = false
+  val machineHeterogeneity = false
 
 
   val exampleCellStateDesc = new CellStateDesc(numMachines = numMach,
@@ -88,6 +87,103 @@ object Workloads {
     machEn = machinesEnergy,
     machPerf = machinesPerformance,
     machSec = machinesSecurity)
+
+  //Primer elemento de la tupla Batch, segundo Service
+  //val interArrival = ((90, 900) :: (100, 1000) :: Nil)
+  //90/10%
+  val interArrival = for (elem <- (5 to 90 by 5).toList) yield (elem, elem*10)
+  val tasksPerJob = ((180.0, 30.0)  :: Nil)
+  val jobDuration = ((90.0, 2000.0) :: Nil)
+  val cpusTask = ((0.3, 0.5) :: Nil)
+  val memTask = ((0.5, 1.2) :: Nil)
+  val tasksHeterogeneity = false
+  val runFlatPattern = false
+  val runDayNightPattern = true
+
+  // example pre-fill workload generators.
+  val examplePrefillTraceFileName = "traces/initial-traces/example-init-cluster-state.log"
+  assert((new File(examplePrefillTraceFileName)).exists())
+  val exampleBatchPrefillTraceWLGenerator =
+    new PrefillPbbTraceWorkloadGenerator("PrefillBatch",
+      examplePrefillTraceFileName)
+  val exampleServicePrefillTraceWLGenerator =
+    new PrefillPbbTraceWorkloadGenerator("PrefillService",
+      examplePrefillTraceFileName)
+  val exampleBatchServicePrefillTraceWLGenerator =
+    new PrefillPbbTraceWorkloadGenerator("PrefillBatchService",
+      examplePrefillTraceFileName)
+
+  var workloadGenerators = List[WorkloadDesc]()
+
+  for( inter <- interArrival){
+    for( tasks <- tasksPerJob ){
+      for( duration <- jobDuration ){
+        for( cpu <- cpusTask ){
+          for( mem <- memTask ){
+            if(runDayNightPattern) {
+              val workloadGeneratorBatch =
+                new DailyExpExpExpWorkloadGenerator(workloadName = "Batch".intern(),
+                  initAvgJobInterarrivalTime = inter._1,
+                  avgTasksPerJob = tasks._1,
+                  avgJobDuration = duration._1,
+                  avgCpusPerTask = cpu._1,
+                  avgMemPerTask = mem._1,
+                  heterogeneousTasks = tasksHeterogeneity)
+              val workloadGeneratorService =
+                new DailyExpExpExpWorkloadGenerator(workloadName = "Service".intern(),
+                  initAvgJobInterarrivalTime = inter._2,
+                  avgTasksPerJob = tasks._2,
+                  avgJobDuration = duration._2,
+                  avgCpusPerTask = cpu._1,
+                  avgMemPerTask = cpu._2,
+                  heterogeneousTasks = tasksHeterogeneity)
+              val workloadDesc =
+                WorkloadDesc(cell = "example",
+                  assignmentPolicy = "CMB_PBB",
+                  workloadGenerators =
+                    workloadGeneratorBatch ::
+                      workloadGeneratorService ::
+                      Nil,
+                  cellStateDesc = exampleCellStateDesc,
+                  prefillWorkloadGenerators =
+                    List(exampleBatchServicePrefillTraceWLGenerator))
+              workloadGenerators ::= workloadDesc
+            }
+            if(runFlatPattern){
+              val workloadGeneratorBatch =
+                new ExpExpExpWorkloadGenerator(workloadName = "Batch".intern(),
+                  initAvgJobInterarrivalTime = inter._1,
+                  avgTasksPerJob = tasks._1,
+                  avgJobDuration = duration._1,
+                  avgCpusPerTask = cpu._1,
+                  avgMemPerTask = mem._1,
+                  heterogeneousTasks = tasksHeterogeneity)
+              val workloadGeneratorService =
+                new ExpExpExpWorkloadGenerator(workloadName = "Service".intern(),
+                  initAvgJobInterarrivalTime = inter._2,
+                  avgTasksPerJob = tasks._2,
+                  avgJobDuration = duration._2,
+                  avgCpusPerTask = cpu._1,
+                  avgMemPerTask = cpu._2,
+                  heterogeneousTasks = tasksHeterogeneity)
+              val workloadDesc =
+                WorkloadDesc(cell = "example",
+                  assignmentPolicy = "CMB_PBB",
+                  workloadGenerators =
+                    workloadGeneratorBatch ::
+                      workloadGeneratorService ::
+                      Nil,
+                  cellStateDesc = exampleCellStateDesc,
+                  prefillWorkloadGenerators =
+                    List(exampleBatchServicePrefillTraceWLGenerator))
+              workloadGenerators ::= workloadDesc
+            }
+          }
+        }
+      }
+    }
+  }
+
 
   /*
     /**
@@ -143,7 +239,7 @@ object Workloads {
     */
   //1000 maquinas
 
-  val exampleWorkloadGeneratorBatch =
+/*  val exampleWorkloadGeneratorBatch =
   new DailyExpExpExpWorkloadGenerator(workloadName = "Batch".intern(),
     initAvgJobInterarrivalTime = 90,
     avgTasksPerJob = 50.0,
@@ -164,7 +260,7 @@ object Workloads {
     workloadGenerators =
       exampleWorkloadGeneratorBatch ::
         exampleWorkloadGeneratorService :: Nil,
-    cellStateDesc = exampleCellStateDesc)
+    cellStateDesc = exampleCellStateDesc)*/
 
 
   /*
@@ -200,20 +296,7 @@ object Workloads {
       cellStateDesc = exampleCellStateDesc)
   */
 
-  // example pre-fill workload generators.
-  val examplePrefillTraceFileName = "traces/initial-traces/example-init-cluster-state.log"
-  assert((new File(examplePrefillTraceFileName)).exists())
-  val exampleBatchPrefillTraceWLGenerator =
-    new PrefillPbbTraceWorkloadGenerator("PrefillBatch",
-      examplePrefillTraceFileName)
-  val exampleServicePrefillTraceWLGenerator =
-    new PrefillPbbTraceWorkloadGenerator("PrefillService",
-      examplePrefillTraceFileName)
-  val exampleBatchServicePrefillTraceWLGenerator =
-    new PrefillPbbTraceWorkloadGenerator("PrefillBatchService",
-      examplePrefillTraceFileName)
-
-  val exampleWorkloadPrefillDesc =
+  /*val exampleWorkloadPrefillDesc =
     WorkloadDesc(cell = "example",
       assignmentPolicy = "CMB_PBB",
       workloadGenerators =
@@ -222,7 +305,7 @@ object Workloads {
           Nil,
       cellStateDesc = exampleCellStateDesc,
       prefillWorkloadGenerators =
-        List(exampleBatchServicePrefillTraceWLGenerator))
+        List(exampleBatchServicePrefillTraceWLGenerator))*/
 
 
   // Set up example workload with jobs that have interarrival times
@@ -270,7 +353,9 @@ object Workloads {
       prefillWorkloadGenerators =
         List(exampleBatchServicePrefillTraceWLGenerator))
 
-  val exampleGeneratedWorkloadPrefillDesc =
+  //Este es el que usa el simulador, hay que convertirlo en lista
+
+  /*val exampleGeneratedWorkloadPrefillDesc =
     WorkloadDesc(cell = "example",
       assignmentPolicy = "CMB_PBB",
       workloadGenerators =
@@ -279,7 +364,7 @@ object Workloads {
           Nil,
       cellStateDesc = exampleCellStateDesc,
       prefillWorkloadGenerators =
-        List(exampleBatchServicePrefillTraceWLGenerator))
+        List(exampleBatchServicePrefillTraceWLGenerator))*/
   /*Solo service
 
     val exampleGeneratedWorkloadPrefillDesc =
