@@ -54,7 +54,7 @@ import efficiency.power_on_policies.decision.{CombinedPowerOnDecision, DefaultPo
 import efficiency.power_on_policies.{ComposedPowerOnPolicy, PowerOnPolicy}
 import stackelberg.{NoStackelberg, StackelbergAgent, SwitchBetweenCurrentAndSpecified}
 
-import scala.collection.mutable.ArrayBuffer
+import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 
 object Simulation {
   def main(args: Array[String]) {
@@ -223,7 +223,7 @@ object Simulation {
     /**
      * Set up a simulatorDesc-s.
      */
-    val globalRunTime = 86400.0 * 7
+    val globalRunTime = 86400.0 / 4
     //val globalRunTime = 86400.0 * 30 // 1 Day
     val monolithicSimulatorDesc =
       new MonolithicSimulatorDesc(Array(monolithicSchedulerDesc),
@@ -334,7 +334,8 @@ object Simulation {
 
     // ------------------Omega------------------
     val numOmegaServiceSchedsRange = Seq(1)
-    val numOmegaBatchSchedsRange = Seq(4)
+    //val numOmegaBatchSchedsRange = Seq(4)
+    val numOmegaBatchSchedsRange = Seq(1)
 
     val omegaSimulatorSetups =
       for (numOmegaServiceScheds <- numOmegaServiceSchedsRange;
@@ -369,8 +370,8 @@ object Simulation {
       }
 
     // ------------------Mesos------------------
-      val mesosSimulatorDesc = mesosSimulator4BatchDesc
-    //val mesosSimulatorDesc = mesosSimulator1BatchDesc
+      //val mesosSimulatorDesc = mesosSimulator4BatchDesc
+    val mesosSimulatorDesc = mesosSimulator1BatchDesc
 
     // val mesosSchedulerWorkloadMap = mesos4BatchSchedulerWorkloadMap
     val mesosSchedulerWorkloadMap = mesos1BatchSchedulerWorkloadMap
@@ -379,14 +380,16 @@ object Simulation {
     //                                      "MesosBatch-2" -> List("Batch"),
     //                                      "MesosBatch-3" -> List("Batch"),
     //                                      "MesosBatch-4" -> List("Batch"))
-    val mesosSchedWorkloadsToSweep = Map("MesosService" -> List("Service"))
+    //val mesosSchedWorkloadsToSweep = Map("MesosService" -> List("Service"))
+    val mesosSchedWorkloadsToSweep = Map("MesosBatch" -> List("Batch"),
+      "MesosService" -> List("Service"))
 
-    // val mesosWorkloadToSweep = "Batch"
-    val mesosWorkloadToSweep = "Service"
+     val mesosWorkloadToSweep = "Batch"
+    // val mesosWorkloadToSweep = "Service"
 
     val runMonolithic = true
-    val runMesos = false
-    val runOmega = false
+    val runMesos = true
+    val runOmega = true
 
 
     val runStackelberg = true
@@ -406,9 +409,9 @@ object Simulation {
     //val pickingPolicies = List[CellStateResourcesPicker](GeneticNoCrossingMutatingWorstPicker)
     //val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaWithRandom) //This one is the best so far
     //val pickingPolicies = List[CellStateResourcesPicker](new NewGeneticStandardPicker(populationSize=10, mutationProbability=0.5, crossoverProbability = 0.7, crossingSelector=TwoBest, fitnessFunction = Makespan, epochNumber = 2000, crossingFunction = CrossGenes, mutatingFunction = WorstRandom))
-    val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaSecurityWithRandom)
+    //val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaSecurityWithRandom)
     //val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaSecurityWithRandom,AgnieszkaEnergySecurityWithRandom)
-    //val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaSecurityWithRandom, new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.07), RandomPicker, AgnieszkaEnergySecurityWithRandom)
+    val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaSecurityWithRandom, new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.07), RandomPicker, AgnieszkaEnergySecurityWithRandom)
     //val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaEnergySecurityWithRandom)
     val powerOnPolicies = List[PowerOnPolicy](new ComposedPowerOnPolicy(DefaultPowerOnAction, NoPowerOnDecision))
     val powerOffPolicies = List[PowerOffPolicy](new ComposedPowerOffPolicy(DefaultPowerOffAction, NoPowerOffDecision))
@@ -425,7 +428,8 @@ object Simulation {
     val stackelbergCurrentAlwzOffLessMarginDecision = new SwitchBetweenCurrentAndSpecified(new ComposedPowerOffPolicy(DefaultPowerOffAction, AlwzPowerOffDecision), new FreeCapacityMinMarginPowerOffDecision(0.25))
     val stackelbergCurrentAlwzOffRandomDecision = new SwitchBetweenCurrentAndSpecified(new ComposedPowerOffPolicy(DefaultPowerOffAction, AlwzPowerOffDecision), new RandomPowerOffDecision(0.5))
     val stackelbergCurrentAlwzOffGammaDecision = new SwitchBetweenCurrentAndSpecified(new ComposedPowerOffPolicy(DefaultPowerOffAction, AlwzPowerOffDecision), new GammaPowerOffDecision(0.8, 25, 0.4))
-    var stackelbergStrategies = List[StackelbergAgent](stackelbergCurrentAlwzOffMarginDecision,NoStackelberg,stackelbergCurrentAlwzOffLessMarginDecision,stackelbergCurrentAlwzOffRandomDecision,stackelbergCurrentAlwzOffGammaDecision)
+    val stackelbergCurrentAlwzOffExponentialDecision = new SwitchBetweenCurrentAndSpecified(new ComposedPowerOffPolicy(DefaultPowerOffAction, AlwzPowerOffDecision), new ExponentialPowerOffDecision(0.8, 25, 0.4))
+    var stackelbergStrategies = List[StackelbergAgent](stackelbergCurrentAlwzOffMarginDecision,NoStackelberg,stackelbergCurrentAlwzOffLessMarginDecision,stackelbergCurrentAlwzOffRandomDecision,stackelbergCurrentAlwzOffGammaDecision,stackelbergCurrentAlwzOffExponentialDecision)
     if(!runStackelberg){
       stackelbergStrategies = List[StackelbergAgent](NoStackelberg)
     }
@@ -921,8 +925,8 @@ object Simulation {
     //var security3Range = (60.0 :: 120.0 :: 240.0 :: Nil) //seconds added to tasks of this security level
     var security3Range = (360.0 :: 1080.0 :: Nil) //seconds added to tasks of this security level
     security3Range = (0.0 :: Nil) //disable
-    //val constantRange = (0.1 :: 1.0 :: Nil)
-    val constantRange = (1.0 :: Nil)
+    val constantRange = (0.1 :: 1.0 :: Nil)
+    //val constantRange = (1.0 :: Nil)
     //val constantRange = (0.1 :: 1.0 :: 10.0 :: Nil)
     //val constantRange = medConstantRange
     // val constantRange = fullConstantRange
@@ -934,7 +938,14 @@ object Simulation {
     // val lambdaRange = fullLambdaRange
     val interArrivalScaleRange = 0.009 :: 0.01 :: 0.02 :: 0.1 :: 0.2 :: 1.0 :: Nil
     // val interArrivalScaleRange = lambdaRange.map(1/_)
-    val prefillCpuLim = Map("PrefillBatch" -> 0.3, "PrefillService" -> 0.3, "PrefillBatchService" -> 0.3)
+    val prefillRange = (0.3 :: 0.4 :: Nil)
+    var prefillCpuLim = List[Map[String, Double]]()
+    for (prefillPerc <- prefillRange) {
+      val newPrefill = Map("PrefillBatch" -> prefillPerc, "PrefillService" -> prefillPerc, "PrefillBatchService" -> prefillPerc)
+      prefillCpuLim ::= newPrefill
+      val a=0
+    }
+    //val prefillCpuLim = Map("PrefillBatch" -> 0.3, "PrefillService" -> 0.3, "PrefillBatchService" -> 0.3)
     val doLogging = false
     val timeout = 60.0 * 60.0 *10000.0 // In seconds.
 
@@ -947,6 +958,7 @@ object Simulation {
     val sweepPicking = false
     val sweepPowerOn = false
     val sweepPowerOff = false
+    val sweepPrefill = true
 
     var sweepDimensions = collection.mutable.ListBuffer[String]()
     if (sweepC)
@@ -967,6 +979,8 @@ object Simulation {
       sweepDimensions += "PowerOn"
     if (sweepPowerOff)
       sweepDimensions += "PowerOff"
+    if (sweepPrefill)
+      sweepDimensions += "Prefill"
 
     val formatter = new java.text.SimpleDateFormat("yyyy-MM-dd-HH-mm-ss")
     val dateTimeStamp = formatter.format(new java.util.Date)
