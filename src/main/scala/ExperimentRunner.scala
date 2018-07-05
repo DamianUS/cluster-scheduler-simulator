@@ -144,6 +144,7 @@ class Experiment(
         // Set up a list of workloads
         var commonWorkloadSet = ListBuffer[Workload]()
         var newAvgJobInterarrivalTime: Option[Double] = None
+        //Esto está preparado para una sola carga
         workloadDesc.workloadGenerators.foreach(workloadGenerator => {
           if (workloadToSweepOver.equals(
             workloadGenerator.workloadName)) {
@@ -270,7 +271,7 @@ class Experiment(
                             numMemService += job.numTasks * job.memPerTask
                           }
                         })*/
-
+                                  //Aquí es donde tengo que recorrer los workload
                                   workloads.append(workload.copy)
                                 })
                                 /*pw.write(sb.toString());

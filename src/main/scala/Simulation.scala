@@ -223,7 +223,7 @@ object Simulation {
     /**
      * Set up a simulatorDesc-s.
      */
-    val globalRunTime = 86400.0 / 48
+    val globalRunTime = 86400.0 / 12
     //val globalRunTime = 86400.0 * 30 // 1 Day
     val monolithicSimulatorDesc =
       new MonolithicSimulatorDesc(Array(monolithicSchedulerDesc),
@@ -412,9 +412,9 @@ object Simulation {
     //val pickingPolicies = List[CellStateResourcesPicker](GeneticNoCrossingMutatingWorstPicker)
     //val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaWithRandom) //This one is the best so far
     //val pickingPolicies = List[CellStateResourcesPicker](new NewGeneticStandardPicker(populationSize=10, mutationProbability=0.5, crossoverProbability = 0.7, crossingSelector=TwoBest, fitnessFunction = Makespan, epochNumber = 2000, crossingFunction = CrossGenes, mutatingFunction = WorstRandom))
-    //val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaSecurityWithRandom)
+    val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaSecurityWithRandom)
     //val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaSecurityWithRandom,AgnieszkaEnergySecurityWithRandom)
-    val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaSecurityWithRandom, new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.07), RandomPicker, AgnieszkaEnergySecurityWithRandom)
+    //val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaSecurityWithRandom, new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.07), RandomPicker, AgnieszkaEnergySecurityWithRandom)
     //val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaEnergySecurityWithRandom)
     val powerOnPolicies = List[PowerOnPolicy](new ComposedPowerOnPolicy(DefaultPowerOnAction, NoPowerOnDecision))
     val powerOffPolicies = List[PowerOffPolicy](new ComposedPowerOffPolicy(DefaultPowerOffAction, NoPowerOffDecision))
@@ -942,12 +942,9 @@ object Simulation {
     val interArrivalScaleRange = 0.009 :: 0.01 :: 0.02 :: 0.1 :: 0.2 :: 1.0 :: Nil
     // val interArrivalScaleRange = lambdaRange.map(1/_)
     val prefillRange = (0.25 to 0.8 by 0.05).toList
+    //val prefillRange = (0.25 to 0.4 by 0.05).toList
     var prefillCpuLim = List[Map[String, Double]]()
-    for (prefillPerc <- prefillRange) {
-      val newPrefill = Map("PrefillBatch" -> prefillPerc, "PrefillService" -> prefillPerc, "PrefillBatchService" -> prefillPerc)
-      prefillCpuLim ::= newPrefill
-      val a=0
-    }
+    for (prefillPerc <- prefillRange) {prefillCpuLim ::= Map("PrefillBatch" -> prefillPerc, "PrefillService" -> prefillPerc, "PrefillBatchService" -> prefillPerc)}
     //val prefillCpuLim = Map("PrefillBatch" -> 0.3, "PrefillService" -> 0.3, "PrefillBatchService" -> 0.3)
     val doLogging = false
     val timeout = 60.0 * 60.0 *10000.0 // In seconds.
@@ -993,7 +990,9 @@ object Simulation {
       println("Creating the 'experiment_results' dir.")
       experDir.mkdir()
     }
-    val outputDirName = "%s/%s-%s-%s-%.0f"
+    //Esta aproximación intenta aglutinar todas las cargas en una misma carpeta en vez de generar 15 carpetas para 15 cargas
+      val outputDirName = "%s/%s-%s-%.0f"
+      //val outputDirName = "%s/%s-%s-%s-%.0f"
       .format(
         experDir.toString,
         dateTimeStamp,
@@ -1006,11 +1005,11 @@ object Simulation {
               ""
             })
         }).mkString("_"),*/
-        wlDescs(0).cell + wlDescs(0).assignmentPolicy + (if (wlDescs(0).prefillWorkloadGenerators.length > 0) {
+        /*wlDescs(0).cell + wlDescs(0).assignmentPolicy + (if (wlDescs(0).prefillWorkloadGenerators.length > 0) {
           "_prefilled"
         } else {
           ""
-        }),
+        }),*/
         globalRunTime)
     println("outputDirName is %s".format(outputDirName))
 

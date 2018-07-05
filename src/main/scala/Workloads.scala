@@ -92,13 +92,14 @@ object Workloads {
   //val interArrival = ((90, 900) :: (100, 1000) :: Nil)
   //90/10%
   val interArrival = for (elem <- (5 to 90 by 5).toList) yield (elem, elem*10)
+  //val interArrival = for (elem <- (80 to 95 by 5).toList) yield (elem, elem*10)
   val tasksPerJob = ((180.0, 30.0)  :: Nil)
   val jobDuration = ((90.0, 2000.0) :: Nil)
   val cpusTask = ((0.3, 0.5) :: Nil)
   val memTask = ((0.5, 1.2) :: Nil)
   val tasksHeterogeneity = false
-  val runFlatPattern = false
-  val runDayNightPattern = true
+  val runFlatPattern = true
+  val runDayNightPattern = false
 
   // example pre-fill workload generators.
   val examplePrefillTraceFileName = "traces/initial-traces/example-init-cluster-state.log"
