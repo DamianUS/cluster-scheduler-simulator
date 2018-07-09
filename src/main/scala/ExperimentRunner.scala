@@ -404,6 +404,14 @@ class Experiment(
                                     //Makespan
                                     workloadStats.setAvgMakespan(workload.avgJobMakespan)
                                     workloadStats.setMakespan90Percentile(workload.jobMakespanPercentile(0.9))
+
+                                    //Inputs
+                                    workloadStats.setAvgCpuUtil(workload.getJobs.map{ x => x.cpusPerTask * x.numTasks }.sum / workload.getJobs.length)
+                                    workloadStats.setAvgMemUtil(workload.getJobs.map{ x => x.memPerTask * x.numTasks }.sum / workload.getJobs.length)
+                                    workloadStats.setAvgDuration(workload.getJobs.map(_.taskDuration).sum / workload.getJobs.length)
+                                    workloadStats.setAvgInterarrival(workload.avgJobInterarrivalTime)
+                                    workloadStats.setAvgTasks(workload.getJobs.map(_.numTasks).sum / workload.getJobs.length)
+
                                     //Nuevo
                                     val numJobs0 = workload.getJobs.filter(_.security == 0).length
                                     val numJobs1 = workload.getJobs.filter(_.security == 1).length
@@ -464,12 +472,23 @@ class Experiment(
                                     }
                                     experimentResult.addWorkloadStats(workloadStats)
                                   })
-                                  // Record workload specific details about the parameter sweeps.
                                   experimentResult.setSweepWorkload(workloadToSweepOver)
-                                  experimentResult.setAvgJobInterarrivalTime(
+                                  // Record workload specific details about the parameter sweeps.
+                                  //Cambiado para tener el interarrival de todos
+                                  var submittedArray = new Array[Double](0)
+                                  workloads.foreach(workload => {
+                                    submittedArray = submittedArray ++ workload.jobInterArrivalTimesArray
+                                  })
+                                  util.Sorting.quickSort(submittedArray)
+                                  var sumInterarrivalTime = 0.0
+                                  for (i <- 1 to submittedArray.length - 1) {
+                                    sumInterarrivalTime += submittedArray(i) - submittedArray(i - 1)
+                                  }
+                                  experimentResult.setAvgJobInterarrivalTime(sumInterarrivalTime / submittedArray.length)
+                                  /*experimentResult.setAvgJobInterarrivalTime(
                                     avgJobInterarrivalTime.getOrElse(
                                       workloads.filter(_.name == workloadToSweepOver)
-                                        .head.avgJobInterarrivalTime))
+                                        .head.avgJobInterarrivalTime))*/
 
                                   // Save repeated stats about schedulers.
                                   simulator.schedulers.values.foreach(scheduler => {

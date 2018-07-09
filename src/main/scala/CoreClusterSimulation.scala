@@ -163,7 +163,7 @@ class ClusterSimulator(val cellState: CellState,
                        prefillWorkloads: Seq[Workload],
                        logging: Boolean = false,
                        monitorUtilization: Boolean = true,
-                       monitoringPeriod: Double = 15.0,
+                       monitoringPeriod: Double = 150.0,
                        cellStateResourcesSorter: CellStateResourcesSorter,
                        cellStateResourcesPicker: CellStateResourcesPicker,
                        powerOnPolicy: PowerOnPolicy,
@@ -1627,6 +1627,13 @@ class Workload(val name: String,
   def totalJobWastedThinkTimes: Double = jobs.map(_.wastedTimeScheduling).sum
 
   def totalJobWastedThinkTimesPowering: Double = jobs.map(_.wastedTimeSchedulingPowering).sum
+
+  def jobInterArrivalTimesArray: Array[Double] = {
+    val submittedTimesArray = new Array[Double](jobs.length)
+    jobs.map(_.submitted).copyToArray(submittedTimesArray)
+    util.Sorting.quickSort(submittedTimesArray)
+    submittedTimesArray
+  }
 
   def avgJobInterarrivalTime: Double = {
     val submittedTimesArray = new Array[Double](jobs.length)

@@ -82,8 +82,14 @@ for scheduler, protobuf in protobufs_to_iterate.iteritems():
                 params[workload_stat.workload_name + "_" + "queue_fully"] = workload_stat.avg_job_queue_times_till_fully_scheduled
                 params[workload_stat.workload_name + "_" + "makespan"] = workload_stat.avg_makespan
                 params[workload_stat.workload_name + "_" + "makespan_90p"] = workload_stat.makespan_90_percentile
+                params[workload_stat.workload_name + "_" + "cpu_util"] = workload_stat.avg_cpu_util
+                params[workload_stat.workload_name + "_" + "mem_util"] = workload_stat.avg_mem_util
+                params[workload_stat.workload_name + "_" + "duration"] = workload_stat.avg_duration
+                params[workload_stat.workload_name + "_" + "inter_arrival"] = workload_stat.avg_interarrival
+                params[workload_stat.workload_name + "_" + "tasks"] = workload_stat.avg_tasks
 
-            for param_name, value in params.iteritems():
+
+        for param_name, value in params.iteritems():
                 if param_name in result_dict:
                     if scheduler in result_dict[param_name]:
                         result_dict[param_name][scheduler].append(value)
