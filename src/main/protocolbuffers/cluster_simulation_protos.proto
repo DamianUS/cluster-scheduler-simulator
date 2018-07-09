@@ -97,6 +97,10 @@ message ExperimentResultSet {
         optional int64 num_jobs_security_5 = 25;
         repeated Epoch epochs = 26;
         optional double avg_interarrival = 27;
+        optional double avg_tasks = 28;
+        optional double avg_duration = 29;
+        optional double avg_cpu_util = 30;
+        optional double avg_mem_util = 31;
 
         message Epoch {
           optional int64 number_epoch = 1;
