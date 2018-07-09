@@ -18,7 +18,7 @@ _sym_db = _symbol_database.Default()
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='cluster_simulation_protos.proto',
   package='ClusterSchedulingSimulation',
-  serialized_pb=_b('\n\x1f\x63luster_simulation_protos.proto\x12\x1b\x43lusterSchedulingSimulation\"\xdc(\n\x13\x45xperimentResultSet\x12V\n\x0e\x65xperiment_env\x18\x01 \x03(\x0b\x32>.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv\x1a\xec\'\n\rExperimentEnv\x12\x11\n\tcell_name\x18\x01 \x01(\t\x12\x1b\n\x13workload_split_type\x18\x02 \x01(\t\x12\x1b\n\x0cis_prefilled\x18\x05 \x01(\x08:\x05\x66\x61lse\x12\x10\n\x08run_time\x18\x03 \x01(\x01\x12j\n\x11\x65xperiment_result\x18\x04 \x03(\x0b\x32O.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult\x12\x14\n\x0cnum_machines\x18\x06 \x01(\x03\x12%\n\x16heterogeneous_machines\x18\x07 \x01(\x08:\x05\x66\x61lse\x1a\xd2%\n\x10\x45xperimentResult\x12&\n\x1e\x63\x65ll_state_avg_cpu_utilization\x18\x04 \x01(\x01\x12&\n\x1e\x63\x65ll_state_avg_mem_utilization\x18\x05 \x01(\x01\x12!\n\x19\x63\x65ll_state_avg_cpu_locked\x18\r \x01(\x01\x12!\n\x19\x63\x65ll_state_avg_mem_locked\x18\x0e \x01(\x01\x12u\n\x0eworkload_stats\x18\x06 \x03(\x0b\x32].ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats\x12\x16\n\x0esweep_workload\x18\x08 \x01(\t\x12!\n\x19\x61vg_job_interarrival_time\x18\t \x01(\x01\x12w\n\x0fscheduler_stats\x18\x07 \x03(\x0b\x32^.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.SchedulerStats\x12\x83\x01\n\x18sweep_scheduler_workload\x18\n \x03(\x0b\x32\x61.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.SchedulerWorkload\x12\x1b\n\x13\x63onstant_think_time\x18\x0b \x01(\x01\x12\x1b\n\x13per_task_think_time\x18\x0c \x01(\x01\x12y\n\x10\x65\x66\x66iciency_stats\x18\x0f \x01(\x0b\x32_.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats\x12q\n\x0cmeasurements\x18\x10 \x03(\x0b\x32[.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement\x12\x17\n\x0fsecurity_1_time\x18\x11 \x01(\x01\x12\x17\n\x0fsecurity_2_time\x18\x12 \x01(\x01\x12\x17\n\x0fsecurity_3_time\x18\x13 \x01(\x01\x12\x13\n\x0bstackelberg\x18\x14 \x01(\t\x1a\xe2\x08\n\rWorkloadStats\x12\x15\n\rworkload_name\x18\x01 \x01(\t\x12\x10\n\x08num_jobs\x18\x02 \x01(\x03\x12\x1a\n\x12num_jobs_scheduled\x18\x03 \x01(\x03\x12%\n\x1djob_think_times_90_percentile\x18\x04 \x01(\x01\x12\x30\n(avg_job_queue_times_till_first_scheduled\x18\x05 \x01(\x01\x12\x30\n(avg_job_queue_times_till_fully_scheduled\x18\x06 \x01(\x01\x12\x39\n1job_queue_time_till_first_scheduled_90_percentile\x18\x07 \x01(\x01\x12\x39\n1job_queue_time_till_fully_scheduled_90_percentile\x18\x08 \x01(\x01\x12-\n%num_scheduling_attempts_90_percentile\x18\t \x01(\x01\x12-\n%num_scheduling_attempts_99_percentile\x18\n \x01(\x01\x12\x32\n*num_task_scheduling_attempts_90_percentile\x18\x0b \x01(\x01\x12\x32\n*num_task_scheduling_attempts_99_percentile\x18\x0c \x01(\x01\x12\x14\n\x0c\x61vg_makespan\x18\r \x01(\x01\x12\x1e\n\x16makespan_90_percentile\x18\x0e \x01(\x01\x12\x1c\n\x14\x61vg_makespan_epoch_0\x18\x0f \x01(\x01\x12\x1e\n\x16\x61vg_makespan_epoch_100\x18\x10 \x01(\x01\x12\x1e\n\x16\x61vg_makespan_epoch_500\x18\x11 \x01(\x01\x12\x1f\n\x17\x61vg_makespan_epoch_1000\x18\x12 \x01(\x01\x12\x1f\n\x17\x61vg_makespan_epoch_2000\x18\x13 \x01(\x01\x12\x1b\n\x13num_jobs_security_0\x18\x14 \x01(\x03\x12\x1b\n\x13num_jobs_security_1\x18\x15 \x01(\x03\x12\x1b\n\x13num_jobs_security_2\x18\x16 \x01(\x03\x12\x1b\n\x13num_jobs_security_3\x18\x17 \x01(\x03\x12\x1b\n\x13num_jobs_security_4\x18\x18 \x01(\x03\x12\x1b\n\x13num_jobs_security_5\x18\x19 \x01(\x03\x12s\n\x06\x65pochs\x18\x1a \x03(\x0b\x32\x63.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch\x12\x18\n\x10\x61vg_interarrival\x18\x1b \x01(\x01\x1a\x32\n\x05\x45poch\x12\x14\n\x0cnumber_epoch\x18\x01 \x01(\x03\x12\x13\n\x0b\x66intess_avg\x18\x02 \x01(\x01\x1a\xe1\x07\n\x0eSchedulerStats\x12\x16\n\x0escheduler_name\x18\x01 \x01(\t\x12\x18\n\x10useful_busy_time\x18\x03 \x01(\x01\x12\x18\n\x10wasted_busy_time\x18\x04 \x01(\x01\x12\x81\x01\n\rper_day_stats\x18\x10 \x03(\x0b\x32j.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.SchedulerStats.PerDayStats\x12\x92\x01\n\x16per_workload_busy_time\x18\x05 \x03(\x0b\x32r.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.SchedulerStats.PerWorkloadBusyTime\x12#\n\x1bnum_successful_transactions\x18\x06 \x01(\x03\x12\x1f\n\x17num_failed_transactions\x18\x07 \x01(\x03\x12\x32\n*num_no_resources_found_scheduling_attempts\x18\r \x01(\x03\x12 \n\x18num_retried_transactions\x18\x0b \x01(\x03\x12%\n\x1dnum_jobs_timed_out_scheduling\x18\x11 \x01(\x03\x12(\n num_successful_task_transactions\x18\t \x01(\x03\x12$\n\x1cnum_failed_task_transactions\x18\n \x01(\x03\x12\x15\n\ris_multi_path\x18\x08 \x01(\x08\x12\x1e\n\x16num_jobs_left_in_queue\x18\x0c \x01(\x03\x12#\n\x1b\x66\x61iled_find_victim_attempts\x18\x0e \x01(\x03\x1a\x98\x01\n\x0bPerDayStats\x12\x0f\n\x07\x64\x61y_num\x18\x01 \x01(\x03\x12\x18\n\x10useful_busy_time\x18\x02 \x01(\x01\x12\x18\n\x10wasted_busy_time\x18\x03 \x01(\x01\x12#\n\x1bnum_successful_transactions\x18\x04 \x01(\x03\x12\x1f\n\x17num_failed_transactions\x18\x05 \x01(\x03\x1a`\n\x13PerWorkloadBusyTime\x12\x15\n\rworkload_name\x18\x01 \x01(\t\x12\x18\n\x10useful_busy_time\x18\x02 \x01(\x01\x12\x18\n\x10wasted_busy_time\x18\x03 \x01(\x01\x1a@\n\x11SchedulerWorkload\x12\x15\n\rschedulerName\x18\x01 \x01(\t\x12\x14\n\x0cworkloadName\x18\x02 \x01(\t\x1a\xb9\n\n\x0f\x45\x66\x66iciencyStats\x12\x1d\n\x15total_energy_consumed\x18\x01 \x01(\x01\x12\x1a\n\x12total_energy_saved\x18\x02 \x01(\x01\x12\x1e\n\x16total_power_off_number\x18\x03 \x01(\x01\x12\x1e\n\x16kwh_saved_per_shutting\x18\x04 \x01(\x01\x12!\n\x19\x61vg_shuttings_per_machine\x18\x05 \x01(\x01\x12!\n\x19max_shuttings_per_machine\x18\x06 \x01(\x01\x12!\n\x19min_shuttings_per_machine\x18\x07 \x01(\x01\x12+\n#shuttings_per_machine_90_percentile\x18\x08 \x01(\x01\x12+\n#shuttings_per_machine_99_percentile\x18\t \x01(\x01\x12\'\n\x1f\x61vg_time_shutted_down_per_cycle\x18\n \x01(\x01\x12\'\n\x1fmax_time_shutted_down_per_cycle\x18\x0b \x01(\x01\x12\'\n\x1fmin_time_shutted_down_per_cycle\x18\x0c \x01(\x01\x12\x31\n)time_shutted_down_per_cycle_90_percentile\x18\r \x01(\x01\x12\x31\n)time_shutted_down_per_cycle_99_percentile\x18\x0e \x01(\x01\x12)\n!avg_time_shutted_down_per_machine\x18\x0f \x01(\x01\x12)\n!max_time_shutted_down_per_machine\x18\x10 \x01(\x01\x12)\n!min_time_shutted_down_per_machine\x18\x11 \x01(\x01\x12\x33\n+time_shutted_down_per_machine_90_percentile\x18\x12 \x01(\x01\x12\x33\n+time_shutted_down_per_machine_99_percentile\x18\x13 \x01(\x01\x12\x1e\n\x16\x61vg_number_machines_on\x18\x14 \x01(\x01\x12\x1f\n\x17\x61vg_number_machines_off\x18\x15 \x01(\x01\x12&\n\x1e\x61vg_number_machines_turning_on\x18\x16 \x01(\x01\x12\'\n\x1f\x61vg_number_machines_turning_off\x18\x17 \x01(\x01\x12\x88\x01\n\x10power_off_policy\x18\x18 \x01(\x0b\x32n.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy\x12\x86\x01\n\x0fpower_on_policy\x18\x19 \x01(\x0b\x32m.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy\x12\x1f\n\x17\x63urrent_energy_consumed\x18\x1a \x01(\x01\x12\x16\n\x0epicking_policy\x18\x1b \x01(\t\x1a\x1e\n\x0ePowerOffPolicy\x12\x0c\n\x04name\x18\x01 \x01(\t\x1a\x1d\n\rPowerOnPolicy\x12\x0c\n\x04name\x18\x01 \x01(\t\x1a\xa7\x02\n\x0bMeasurement\x12\x16\n\x0e\x63puUtilization\x18\x01 \x01(\x01\x12\x16\n\x0e\x63puTotallyIdle\x18\x02 \x01(\x01\x12\x18\n\x10\x63puPartiallyIdle\x18\x03 \x01(\x01\x12\x16\n\x0ememUtilization\x18\x04 \x01(\x01\x12\x16\n\x0ememTotallyIdle\x18\x05 \x01(\x01\x12\x18\n\x10memPartiallyIdle\x18\x06 \x01(\x01\x12\x13\n\x0bmachinesOff\x18\x07 \x01(\x01\x12\x12\n\nmachinesOn\x18\x08 \x01(\x01\x12\x1a\n\x12machinesTurningOff\x18\t \x01(\x01\x12\x19\n\x11machinesTurningOn\x18\n \x01(\x01\x12\x11\n\tmpuLocked\x18\x0b \x01(\x01\x12\x11\n\tmemLocked\x18\x0c \x01(\x01')
+  serialized_pb=_b('\n\x1f\x63luster_simulation_protos.proto\x12\x1b\x43lusterSchedulingSimulation\"\xb1)\n\x13\x45xperimentResultSet\x12V\n\x0e\x65xperiment_env\x18\x01 \x03(\x0b\x32>.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv\x1a\xc1(\n\rExperimentEnv\x12\x11\n\tcell_name\x18\x01 \x01(\t\x12\x1b\n\x13workload_split_type\x18\x02 \x01(\t\x12\x1b\n\x0cis_prefilled\x18\x05 \x01(\x08:\x05\x66\x61lse\x12\x10\n\x08run_time\x18\x03 \x01(\x01\x12j\n\x11\x65xperiment_result\x18\x04 \x03(\x0b\x32O.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult\x12\x14\n\x0cnum_machines\x18\x06 \x01(\x03\x12%\n\x16heterogeneous_machines\x18\x07 \x01(\x08:\x05\x66\x61lse\x1a\xa7&\n\x10\x45xperimentResult\x12&\n\x1e\x63\x65ll_state_avg_cpu_utilization\x18\x04 \x01(\x01\x12&\n\x1e\x63\x65ll_state_avg_mem_utilization\x18\x05 \x01(\x01\x12!\n\x19\x63\x65ll_state_avg_cpu_locked\x18\r \x01(\x01\x12!\n\x19\x63\x65ll_state_avg_mem_locked\x18\x0e \x01(\x01\x12u\n\x0eworkload_stats\x18\x06 \x03(\x0b\x32].ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats\x12\x16\n\x0esweep_workload\x18\x08 \x01(\t\x12!\n\x19\x61vg_job_interarrival_time\x18\t \x01(\x01\x12w\n\x0fscheduler_stats\x18\x07 \x03(\x0b\x32^.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.SchedulerStats\x12\x83\x01\n\x18sweep_scheduler_workload\x18\n \x03(\x0b\x32\x61.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.SchedulerWorkload\x12\x1b\n\x13\x63onstant_think_time\x18\x0b \x01(\x01\x12\x1b\n\x13per_task_think_time\x18\x0c \x01(\x01\x12y\n\x10\x65\x66\x66iciency_stats\x18\x0f \x01(\x0b\x32_.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats\x12q\n\x0cmeasurements\x18\x10 \x03(\x0b\x32[.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement\x12\x17\n\x0fsecurity_1_time\x18\x11 \x01(\x01\x12\x17\n\x0fsecurity_2_time\x18\x12 \x01(\x01\x12\x17\n\x0fsecurity_3_time\x18\x13 \x01(\x01\x12\x13\n\x0bstackelberg\x18\x14 \x01(\t\x1a\xb7\t\n\rWorkloadStats\x12\x15\n\rworkload_name\x18\x01 \x01(\t\x12\x10\n\x08num_jobs\x18\x02 \x01(\x03\x12\x1a\n\x12num_jobs_scheduled\x18\x03 \x01(\x03\x12%\n\x1djob_think_times_90_percentile\x18\x04 \x01(\x01\x12\x30\n(avg_job_queue_times_till_first_scheduled\x18\x05 \x01(\x01\x12\x30\n(avg_job_queue_times_till_fully_scheduled\x18\x06 \x01(\x01\x12\x39\n1job_queue_time_till_first_scheduled_90_percentile\x18\x07 \x01(\x01\x12\x39\n1job_queue_time_till_fully_scheduled_90_percentile\x18\x08 \x01(\x01\x12-\n%num_scheduling_attempts_90_percentile\x18\t \x01(\x01\x12-\n%num_scheduling_attempts_99_percentile\x18\n \x01(\x01\x12\x32\n*num_task_scheduling_attempts_90_percentile\x18\x0b \x01(\x01\x12\x32\n*num_task_scheduling_attempts_99_percentile\x18\x0c \x01(\x01\x12\x14\n\x0c\x61vg_makespan\x18\r \x01(\x01\x12\x1e\n\x16makespan_90_percentile\x18\x0e \x01(\x01\x12\x1c\n\x14\x61vg_makespan_epoch_0\x18\x0f \x01(\x01\x12\x1e\n\x16\x61vg_makespan_epoch_100\x18\x10 \x01(\x01\x12\x1e\n\x16\x61vg_makespan_epoch_500\x18\x11 \x01(\x01\x12\x1f\n\x17\x61vg_makespan_epoch_1000\x18\x12 \x01(\x01\x12\x1f\n\x17\x61vg_makespan_epoch_2000\x18\x13 \x01(\x01\x12\x1b\n\x13num_jobs_security_0\x18\x14 \x01(\x03\x12\x1b\n\x13num_jobs_security_1\x18\x15 \x01(\x03\x12\x1b\n\x13num_jobs_security_2\x18\x16 \x01(\x03\x12\x1b\n\x13num_jobs_security_3\x18\x17 \x01(\x03\x12\x1b\n\x13num_jobs_security_4\x18\x18 \x01(\x03\x12\x1b\n\x13num_jobs_security_5\x18\x19 \x01(\x03\x12s\n\x06\x65pochs\x18\x1a \x03(\x0b\x32\x63.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch\x12\x18\n\x10\x61vg_interarrival\x18\x1b \x01(\x01\x12\x11\n\tavg_tasks\x18\x1c \x01(\x01\x12\x14\n\x0c\x61vg_duration\x18\x1d \x01(\x01\x12\x14\n\x0c\x61vg_cpu_util\x18\x1e \x01(\x01\x12\x14\n\x0c\x61vg_mem_util\x18\x1f \x01(\x01\x1a\x32\n\x05\x45poch\x12\x14\n\x0cnumber_epoch\x18\x01 \x01(\x03\x12\x13\n\x0b\x66intess_avg\x18\x02 \x01(\x01\x1a\xe1\x07\n\x0eSchedulerStats\x12\x16\n\x0escheduler_name\x18\x01 \x01(\t\x12\x18\n\x10useful_busy_time\x18\x03 \x01(\x01\x12\x18\n\x10wasted_busy_time\x18\x04 \x01(\x01\x12\x81\x01\n\rper_day_stats\x18\x10 \x03(\x0b\x32j.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.SchedulerStats.PerDayStats\x12\x92\x01\n\x16per_workload_busy_time\x18\x05 \x03(\x0b\x32r.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.SchedulerStats.PerWorkloadBusyTime\x12#\n\x1bnum_successful_transactions\x18\x06 \x01(\x03\x12\x1f\n\x17num_failed_transactions\x18\x07 \x01(\x03\x12\x32\n*num_no_resources_found_scheduling_attempts\x18\r \x01(\x03\x12 \n\x18num_retried_transactions\x18\x0b \x01(\x03\x12%\n\x1dnum_jobs_timed_out_scheduling\x18\x11 \x01(\x03\x12(\n num_successful_task_transactions\x18\t \x01(\x03\x12$\n\x1cnum_failed_task_transactions\x18\n \x01(\x03\x12\x15\n\ris_multi_path\x18\x08 \x01(\x08\x12\x1e\n\x16num_jobs_left_in_queue\x18\x0c \x01(\x03\x12#\n\x1b\x66\x61iled_find_victim_attempts\x18\x0e \x01(\x03\x1a\x98\x01\n\x0bPerDayStats\x12\x0f\n\x07\x64\x61y_num\x18\x01 \x01(\x03\x12\x18\n\x10useful_busy_time\x18\x02 \x01(\x01\x12\x18\n\x10wasted_busy_time\x18\x03 \x01(\x01\x12#\n\x1bnum_successful_transactions\x18\x04 \x01(\x03\x12\x1f\n\x17num_failed_transactions\x18\x05 \x01(\x03\x1a`\n\x13PerWorkloadBusyTime\x12\x15\n\rworkload_name\x18\x01 \x01(\t\x12\x18\n\x10useful_busy_time\x18\x02 \x01(\x01\x12\x18\n\x10wasted_busy_time\x18\x03 \x01(\x01\x1a@\n\x11SchedulerWorkload\x12\x15\n\rschedulerName\x18\x01 \x01(\t\x12\x14\n\x0cworkloadName\x18\x02 \x01(\t\x1a\xb9\n\n\x0f\x45\x66\x66iciencyStats\x12\x1d\n\x15total_energy_consumed\x18\x01 \x01(\x01\x12\x1a\n\x12total_energy_saved\x18\x02 \x01(\x01\x12\x1e\n\x16total_power_off_number\x18\x03 \x01(\x01\x12\x1e\n\x16kwh_saved_per_shutting\x18\x04 \x01(\x01\x12!\n\x19\x61vg_shuttings_per_machine\x18\x05 \x01(\x01\x12!\n\x19max_shuttings_per_machine\x18\x06 \x01(\x01\x12!\n\x19min_shuttings_per_machine\x18\x07 \x01(\x01\x12+\n#shuttings_per_machine_90_percentile\x18\x08 \x01(\x01\x12+\n#shuttings_per_machine_99_percentile\x18\t \x01(\x01\x12\'\n\x1f\x61vg_time_shutted_down_per_cycle\x18\n \x01(\x01\x12\'\n\x1fmax_time_shutted_down_per_cycle\x18\x0b \x01(\x01\x12\'\n\x1fmin_time_shutted_down_per_cycle\x18\x0c \x01(\x01\x12\x31\n)time_shutted_down_per_cycle_90_percentile\x18\r \x01(\x01\x12\x31\n)time_shutted_down_per_cycle_99_percentile\x18\x0e \x01(\x01\x12)\n!avg_time_shutted_down_per_machine\x18\x0f \x01(\x01\x12)\n!max_time_shutted_down_per_machine\x18\x10 \x01(\x01\x12)\n!min_time_shutted_down_per_machine\x18\x11 \x01(\x01\x12\x33\n+time_shutted_down_per_machine_90_percentile\x18\x12 \x01(\x01\x12\x33\n+time_shutted_down_per_machine_99_percentile\x18\x13 \x01(\x01\x12\x1e\n\x16\x61vg_number_machines_on\x18\x14 \x01(\x01\x12\x1f\n\x17\x61vg_number_machines_off\x18\x15 \x01(\x01\x12&\n\x1e\x61vg_number_machines_turning_on\x18\x16 \x01(\x01\x12\'\n\x1f\x61vg_number_machines_turning_off\x18\x17 \x01(\x01\x12\x88\x01\n\x10power_off_policy\x18\x18 \x01(\x0b\x32n.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy\x12\x86\x01\n\x0fpower_on_policy\x18\x19 \x01(\x0b\x32m.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy\x12\x1f\n\x17\x63urrent_energy_consumed\x18\x1a \x01(\x01\x12\x16\n\x0epicking_policy\x18\x1b \x01(\t\x1a\x1e\n\x0ePowerOffPolicy\x12\x0c\n\x04name\x18\x01 \x01(\t\x1a\x1d\n\rPowerOnPolicy\x12\x0c\n\x04name\x18\x01 \x01(\t\x1a\xa7\x02\n\x0bMeasurement\x12\x16\n\x0e\x63puUtilization\x18\x01 \x01(\x01\x12\x16\n\x0e\x63puTotallyIdle\x18\x02 \x01(\x01\x12\x18\n\x10\x63puPartiallyIdle\x18\x03 \x01(\x01\x12\x16\n\x0ememUtilization\x18\x04 \x01(\x01\x12\x16\n\x0ememTotallyIdle\x18\x05 \x01(\x01\x12\x18\n\x10memPartiallyIdle\x18\x06 \x01(\x01\x12\x13\n\x0bmachinesOff\x18\x07 \x01(\x01\x12\x12\n\nmachinesOn\x18\x08 \x01(\x01\x12\x1a\n\x12machinesTurningOff\x18\t \x01(\x01\x12\x19\n\x11machinesTurningOn\x18\n \x01(\x01\x12\x11\n\tmpuLocked\x18\x0b \x01(\x01\x12\x11\n\tmemLocked\x18\x0c \x01(\x01')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -57,8 +57,8 @@ _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_WORKLOADSTATS_EPOCH = _descr
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2527,
-  serialized_end=2577,
+  serialized_start=2612,
+  serialized_end=2662,
 )
 
 _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_WORKLOADSTATS = _descriptor.Descriptor(
@@ -257,6 +257,34 @@ _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_WORKLOADSTATS = _descriptor.
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='avg_tasks', full_name='ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.avg_tasks', index=27,
+      number=28, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='avg_duration', full_name='ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.avg_duration', index=28,
+      number=29, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='avg_cpu_util', full_name='ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.avg_cpu_util', index=29,
+      number=30, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='avg_mem_util', full_name='ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.avg_mem_util', index=30,
+      number=31, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -269,7 +297,7 @@ _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_WORKLOADSTATS = _descriptor.
   oneofs=[
   ],
   serialized_start=1455,
-  serialized_end=2577,
+  serialized_end=2662,
 )
 
 _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_SCHEDULERSTATS_PERDAYSTATS = _descriptor.Descriptor(
@@ -325,8 +353,8 @@ _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_SCHEDULERSTATS_PERDAYSTATS =
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3323,
-  serialized_end=3475,
+  serialized_start=3408,
+  serialized_end=3560,
 )
 
 _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_SCHEDULERSTATS_PERWORKLOADBUSYTIME = _descriptor.Descriptor(
@@ -368,8 +396,8 @@ _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_SCHEDULERSTATS_PERWORKLOADBU
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3477,
-  serialized_end=3573,
+  serialized_start=3562,
+  serialized_end=3658,
 )
 
 _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_SCHEDULERSTATS = _descriptor.Descriptor(
@@ -495,8 +523,8 @@ _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_SCHEDULERSTATS = _descriptor
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2580,
-  serialized_end=3573,
+  serialized_start=2665,
+  serialized_end=3658,
 )
 
 _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_SCHEDULERWORKLOAD = _descriptor.Descriptor(
@@ -531,8 +559,8 @@ _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_SCHEDULERWORKLOAD = _descrip
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3575,
-  serialized_end=3639,
+  serialized_start=3660,
+  serialized_end=3724,
 )
 
 _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_EFFICIENCYSTATS_POWEROFFPOLICY = _descriptor.Descriptor(
@@ -560,8 +588,8 @@ _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_EFFICIENCYSTATS_POWEROFFPOLI
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4918,
-  serialized_end=4948,
+  serialized_start=5003,
+  serialized_end=5033,
 )
 
 _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_EFFICIENCYSTATS_POWERONPOLICY = _descriptor.Descriptor(
@@ -589,8 +617,8 @@ _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_EFFICIENCYSTATS_POWERONPOLIC
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4950,
-  serialized_end=4979,
+  serialized_start=5035,
+  serialized_end=5064,
 )
 
 _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_EFFICIENCYSTATS = _descriptor.Descriptor(
@@ -800,8 +828,8 @@ _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_EFFICIENCYSTATS = _descripto
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3642,
-  serialized_end=4979,
+  serialized_start=3727,
+  serialized_end=5064,
 )
 
 _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_MEASUREMENT = _descriptor.Descriptor(
@@ -906,8 +934,8 @@ _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_MEASUREMENT = _descriptor.De
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4982,
-  serialized_end=5277,
+  serialized_start=5067,
+  serialized_end=5362,
 )
 
 _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT = _descriptor.Descriptor(
@@ -1048,7 +1076,7 @@ _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=459,
-  serialized_end=5277,
+  serialized_end=5362,
 )
 
 _EXPERIMENTRESULTSET_EXPERIMENTENV = _descriptor.Descriptor(
@@ -1119,7 +1147,7 @@ _EXPERIMENTRESULTSET_EXPERIMENTENV = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=177,
-  serialized_end=5277,
+  serialized_end=5362,
 )
 
 _EXPERIMENTRESULTSET = _descriptor.Descriptor(
@@ -1148,7 +1176,7 @@ _EXPERIMENTRESULTSET = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=65,
-  serialized_end=5277,
+  serialized_end=5362,
 )
 
 _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_WORKLOADSTATS_EPOCH.containing_type = _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_WORKLOADSTATS

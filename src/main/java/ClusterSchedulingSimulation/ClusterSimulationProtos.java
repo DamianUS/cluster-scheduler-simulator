@@ -1173,6 +1173,42 @@ public final class ClusterSimulationProtos {
            * <code>optional double avg_interarrival = 27;</code>
            */
           double getAvgInterarrival();
+
+          /**
+           * <code>optional double avg_tasks = 28;</code>
+           */
+          boolean hasAvgTasks();
+          /**
+           * <code>optional double avg_tasks = 28;</code>
+           */
+          double getAvgTasks();
+
+          /**
+           * <code>optional double avg_duration = 29;</code>
+           */
+          boolean hasAvgDuration();
+          /**
+           * <code>optional double avg_duration = 29;</code>
+           */
+          double getAvgDuration();
+
+          /**
+           * <code>optional double avg_cpu_util = 30;</code>
+           */
+          boolean hasAvgCpuUtil();
+          /**
+           * <code>optional double avg_cpu_util = 30;</code>
+           */
+          double getAvgCpuUtil();
+
+          /**
+           * <code>optional double avg_mem_util = 31;</code>
+           */
+          boolean hasAvgMemUtil();
+          /**
+           * <code>optional double avg_mem_util = 31;</code>
+           */
+          double getAvgMemUtil();
         }
         /**
          * Protobuf type {@code ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats}
@@ -1367,6 +1403,26 @@ public final class ClusterSimulationProtos {
                   case 217: {
                     bitField0_ |= 0x02000000;
                     avgInterarrival_ = input.readDouble();
+                    break;
+                  }
+                  case 225: {
+                    bitField0_ |= 0x04000000;
+                    avgTasks_ = input.readDouble();
+                    break;
+                  }
+                  case 233: {
+                    bitField0_ |= 0x08000000;
+                    avgDuration_ = input.readDouble();
+                    break;
+                  }
+                  case 241: {
+                    bitField0_ |= 0x10000000;
+                    avgCpuUtil_ = input.readDouble();
+                    break;
+                  }
+                  case 249: {
+                    bitField0_ |= 0x20000000;
+                    avgMemUtil_ = input.readDouble();
                     break;
                   }
                 }
@@ -2339,6 +2395,66 @@ public final class ClusterSimulationProtos {
             return avgInterarrival_;
           }
 
+          public static final int AVG_TASKS_FIELD_NUMBER = 28;
+          private double avgTasks_;
+          /**
+           * <code>optional double avg_tasks = 28;</code>
+           */
+          public boolean hasAvgTasks() {
+            return ((bitField0_ & 0x04000000) == 0x04000000);
+          }
+          /**
+           * <code>optional double avg_tasks = 28;</code>
+           */
+          public double getAvgTasks() {
+            return avgTasks_;
+          }
+
+          public static final int AVG_DURATION_FIELD_NUMBER = 29;
+          private double avgDuration_;
+          /**
+           * <code>optional double avg_duration = 29;</code>
+           */
+          public boolean hasAvgDuration() {
+            return ((bitField0_ & 0x08000000) == 0x08000000);
+          }
+          /**
+           * <code>optional double avg_duration = 29;</code>
+           */
+          public double getAvgDuration() {
+            return avgDuration_;
+          }
+
+          public static final int AVG_CPU_UTIL_FIELD_NUMBER = 30;
+          private double avgCpuUtil_;
+          /**
+           * <code>optional double avg_cpu_util = 30;</code>
+           */
+          public boolean hasAvgCpuUtil() {
+            return ((bitField0_ & 0x10000000) == 0x10000000);
+          }
+          /**
+           * <code>optional double avg_cpu_util = 30;</code>
+           */
+          public double getAvgCpuUtil() {
+            return avgCpuUtil_;
+          }
+
+          public static final int AVG_MEM_UTIL_FIELD_NUMBER = 31;
+          private double avgMemUtil_;
+          /**
+           * <code>optional double avg_mem_util = 31;</code>
+           */
+          public boolean hasAvgMemUtil() {
+            return ((bitField0_ & 0x20000000) == 0x20000000);
+          }
+          /**
+           * <code>optional double avg_mem_util = 31;</code>
+           */
+          public double getAvgMemUtil() {
+            return avgMemUtil_;
+          }
+
           private void initFields() {
             workloadName_ = "";
             numJobs_ = 0L;
@@ -2367,6 +2483,10 @@ public final class ClusterSimulationProtos {
             numJobsSecurity5_ = 0L;
             epochs_ = java.util.Collections.emptyList();
             avgInterarrival_ = 0D;
+            avgTasks_ = 0D;
+            avgDuration_ = 0D;
+            avgCpuUtil_ = 0D;
+            avgMemUtil_ = 0D;
           }
           private byte memoizedIsInitialized = -1;
           public final boolean isInitialized() {
@@ -2461,6 +2581,18 @@ public final class ClusterSimulationProtos {
             }
             if (((bitField0_ & 0x02000000) == 0x02000000)) {
               output.writeDouble(27, avgInterarrival_);
+            }
+            if (((bitField0_ & 0x04000000) == 0x04000000)) {
+              output.writeDouble(28, avgTasks_);
+            }
+            if (((bitField0_ & 0x08000000) == 0x08000000)) {
+              output.writeDouble(29, avgDuration_);
+            }
+            if (((bitField0_ & 0x10000000) == 0x10000000)) {
+              output.writeDouble(30, avgCpuUtil_);
+            }
+            if (((bitField0_ & 0x20000000) == 0x20000000)) {
+              output.writeDouble(31, avgMemUtil_);
             }
             getUnknownFields().writeTo(output);
           }
@@ -2578,6 +2710,22 @@ public final class ClusterSimulationProtos {
             if (((bitField0_ & 0x02000000) == 0x02000000)) {
               size += com.google.protobuf.CodedOutputStream
                 .computeDoubleSize(27, avgInterarrival_);
+            }
+            if (((bitField0_ & 0x04000000) == 0x04000000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(28, avgTasks_);
+            }
+            if (((bitField0_ & 0x08000000) == 0x08000000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(29, avgDuration_);
+            }
+            if (((bitField0_ & 0x10000000) == 0x10000000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(30, avgCpuUtil_);
+            }
+            if (((bitField0_ & 0x20000000) == 0x20000000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(31, avgMemUtil_);
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -2759,6 +2907,14 @@ public final class ClusterSimulationProtos {
               }
               avgInterarrival_ = 0D;
               bitField0_ = (bitField0_ & ~0x04000000);
+              avgTasks_ = 0D;
+              bitField0_ = (bitField0_ & ~0x08000000);
+              avgDuration_ = 0D;
+              bitField0_ = (bitField0_ & ~0x10000000);
+              avgCpuUtil_ = 0D;
+              bitField0_ = (bitField0_ & ~0x20000000);
+              avgMemUtil_ = 0D;
+              bitField0_ = (bitField0_ & ~0x40000000);
               return this;
             }
 
@@ -2900,6 +3056,22 @@ public final class ClusterSimulationProtos {
                 to_bitField0_ |= 0x02000000;
               }
               result.avgInterarrival_ = avgInterarrival_;
+              if (((from_bitField0_ & 0x08000000) == 0x08000000)) {
+                to_bitField0_ |= 0x04000000;
+              }
+              result.avgTasks_ = avgTasks_;
+              if (((from_bitField0_ & 0x10000000) == 0x10000000)) {
+                to_bitField0_ |= 0x08000000;
+              }
+              result.avgDuration_ = avgDuration_;
+              if (((from_bitField0_ & 0x20000000) == 0x20000000)) {
+                to_bitField0_ |= 0x10000000;
+              }
+              result.avgCpuUtil_ = avgCpuUtil_;
+              if (((from_bitField0_ & 0x40000000) == 0x40000000)) {
+                to_bitField0_ |= 0x20000000;
+              }
+              result.avgMemUtil_ = avgMemUtil_;
               result.bitField0_ = to_bitField0_;
               onBuilt();
               return result;
@@ -3021,6 +3193,18 @@ public final class ClusterSimulationProtos {
               }
               if (other.hasAvgInterarrival()) {
                 setAvgInterarrival(other.getAvgInterarrival());
+              }
+              if (other.hasAvgTasks()) {
+                setAvgTasks(other.getAvgTasks());
+              }
+              if (other.hasAvgDuration()) {
+                setAvgDuration(other.getAvgDuration());
+              }
+              if (other.hasAvgCpuUtil()) {
+                setAvgCpuUtil(other.getAvgCpuUtil());
+              }
+              if (other.hasAvgMemUtil()) {
+                setAvgMemUtil(other.getAvgMemUtil());
               }
               this.mergeUnknownFields(other.getUnknownFields());
               return this;
@@ -4161,6 +4345,134 @@ public final class ClusterSimulationProtos {
             public Builder clearAvgInterarrival() {
               bitField0_ = (bitField0_ & ~0x04000000);
               avgInterarrival_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double avgTasks_ ;
+            /**
+             * <code>optional double avg_tasks = 28;</code>
+             */
+            public boolean hasAvgTasks() {
+              return ((bitField0_ & 0x08000000) == 0x08000000);
+            }
+            /**
+             * <code>optional double avg_tasks = 28;</code>
+             */
+            public double getAvgTasks() {
+              return avgTasks_;
+            }
+            /**
+             * <code>optional double avg_tasks = 28;</code>
+             */
+            public Builder setAvgTasks(double value) {
+              bitField0_ |= 0x08000000;
+              avgTasks_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double avg_tasks = 28;</code>
+             */
+            public Builder clearAvgTasks() {
+              bitField0_ = (bitField0_ & ~0x08000000);
+              avgTasks_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double avgDuration_ ;
+            /**
+             * <code>optional double avg_duration = 29;</code>
+             */
+            public boolean hasAvgDuration() {
+              return ((bitField0_ & 0x10000000) == 0x10000000);
+            }
+            /**
+             * <code>optional double avg_duration = 29;</code>
+             */
+            public double getAvgDuration() {
+              return avgDuration_;
+            }
+            /**
+             * <code>optional double avg_duration = 29;</code>
+             */
+            public Builder setAvgDuration(double value) {
+              bitField0_ |= 0x10000000;
+              avgDuration_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double avg_duration = 29;</code>
+             */
+            public Builder clearAvgDuration() {
+              bitField0_ = (bitField0_ & ~0x10000000);
+              avgDuration_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double avgCpuUtil_ ;
+            /**
+             * <code>optional double avg_cpu_util = 30;</code>
+             */
+            public boolean hasAvgCpuUtil() {
+              return ((bitField0_ & 0x20000000) == 0x20000000);
+            }
+            /**
+             * <code>optional double avg_cpu_util = 30;</code>
+             */
+            public double getAvgCpuUtil() {
+              return avgCpuUtil_;
+            }
+            /**
+             * <code>optional double avg_cpu_util = 30;</code>
+             */
+            public Builder setAvgCpuUtil(double value) {
+              bitField0_ |= 0x20000000;
+              avgCpuUtil_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double avg_cpu_util = 30;</code>
+             */
+            public Builder clearAvgCpuUtil() {
+              bitField0_ = (bitField0_ & ~0x20000000);
+              avgCpuUtil_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double avgMemUtil_ ;
+            /**
+             * <code>optional double avg_mem_util = 31;</code>
+             */
+            public boolean hasAvgMemUtil() {
+              return ((bitField0_ & 0x40000000) == 0x40000000);
+            }
+            /**
+             * <code>optional double avg_mem_util = 31;</code>
+             */
+            public double getAvgMemUtil() {
+              return avgMemUtil_;
+            }
+            /**
+             * <code>optional double avg_mem_util = 31;</code>
+             */
+            public Builder setAvgMemUtil(double value) {
+              bitField0_ |= 0x40000000;
+              avgMemUtil_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double avg_mem_util = 31;</code>
+             */
+            public Builder clearAvgMemUtil() {
+              bitField0_ = (bitField0_ & ~0x40000000);
+              avgMemUtil_ = 0D;
               onChanged();
               return this;
             }
@@ -18040,17 +18352,17 @@ public final class ClusterSimulationProtos {
   static {
     java.lang.String[] descriptorData = {
       "\n\037cluster_simulation_protos.proto\022\033Clust" +
-      "erSchedulingSimulation\"\334(\n\023ExperimentRes" +
+      "erSchedulingSimulation\"\261)\n\023ExperimentRes" +
       "ultSet\022V\n\016experiment_env\030\001 \003(\0132>.Cluster" +
       "SchedulingSimulation.ExperimentResultSet" +
-      ".ExperimentEnv\032\354\'\n\rExperimentEnv\022\021\n\tcell" +
+      ".ExperimentEnv\032\301(\n\rExperimentEnv\022\021\n\tcell" +
       "_name\030\001 \001(\t\022\033\n\023workload_split_type\030\002 \001(\t" +
       "\022\033\n\014is_prefilled\030\005 \001(\010:\005false\022\020\n\010run_tim" +
       "e\030\003 \001(\001\022j\n\021experiment_result\030\004 \003(\0132O.Clu" +
       "sterSchedulingSimulation.ExperimentResul" +
       "tSet.ExperimentEnv.ExperimentResult\022\024\n\014n",
       "um_machines\030\006 \001(\003\022%\n\026heterogeneous_machi" +
-      "nes\030\007 \001(\010:\005false\032\322%\n\020ExperimentResult\022&\n" +
+      "nes\030\007 \001(\010:\005false\032\247&\n\020ExperimentResult\022&\n" +
       "\036cell_state_avg_cpu_utilization\030\004 \001(\001\022&\n" +
       "\036cell_state_avg_mem_utilization\030\005 \001(\001\022!\n" +
       "\031cell_state_avg_cpu_locked\030\r \001(\001\022!\n\031cell" +
@@ -18075,7 +18387,7 @@ public final class ClusterSimulationProtos {
       "mentEnv.ExperimentResult.Measurement\022\027\n\017" +
       "security_1_time\030\021 \001(\001\022\027\n\017security_2_time" +
       "\030\022 \001(\001\022\027\n\017security_3_time\030\023 \001(\001\022\023\n\013stack" +
-      "elberg\030\024 \001(\t\032\342\010\n\rWorkloadStats\022\025\n\rworklo" +
+      "elberg\030\024 \001(\t\032\267\t\n\rWorkloadStats\022\025\n\rworklo" +
       "ad_name\030\001 \001(\t\022\020\n\010num_jobs\030\002 \001(\003\022\032\n\022num_j" +
       "obs_scheduled\030\003 \001(\003\022%\n\035job_think_times_9" +
       "0_percentile\030\004 \001(\001\0220\n(avg_job_queue_time",
@@ -18102,75 +18414,78 @@ public final class ClusterSimulationProtos {
       ".ClusterSchedulingSimulation.ExperimentR" +
       "esultSet.ExperimentEnv.ExperimentResult." +
       "WorkloadStats.Epoch\022\030\n\020avg_interarrival\030" +
-      "\033 \001(\001\0322\n\005Epoch\022\024\n\014number_epoch\030\001 \001(\003\022\023\n\013" +
-      "fintess_avg\030\002 \001(\001\032\341\007\n\016SchedulerStats\022\026\n\016" +
-      "scheduler_name\030\001 \001(\t\022\030\n\020useful_busy_time" +
-      "\030\003 \001(\001\022\030\n\020wasted_busy_time\030\004 \001(\001\022\201\001\n\rper" +
-      "_day_stats\030\020 \003(\0132j.ClusterSchedulingSimu" +
-      "lation.ExperimentResultSet.ExperimentEnv" +
-      ".ExperimentResult.SchedulerStats.PerDayS",
-      "tats\022\222\001\n\026per_workload_busy_time\030\005 \003(\0132r." +
-      "ClusterSchedulingSimulation.ExperimentRe" +
-      "sultSet.ExperimentEnv.ExperimentResult.S" +
-      "chedulerStats.PerWorkloadBusyTime\022#\n\033num" +
-      "_successful_transactions\030\006 \001(\003\022\037\n\027num_fa" +
-      "iled_transactions\030\007 \001(\003\0222\n*num_no_resour" +
-      "ces_found_scheduling_attempts\030\r \001(\003\022 \n\030n" +
-      "um_retried_transactions\030\013 \001(\003\022%\n\035num_job" +
-      "s_timed_out_scheduling\030\021 \001(\003\022(\n num_succ" +
-      "essful_task_transactions\030\t \001(\003\022$\n\034num_fa",
-      "iled_task_transactions\030\n \001(\003\022\025\n\ris_multi" +
-      "_path\030\010 \001(\010\022\036\n\026num_jobs_left_in_queue\030\014 " +
-      "\001(\003\022#\n\033failed_find_victim_attempts\030\016 \001(\003" +
-      "\032\230\001\n\013PerDayStats\022\017\n\007day_num\030\001 \001(\003\022\030\n\020use" +
-      "ful_busy_time\030\002 \001(\001\022\030\n\020wasted_busy_time\030" +
-      "\003 \001(\001\022#\n\033num_successful_transactions\030\004 \001" +
-      "(\003\022\037\n\027num_failed_transactions\030\005 \001(\003\032`\n\023P" +
-      "erWorkloadBusyTime\022\025\n\rworkload_name\030\001 \001(" +
-      "\t\022\030\n\020useful_busy_time\030\002 \001(\001\022\030\n\020wasted_bu" +
-      "sy_time\030\003 \001(\001\032@\n\021SchedulerWorkload\022\025\n\rsc",
-      "hedulerName\030\001 \001(\t\022\024\n\014workloadName\030\002 \001(\t\032" +
-      "\271\n\n\017EfficiencyStats\022\035\n\025total_energy_cons" +
-      "umed\030\001 \001(\001\022\032\n\022total_energy_saved\030\002 \001(\001\022\036" +
-      "\n\026total_power_off_number\030\003 \001(\001\022\036\n\026kwh_sa" +
-      "ved_per_shutting\030\004 \001(\001\022!\n\031avg_shuttings_" +
-      "per_machine\030\005 \001(\001\022!\n\031max_shuttings_per_m" +
-      "achine\030\006 \001(\001\022!\n\031min_shuttings_per_machin" +
-      "e\030\007 \001(\001\022+\n#shuttings_per_machine_90_perc" +
-      "entile\030\010 \001(\001\022+\n#shuttings_per_machine_99" +
-      "_percentile\030\t \001(\001\022\'\n\037avg_time_shutted_do",
-      "wn_per_cycle\030\n \001(\001\022\'\n\037max_time_shutted_d" +
-      "own_per_cycle\030\013 \001(\001\022\'\n\037min_time_shutted_" +
-      "down_per_cycle\030\014 \001(\001\0221\n)time_shutted_dow" +
-      "n_per_cycle_90_percentile\030\r \001(\001\0221\n)time_" +
-      "shutted_down_per_cycle_99_percentile\030\016 \001" +
-      "(\001\022)\n!avg_time_shutted_down_per_machine\030" +
-      "\017 \001(\001\022)\n!max_time_shutted_down_per_machi" +
-      "ne\030\020 \001(\001\022)\n!min_time_shutted_down_per_ma" +
-      "chine\030\021 \001(\001\0223\n+time_shutted_down_per_mac" +
-      "hine_90_percentile\030\022 \001(\001\0223\n+time_shutted",
-      "_down_per_machine_99_percentile\030\023 \001(\001\022\036\n" +
-      "\026avg_number_machines_on\030\024 \001(\001\022\037\n\027avg_num" +
-      "ber_machines_off\030\025 \001(\001\022&\n\036avg_number_mac" +
-      "hines_turning_on\030\026 \001(\001\022\'\n\037avg_number_mac" +
-      "hines_turning_off\030\027 \001(\001\022\210\001\n\020power_off_po" +
-      "licy\030\030 \001(\0132n.ClusterSchedulingSimulation" +
-      ".ExperimentResultSet.ExperimentEnv.Exper" +
-      "imentResult.EfficiencyStats.PowerOffPoli" +
-      "cy\022\206\001\n\017power_on_policy\030\031 \001(\0132m.ClusterSc" +
-      "hedulingSimulation.ExperimentResultSet.E",
-      "xperimentEnv.ExperimentResult.Efficiency" +
-      "Stats.PowerOnPolicy\022\037\n\027current_energy_co" +
-      "nsumed\030\032 \001(\001\022\026\n\016picking_policy\030\033 \001(\t\032\036\n\016" +
-      "PowerOffPolicy\022\014\n\004name\030\001 \001(\t\032\035\n\rPowerOnP" +
-      "olicy\022\014\n\004name\030\001 \001(\t\032\247\002\n\013Measurement\022\026\n\016c" +
-      "puUtilization\030\001 \001(\001\022\026\n\016cpuTotallyIdle\030\002 " +
-      "\001(\001\022\030\n\020cpuPartiallyIdle\030\003 \001(\001\022\026\n\016memUtil" +
-      "ization\030\004 \001(\001\022\026\n\016memTotallyIdle\030\005 \001(\001\022\030\n" +
-      "\020memPartiallyIdle\030\006 \001(\001\022\023\n\013machinesOff\030\007" +
-      " \001(\001\022\022\n\nmachinesOn\030\010 \001(\001\022\032\n\022machinesTurn",
-      "ingOff\030\t \001(\001\022\031\n\021machinesTurningOn\030\n \001(\001\022" +
-      "\021\n\tmpuLocked\030\013 \001(\001\022\021\n\tmemLocked\030\014 \001(\001"
+      "\033 \001(\001\022\021\n\tavg_tasks\030\034 \001(\001\022\024\n\014avg_duration" +
+      "\030\035 \001(\001\022\024\n\014avg_cpu_util\030\036 \001(\001\022\024\n\014avg_mem_" +
+      "util\030\037 \001(\001\0322\n\005Epoch\022\024\n\014number_epoch\030\001 \001(" +
+      "\003\022\023\n\013fintess_avg\030\002 \001(\001\032\341\007\n\016SchedulerStat" +
+      "s\022\026\n\016scheduler_name\030\001 \001(\t\022\030\n\020useful_busy" +
+      "_time\030\003 \001(\001\022\030\n\020wasted_busy_time\030\004 \001(\001\022\201\001" +
+      "\n\rper_day_stats\030\020 \003(\0132j.ClusterSchedulin",
+      "gSimulation.ExperimentResultSet.Experime" +
+      "ntEnv.ExperimentResult.SchedulerStats.Pe" +
+      "rDayStats\022\222\001\n\026per_workload_busy_time\030\005 \003" +
+      "(\0132r.ClusterSchedulingSimulation.Experim" +
+      "entResultSet.ExperimentEnv.ExperimentRes" +
+      "ult.SchedulerStats.PerWorkloadBusyTime\022#" +
+      "\n\033num_successful_transactions\030\006 \001(\003\022\037\n\027n" +
+      "um_failed_transactions\030\007 \001(\003\0222\n*num_no_r" +
+      "esources_found_scheduling_attempts\030\r \001(\003" +
+      "\022 \n\030num_retried_transactions\030\013 \001(\003\022%\n\035nu",
+      "m_jobs_timed_out_scheduling\030\021 \001(\003\022(\n num" +
+      "_successful_task_transactions\030\t \001(\003\022$\n\034n" +
+      "um_failed_task_transactions\030\n \001(\003\022\025\n\ris_" +
+      "multi_path\030\010 \001(\010\022\036\n\026num_jobs_left_in_que" +
+      "ue\030\014 \001(\003\022#\n\033failed_find_victim_attempts\030" +
+      "\016 \001(\003\032\230\001\n\013PerDayStats\022\017\n\007day_num\030\001 \001(\003\022\030" +
+      "\n\020useful_busy_time\030\002 \001(\001\022\030\n\020wasted_busy_" +
+      "time\030\003 \001(\001\022#\n\033num_successful_transaction" +
+      "s\030\004 \001(\003\022\037\n\027num_failed_transactions\030\005 \001(\003" +
+      "\032`\n\023PerWorkloadBusyTime\022\025\n\rworkload_name",
+      "\030\001 \001(\t\022\030\n\020useful_busy_time\030\002 \001(\001\022\030\n\020wast" +
+      "ed_busy_time\030\003 \001(\001\032@\n\021SchedulerWorkload\022" +
+      "\025\n\rschedulerName\030\001 \001(\t\022\024\n\014workloadName\030\002" +
+      " \001(\t\032\271\n\n\017EfficiencyStats\022\035\n\025total_energy" +
+      "_consumed\030\001 \001(\001\022\032\n\022total_energy_saved\030\002 " +
+      "\001(\001\022\036\n\026total_power_off_number\030\003 \001(\001\022\036\n\026k" +
+      "wh_saved_per_shutting\030\004 \001(\001\022!\n\031avg_shutt" +
+      "ings_per_machine\030\005 \001(\001\022!\n\031max_shuttings_" +
+      "per_machine\030\006 \001(\001\022!\n\031min_shuttings_per_m" +
+      "achine\030\007 \001(\001\022+\n#shuttings_per_machine_90",
+      "_percentile\030\010 \001(\001\022+\n#shuttings_per_machi" +
+      "ne_99_percentile\030\t \001(\001\022\'\n\037avg_time_shutt" +
+      "ed_down_per_cycle\030\n \001(\001\022\'\n\037max_time_shut" +
+      "ted_down_per_cycle\030\013 \001(\001\022\'\n\037min_time_shu" +
+      "tted_down_per_cycle\030\014 \001(\001\0221\n)time_shutte" +
+      "d_down_per_cycle_90_percentile\030\r \001(\001\0221\n)" +
+      "time_shutted_down_per_cycle_99_percentil" +
+      "e\030\016 \001(\001\022)\n!avg_time_shutted_down_per_mac" +
+      "hine\030\017 \001(\001\022)\n!max_time_shutted_down_per_" +
+      "machine\030\020 \001(\001\022)\n!min_time_shutted_down_p",
+      "er_machine\030\021 \001(\001\0223\n+time_shutted_down_pe" +
+      "r_machine_90_percentile\030\022 \001(\001\0223\n+time_sh" +
+      "utted_down_per_machine_99_percentile\030\023 \001" +
+      "(\001\022\036\n\026avg_number_machines_on\030\024 \001(\001\022\037\n\027av" +
+      "g_number_machines_off\030\025 \001(\001\022&\n\036avg_numbe" +
+      "r_machines_turning_on\030\026 \001(\001\022\'\n\037avg_numbe" +
+      "r_machines_turning_off\030\027 \001(\001\022\210\001\n\020power_o" +
+      "ff_policy\030\030 \001(\0132n.ClusterSchedulingSimul" +
+      "ation.ExperimentResultSet.ExperimentEnv." +
+      "ExperimentResult.EfficiencyStats.PowerOf",
+      "fPolicy\022\206\001\n\017power_on_policy\030\031 \001(\0132m.Clus" +
+      "terSchedulingSimulation.ExperimentResult" +
+      "Set.ExperimentEnv.ExperimentResult.Effic" +
+      "iencyStats.PowerOnPolicy\022\037\n\027current_ener" +
+      "gy_consumed\030\032 \001(\001\022\026\n\016picking_policy\030\033 \001(" +
+      "\t\032\036\n\016PowerOffPolicy\022\014\n\004name\030\001 \001(\t\032\035\n\rPow" +
+      "erOnPolicy\022\014\n\004name\030\001 \001(\t\032\247\002\n\013Measurement" +
+      "\022\026\n\016cpuUtilization\030\001 \001(\001\022\026\n\016cpuTotallyId" +
+      "le\030\002 \001(\001\022\030\n\020cpuPartiallyIdle\030\003 \001(\001\022\026\n\016me" +
+      "mUtilization\030\004 \001(\001\022\026\n\016memTotallyIdle\030\005 \001",
+      "(\001\022\030\n\020memPartiallyIdle\030\006 \001(\001\022\023\n\013machines" +
+      "Off\030\007 \001(\001\022\022\n\nmachinesOn\030\010 \001(\001\022\032\n\022machine" +
+      "sTurningOff\030\t \001(\001\022\031\n\021machinesTurningOn\030\n" +
+      " \001(\001\022\021\n\tmpuLocked\030\013 \001(\001\022\021\n\tmemLocked\030\014 \001" +
+      "(\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -18207,7 +18522,7 @@ public final class ClusterSimulationProtos {
     internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_WorkloadStats_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_WorkloadStats_descriptor,
-        new java.lang.String[] { "WorkloadName", "NumJobs", "NumJobsScheduled", "JobThinkTimes90Percentile", "AvgJobQueueTimesTillFirstScheduled", "AvgJobQueueTimesTillFullyScheduled", "JobQueueTimeTillFirstScheduled90Percentile", "JobQueueTimeTillFullyScheduled90Percentile", "NumSchedulingAttempts90Percentile", "NumSchedulingAttempts99Percentile", "NumTaskSchedulingAttempts90Percentile", "NumTaskSchedulingAttempts99Percentile", "AvgMakespan", "Makespan90Percentile", "AvgMakespanEpoch0", "AvgMakespanEpoch100", "AvgMakespanEpoch500", "AvgMakespanEpoch1000", "AvgMakespanEpoch2000", "NumJobsSecurity0", "NumJobsSecurity1", "NumJobsSecurity2", "NumJobsSecurity3", "NumJobsSecurity4", "NumJobsSecurity5", "Epochs", "AvgInterarrival", });
+        new java.lang.String[] { "WorkloadName", "NumJobs", "NumJobsScheduled", "JobThinkTimes90Percentile", "AvgJobQueueTimesTillFirstScheduled", "AvgJobQueueTimesTillFullyScheduled", "JobQueueTimeTillFirstScheduled90Percentile", "JobQueueTimeTillFullyScheduled90Percentile", "NumSchedulingAttempts90Percentile", "NumSchedulingAttempts99Percentile", "NumTaskSchedulingAttempts90Percentile", "NumTaskSchedulingAttempts99Percentile", "AvgMakespan", "Makespan90Percentile", "AvgMakespanEpoch0", "AvgMakespanEpoch100", "AvgMakespanEpoch500", "AvgMakespanEpoch1000", "AvgMakespanEpoch2000", "NumJobsSecurity0", "NumJobsSecurity1", "NumJobsSecurity2", "NumJobsSecurity3", "NumJobsSecurity4", "NumJobsSecurity5", "Epochs", "AvgInterarrival", "AvgTasks", "AvgDuration", "AvgCpuUtil", "AvgMemUtil", });
     internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_WorkloadStats_Epoch_descriptor =
       internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_WorkloadStats_descriptor.getNestedTypes().get(0);
     internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_WorkloadStats_Epoch_fieldAccessorTable = new
