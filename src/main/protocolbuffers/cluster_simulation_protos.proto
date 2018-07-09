@@ -96,6 +96,7 @@ message ExperimentResultSet {
         optional int64 num_jobs_security_4 = 24;
         optional int64 num_jobs_security_5 = 25;
         repeated Epoch epochs = 26;
+        optional double avg_interarrival = 27;
 
         message Epoch {
           optional int64 number_epoch = 1;
