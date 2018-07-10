@@ -7,30 +7,30 @@ import numpy
 
 logging.basicConfig(level=logging.DEBUG)
 
-# def usage():
-#     print "usage: generate-neural-txt-from-dir.py <input_directory_name> <optional: base name for output files. (defaults to inputdir)>"
-#     sys.exit(1)
-#
-# logging.debug("len(sys.argv): " + str(len(sys.argv)))
-#
-# if len(sys.argv) < 2:
-#     logging.error("Not enough arguments provided.")
-#     usage()
-#
-# try:
-#     input_dir_name = sys.argv[1]
-#     # Start optional args.
-#     if len(sys.argv) == 3:
-#         outfile_name_base = str(sys.argv[2])
-#     else:
-#         #make the output files the same as the input but add .txt to end
-#         outfile_name_base = os.path.join(input_dir_name, "neural.txt")
-#
-# except:
-#     usage()
+def usage():
+    print "usage: generate-neural-txt-from-dir.py <input_directory_name> <optional: base name for output files. (defaults to inputdir)>"
+    sys.exit(1)
 
-input_dir_name = "/Users/damianfernandez/IdeaProjects/cluster-scheduler-simulator/experiment_results/prueba-4"
-outfile_name_base = os.path.join(input_dir_name, "neural.txt")
+logging.debug("len(sys.argv): " + str(len(sys.argv)))
+
+if len(sys.argv) < 2:
+    logging.error("Not enough arguments provided.")
+    usage()
+
+try:
+    input_dir_name = sys.argv[1]
+    # Start optional args.
+    if len(sys.argv) == 3:
+        outfile_name_base = str(sys.argv[2])
+    else:
+        #make the output files the same as the input but add .txt to end
+        outfile_name_base = os.path.join(input_dir_name, "neural.txt")
+
+except:
+    usage()
+
+#input_dir_name = "/Users/damianfernandez/IdeaProjects/cluster-scheduler-simulator/experiment_results/prueba-4"
+#outfile_name_base = os.path.join(input_dir_name, "neural.txt")
 
 logging.info("Input directory: %s" % input_dir_name)
 
