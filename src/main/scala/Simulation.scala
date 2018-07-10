@@ -68,7 +68,7 @@ object Simulation {
       }
     }
     val pp = new ParseParms(helpString)
-    pp.parm("--thread-pool-size", "1").rex("^\\d*") // optional_arg
+    pp.parm("--thread-pool-size", "4").rex("^\\d*") // optional_arg
     pp.parm("--random-seed").rex("^\\d*") // optional_arg
 
     var inputArgs = Map[String, String]()
@@ -934,15 +934,15 @@ object Simulation {
     //val constantRange = medConstantRange
     // val constantRange = fullConstantRange
     //val perTaskRange = (0.01 :: 0.1 :: Nil)
-    val perTaskRange = (0.01 :: Nil)
+    val perTaskRange = (0.1 :: Nil)
     // val perTaskRange = medPerTaskRange
     // val perTaskRange = fullPerTaskRange
     val pickinessRange = fullPickinessRange
     // val lambdaRange = fullLambdaRange
     val interArrivalScaleRange = 0.009 :: 0.01 :: 0.02 :: 0.1 :: 0.2 :: 1.0 :: Nil
     // val interArrivalScaleRange = lambdaRange.map(1/_)
-    val prefillRange = (0.25 to 0.8 by 0.05).toList
-    //val prefillRange = (0.25 to 0.4 by 0.05).toList
+    val prefillRange = (0.2 to 0.8 by 0.1).toList
+    //sval prefillRange = (0.25 to 0.4 by 0.05).toList
     var prefillCpuLim = List[Map[String, Double]]()
     for (prefillPerc <- prefillRange) {prefillCpuLim ::= Map("PrefillBatch" -> prefillPerc, "PrefillService" -> prefillPerc, "PrefillBatchService" -> prefillPerc)}
     //val prefillCpuLim = Map("PrefillBatch" -> 0.3, "PrefillService" -> 0.3, "PrefillBatchService" -> 0.3)
@@ -1437,31 +1437,34 @@ object Simulation {
     /* Make a snapshot of the source file that has our settings in it */
     println("Making a copy of Simulation.scala in %s"
       .format(outputDirName))
-    val settingsFileName = "Simulation.scala"
-    val sourceFile = new File("src/main/scala/" + settingsFileName)
-    val destFile = new File(outputDirName + "/" + settingsFileName +
-      "-snapshot")
-    // Create the output directory if it doesn't exist.
-    (new File(outputDirName)).mkdirs()
-    if (!destFile.exists()) {
-      destFile.createNewFile();
-    }
-    var source: FileChannel = null
-    var destination: FileChannel = null
+    val settingsFileNames = ("Simulation.scala" :: "Workloads.scala" :: Nil)
+    for (settingsFileName <- settingsFileNames){
+      val sourceFile = new File("src/main/scala/" + settingsFileName)
+      val destFile = new File(outputDirName + "/" + settingsFileName +
+        "-snapshot")
+      // Create the output directory if it doesn't exist.
+      (new File(outputDirName)).mkdirs()
+      if (!destFile.exists()) {
+        destFile.createNewFile();
+      }
+      var source: FileChannel = null
+      var destination: FileChannel = null
 
-    try {
-      source = new FileInputStream(sourceFile).getChannel();
-      destination = new FileOutputStream(destFile).getChannel();
-      destination.transferFrom(source, 0, source.size());
-    }
-    finally {
-      if (source != null) {
-        source.close();
+      try {
+        source = new FileInputStream(sourceFile).getChannel();
+        destination = new FileOutputStream(destFile).getChannel();
+        destination.transferFrom(source, 0, source.size());
       }
-      if (destination != null) {
-        destination.close();
+      finally {
+        if (source != null) {
+          source.close();
+        }
+        if (destination != null) {
+          destination.close();
+        }
       }
     }
+
 
     /**
      * Run the experiments we've set up.

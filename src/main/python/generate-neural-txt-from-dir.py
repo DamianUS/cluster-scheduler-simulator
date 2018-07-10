@@ -7,29 +7,29 @@ import numpy
 
 logging.basicConfig(level=logging.DEBUG)
 
-def usage():
-    print "usage: generate-neural-txt-from-dir.py <input_directory_name> <optional: base name for output files. (defaults to inputdir)>"
-    sys.exit(1)
+# def usage():
+#     print "usage: generate-neural-txt-from-dir.py <input_directory_name> <optional: base name for output files. (defaults to inputdir)>"
+#     sys.exit(1)
+#
+# logging.debug("len(sys.argv): " + str(len(sys.argv)))
+#
+# if len(sys.argv) < 2:
+#     logging.error("Not enough arguments provided.")
+#     usage()
+#
+# try:
+#     input_dir_name = sys.argv[1]
+#     # Start optional args.
+#     if len(sys.argv) == 3:
+#         outfile_name_base = str(sys.argv[2])
+#     else:
+#         #make the output files the same as the input but add .txt to end
+#         outfile_name_base = os.path.join(input_dir_name, "neural.txt")
+#
+# except:
+#     usage()
 
-logging.debug("len(sys.argv): " + str(len(sys.argv)))
-
-if len(sys.argv) < 2:
-    logging.error("Not enough arguments provided.")
-    usage()
-
-try:
-    input_dir_name = sys.argv[1]
-    # Start optional args.
-    if len(sys.argv) == 3:
-        outfile_name_base = str(sys.argv[2])
-    else:
-        #make the output files the same as the input but add .txt to end
-        outfile_name_base = os.path.join(input_dir_name, "neural.txt")
-
-except:
-    usage()
-
-#input_dir_name = "/Users/damianfernandez/IdeaProjects/cluster-scheduler-simulator/experiment_results/2018-07-05-12-02-16-vary_CL_Prefill-7200"
+input_dir_name = "/Users/damianfernandez/IdeaProjects/cluster-scheduler-simulator/experiment_results/prueba-4"
 outfile_name_base = os.path.join(input_dir_name, "neural.txt")
 
 logging.info("Input directory: %s" % input_dir_name)
@@ -74,7 +74,8 @@ for scheduler, protobuf in protobufs_to_iterate.iteritems():
             params = {}
             params["resource_utilization"] = exp_result.cell_state_avg_cpu_utilization
             params["inter_arrival"] = exp_result.avg_job_interarrival_time
-
+            logging.debug("Processing %d workload stats."
+                          % len(exp_result.workload_stats))
             for workload_stat in exp_result.workload_stats:
                 params[workload_stat.workload_name + "_" + "num_jobs_total"] = workload_stat.num_jobs
                 params[workload_stat.workload_name + "_" + "num_jobs_scheduled"] = workload_stat.num_jobs_scheduled
@@ -89,7 +90,7 @@ for scheduler, protobuf in protobufs_to_iterate.iteritems():
                 params[workload_stat.workload_name + "_" + "tasks"] = workload_stat.avg_tasks
 
 
-        for param_name, value in params.iteritems():
+            for param_name, value in params.iteritems():
                 if param_name in result_dict:
                     if scheduler in result_dict[param_name]:
                         result_dict[param_name][scheduler].append(value)
@@ -102,7 +103,7 @@ for scheduler, protobuf in protobufs_to_iterate.iteritems():
                     result_dict[param_name] = sched_dict
 
 
-print(str(result_dict))
+#print(str(result_dict))
 # Create output files.
 # One output file for each unique (cell_name, scheduler_name, metric) tuple.
 no_numpty_list = []
