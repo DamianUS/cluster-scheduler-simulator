@@ -12513,6 +12513,20 @@ public final class ClusterSimulationProtos {
            * <code>optional double memLocked = 12;</code>
            */
           double getMemLocked();
+
+          /**
+           * <code>optional string strategy = 13;</code>
+           */
+          boolean hasStrategy();
+          /**
+           * <code>optional string strategy = 13;</code>
+           */
+          java.lang.String getStrategy();
+          /**
+           * <code>optional string strategy = 13;</code>
+           */
+          com.google.protobuf.ByteString
+              getStrategyBytes();
         }
         /**
          * Protobuf type {@code ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement}
@@ -12624,6 +12638,12 @@ public final class ClusterSimulationProtos {
                   case 97: {
                     bitField0_ |= 0x00000800;
                     memLocked_ = input.readDouble();
+                    break;
+                  }
+                  case 106: {
+                    com.google.protobuf.ByteString bs = input.readBytes();
+                    bitField0_ |= 0x00001000;
+                    strategy_ = bs;
                     break;
                   }
                 }
@@ -12846,6 +12866,48 @@ public final class ClusterSimulationProtos {
             return memLocked_;
           }
 
+          public static final int STRATEGY_FIELD_NUMBER = 13;
+          private java.lang.Object strategy_;
+          /**
+           * <code>optional string strategy = 13;</code>
+           */
+          public boolean hasStrategy() {
+            return ((bitField0_ & 0x00001000) == 0x00001000);
+          }
+          /**
+           * <code>optional string strategy = 13;</code>
+           */
+          public java.lang.String getStrategy() {
+            java.lang.Object ref = strategy_;
+            if (ref instanceof java.lang.String) {
+              return (java.lang.String) ref;
+            } else {
+              com.google.protobuf.ByteString bs = 
+                  (com.google.protobuf.ByteString) ref;
+              java.lang.String s = bs.toStringUtf8();
+              if (bs.isValidUtf8()) {
+                strategy_ = s;
+              }
+              return s;
+            }
+          }
+          /**
+           * <code>optional string strategy = 13;</code>
+           */
+          public com.google.protobuf.ByteString
+              getStrategyBytes() {
+            java.lang.Object ref = strategy_;
+            if (ref instanceof java.lang.String) {
+              com.google.protobuf.ByteString b = 
+                  com.google.protobuf.ByteString.copyFromUtf8(
+                      (java.lang.String) ref);
+              strategy_ = b;
+              return b;
+            } else {
+              return (com.google.protobuf.ByteString) ref;
+            }
+          }
+
           private void initFields() {
             cpuUtilization_ = 0D;
             cpuTotallyIdle_ = 0D;
@@ -12859,6 +12921,7 @@ public final class ClusterSimulationProtos {
             machinesTurningOn_ = 0D;
             mpuLocked_ = 0D;
             memLocked_ = 0D;
+            strategy_ = "";
           }
           private byte memoizedIsInitialized = -1;
           public final boolean isInitialized() {
@@ -12908,6 +12971,9 @@ public final class ClusterSimulationProtos {
             }
             if (((bitField0_ & 0x00000800) == 0x00000800)) {
               output.writeDouble(12, memLocked_);
+            }
+            if (((bitField0_ & 0x00001000) == 0x00001000)) {
+              output.writeBytes(13, getStrategyBytes());
             }
             getUnknownFields().writeTo(output);
           }
@@ -12965,6 +13031,10 @@ public final class ClusterSimulationProtos {
             if (((bitField0_ & 0x00000800) == 0x00000800)) {
               size += com.google.protobuf.CodedOutputStream
                 .computeDoubleSize(12, memLocked_);
+            }
+            if (((bitField0_ & 0x00001000) == 0x00001000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeBytesSize(13, getStrategyBytes());
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -13107,6 +13177,8 @@ public final class ClusterSimulationProtos {
               bitField0_ = (bitField0_ & ~0x00000400);
               memLocked_ = 0D;
               bitField0_ = (bitField0_ & ~0x00000800);
+              strategy_ = "";
+              bitField0_ = (bitField0_ & ~0x00001000);
               return this;
             }
 
@@ -13183,6 +13255,10 @@ public final class ClusterSimulationProtos {
                 to_bitField0_ |= 0x00000800;
               }
               result.memLocked_ = memLocked_;
+              if (((from_bitField0_ & 0x00001000) == 0x00001000)) {
+                to_bitField0_ |= 0x00001000;
+              }
+              result.strategy_ = strategy_;
               result.bitField0_ = to_bitField0_;
               onBuilt();
               return result;
@@ -13234,6 +13310,11 @@ public final class ClusterSimulationProtos {
               }
               if (other.hasMemLocked()) {
                 setMemLocked(other.getMemLocked());
+              }
+              if (other.hasStrategy()) {
+                bitField0_ |= 0x00001000;
+                strategy_ = other.strategy_;
+                onChanged();
               }
               this.mergeUnknownFields(other.getUnknownFields());
               return this;
@@ -13642,6 +13723,82 @@ public final class ClusterSimulationProtos {
             public Builder clearMemLocked() {
               bitField0_ = (bitField0_ & ~0x00000800);
               memLocked_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private java.lang.Object strategy_ = "";
+            /**
+             * <code>optional string strategy = 13;</code>
+             */
+            public boolean hasStrategy() {
+              return ((bitField0_ & 0x00001000) == 0x00001000);
+            }
+            /**
+             * <code>optional string strategy = 13;</code>
+             */
+            public java.lang.String getStrategy() {
+              java.lang.Object ref = strategy_;
+              if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs =
+                    (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                  strategy_ = s;
+                }
+                return s;
+              } else {
+                return (java.lang.String) ref;
+              }
+            }
+            /**
+             * <code>optional string strategy = 13;</code>
+             */
+            public com.google.protobuf.ByteString
+                getStrategyBytes() {
+              java.lang.Object ref = strategy_;
+              if (ref instanceof String) {
+                com.google.protobuf.ByteString b = 
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                        (java.lang.String) ref);
+                strategy_ = b;
+                return b;
+              } else {
+                return (com.google.protobuf.ByteString) ref;
+              }
+            }
+            /**
+             * <code>optional string strategy = 13;</code>
+             */
+            public Builder setStrategy(
+                java.lang.String value) {
+              if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00001000;
+              strategy_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional string strategy = 13;</code>
+             */
+            public Builder clearStrategy() {
+              bitField0_ = (bitField0_ & ~0x00001000);
+              strategy_ = getDefaultInstance().getStrategy();
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional string strategy = 13;</code>
+             */
+            public Builder setStrategyBytes(
+                com.google.protobuf.ByteString value) {
+              if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00001000;
+              strategy_ = value;
               onChanged();
               return this;
             }
@@ -18352,17 +18509,17 @@ public final class ClusterSimulationProtos {
   static {
     java.lang.String[] descriptorData = {
       "\n\037cluster_simulation_protos.proto\022\033Clust" +
-      "erSchedulingSimulation\"\261)\n\023ExperimentRes" +
+      "erSchedulingSimulation\"\303)\n\023ExperimentRes" +
       "ultSet\022V\n\016experiment_env\030\001 \003(\0132>.Cluster" +
       "SchedulingSimulation.ExperimentResultSet" +
-      ".ExperimentEnv\032\301(\n\rExperimentEnv\022\021\n\tcell" +
+      ".ExperimentEnv\032\323(\n\rExperimentEnv\022\021\n\tcell" +
       "_name\030\001 \001(\t\022\033\n\023workload_split_type\030\002 \001(\t" +
       "\022\033\n\014is_prefilled\030\005 \001(\010:\005false\022\020\n\010run_tim" +
       "e\030\003 \001(\001\022j\n\021experiment_result\030\004 \003(\0132O.Clu" +
       "sterSchedulingSimulation.ExperimentResul" +
       "tSet.ExperimentEnv.ExperimentResult\022\024\n\014n",
       "um_machines\030\006 \001(\003\022%\n\026heterogeneous_machi" +
-      "nes\030\007 \001(\010:\005false\032\247&\n\020ExperimentResult\022&\n" +
+      "nes\030\007 \001(\010:\005false\032\271&\n\020ExperimentResult\022&\n" +
       "\036cell_state_avg_cpu_utilization\030\004 \001(\001\022&\n" +
       "\036cell_state_avg_mem_utilization\030\005 \001(\001\022!\n" +
       "\031cell_state_avg_cpu_locked\030\r \001(\001\022!\n\031cell" +
@@ -18477,7 +18634,7 @@ public final class ClusterSimulationProtos {
       "iencyStats.PowerOnPolicy\022\037\n\027current_ener" +
       "gy_consumed\030\032 \001(\001\022\026\n\016picking_policy\030\033 \001(" +
       "\t\032\036\n\016PowerOffPolicy\022\014\n\004name\030\001 \001(\t\032\035\n\rPow" +
-      "erOnPolicy\022\014\n\004name\030\001 \001(\t\032\247\002\n\013Measurement" +
+      "erOnPolicy\022\014\n\004name\030\001 \001(\t\032\271\002\n\013Measurement" +
       "\022\026\n\016cpuUtilization\030\001 \001(\001\022\026\n\016cpuTotallyId" +
       "le\030\002 \001(\001\022\030\n\020cpuPartiallyIdle\030\003 \001(\001\022\026\n\016me" +
       "mUtilization\030\004 \001(\001\022\026\n\016memTotallyIdle\030\005 \001",
@@ -18485,7 +18642,7 @@ public final class ClusterSimulationProtos {
       "Off\030\007 \001(\001\022\022\n\nmachinesOn\030\010 \001(\001\022\032\n\022machine" +
       "sTurningOff\030\t \001(\001\022\031\n\021machinesTurningOn\030\n" +
       " \001(\001\022\021\n\tmpuLocked\030\013 \001(\001\022\021\n\tmemLocked\030\014 \001" +
-      "(\001"
+      "(\001\022\020\n\010strategy\030\r \001(\t"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -18576,7 +18733,7 @@ public final class ClusterSimulationProtos {
     internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_Measurement_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_Measurement_descriptor,
-        new java.lang.String[] { "CpuUtilization", "CpuTotallyIdle", "CpuPartiallyIdle", "MemUtilization", "MemTotallyIdle", "MemPartiallyIdle", "MachinesOff", "MachinesOn", "MachinesTurningOff", "MachinesTurningOn", "MpuLocked", "MemLocked", });
+        new java.lang.String[] { "CpuUtilization", "CpuTotallyIdle", "CpuPartiallyIdle", "MemUtilization", "MemTotallyIdle", "MemPartiallyIdle", "MachinesOff", "MachinesOn", "MachinesTurningOff", "MachinesTurningOn", "MpuLocked", "MemLocked", "Strategy", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)
