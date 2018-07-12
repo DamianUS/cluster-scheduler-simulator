@@ -454,7 +454,7 @@ object Simulation {
      val mesosWorkloadToSweep = "Batch"
     // val mesosWorkloadToSweep = "Service"
 
-    val runMonolithic = false
+    val runMonolithic = true
     val runMesos = false
     val runOmega = false
     val runDynamic = true

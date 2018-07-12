@@ -333,6 +333,9 @@ class Experiment(
                                     measurement.setMachinesOn(simulator.measuredMachinesOn(i))
                                     measurement.setMachinesTurningOff(simulator.measuredMachinesTurningOff(i))
                                     measurement.setMachinesTurningOn(simulator.measuredMachinesTurningOn(i))
+                                    if(i < simulator.measuredSchedulingStrategy.length){
+                                      measurement.setStrategy(simulator.measuredSchedulingStrategy(i))
+                                    }
                                     experimentResult.addMeasurements(measurement)
                                   }
 
