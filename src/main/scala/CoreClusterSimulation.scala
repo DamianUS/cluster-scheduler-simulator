@@ -26,6 +26,7 @@
 
 package ClusterSchedulingSimulation
 
+import dynamic.{DynamicScheduler, DynamicSimulator}
 import efficiency.ordering_cellstate_resources_policies.{BasicLoadSorter, CellStateResourcesSorter, NoSorter}
 import efficiency.pick_cellstate_resources._
 import efficiency.power_off_policies.PowerOffPolicy
@@ -565,7 +566,16 @@ class ClusterSimulator(val cellState: CellState,
     }
   }
 
+  def changeResourcerManager: Unit = {
+    //Random strategy, change for the actual neural network
+    val chosenStrategy = this.asInstanceOf[DynamicSimulator].strategies(Random.nextInt(this.asInstanceOf[DynamicSimulator].strategies.length))
+    schedulers.values.foreach(scheduler => scheduler.asInstanceOf[DynamicScheduler].chooseStrategy(chosenStrategy))
+  }
+
   def measureUtilization: Unit = {
+    if(this.isInstanceOf[DynamicSimulator]){
+      changeResourcerManager
+    }
     val totalOccupiedCpus = cellState.totalOccupiedCpus
     val totalOccupiedMem = cellState.totalOccupiedMem
     val numMachinesOccupied = cellState.numMachinesOccupied
@@ -708,7 +718,7 @@ abstract class Scheduler(val name: String,
                          numMachinesToBlackList: Double) {
   assert(constantThinkTimes.size == perTaskThinkTimes.size)
   assert(numMachinesToBlackList >= 0)
-  protected var pendingQueue = new collection.mutable.Queue[Job]
+  var pendingQueue = new collection.mutable.Queue[Job]
   // This gets set when this scheduler is added to a Simulator.
   // TODO(andyk): eliminate this pointer and make the scheduler
   //              more functional.

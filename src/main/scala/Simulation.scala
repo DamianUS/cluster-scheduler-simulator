@@ -32,6 +32,7 @@ import ClusterSchedulingSimulation.Workloads._
 import ClusterSchedulingSimulation._
 import ca.zmatrix.utils._
 import com.sun.xml.internal.ws.policy.jaxws.SafePolicyReader
+import dynamic.{DynamicSchedulerDesc, DynamicSimulatorDesc}
 import efficiency.ordering_cellstate_resources_policies.{BasicLoadSorter, CellStateResourcesSorter, NoSorter, PowerStateLoadSorter}
 import efficiency.pick_cellstate_resources._
 import efficiency.pick_cellstate_resources.genetic.crossing_functions.CrossGenes
@@ -131,6 +132,28 @@ object Simulation {
       mesosBatchScheduler3Desc,
       mesosBatchScheduler4Desc,
       mesosServiceSchedulerDesc)
+
+
+    // Dynamic
+    def generateDynamicSchedulerDescs(numServiceScheds: Int,
+                                    numBatchScheds: Int)
+    : Array[DynamicSchedulerDesc] = {
+      val schedDescs = ArrayBuffer[DynamicSchedulerDesc]()
+      (1 to numBatchScheds).foreach(i => {
+        schedDescs +=
+          new DynamicSchedulerDesc(name = "DynamicBatch-%d".format(i).intern(),
+            constantThinkTimes = Map("Batch" -> 0.01),
+            perTaskThinkTimes = Map("Batch" -> 0.01))
+      })
+      (1 to numServiceScheds).foreach(i => {
+        schedDescs +=
+          new DynamicSchedulerDesc(name = "DynamicService-%d".format(i).intern(),
+            constantThinkTimes = Map("Service" -> 0.01),
+            perTaskThinkTimes = Map("Service" -> 0.01))
+      })
+      println("Generated schedulerDescs: " + schedDescs)
+      schedDescs.toArray
+    }
 
 
     // Omega
@@ -335,6 +358,47 @@ object Simulation {
     var allExperiments: List[Experiment] = List()
     val wlDescs = allWorkloadDescs
 
+
+    // -----------------Dynamic-----------------
+    val numDynamicServiceSchedsRange = Seq(1)
+    val numDynamicBatchSchedsRange = Seq(4)
+    //val numOmegaBatchSchedsRange = Seq(1)
+    val strategiesToSwitch = ("Omega" :: "Mesos" :: Nil)
+    val dynamicSimulatorSetups =
+      for (numDynamicServiceScheds <- numDynamicServiceSchedsRange;
+           numDynamicBatchScheds <- numDynamicBatchSchedsRange) yield {
+        // List of the different {{SimulatorDesc}}s to be run with the
+        // SchedulerWorkloadMap and SchedulerWorkloadToSweep.
+        val dynamicSimulatorDescs = for (
+          //conflictMode <- Seq("sequence-numbers", "resource-fit");
+          conflictMode <- Seq("resource-fit");
+          //conflictMode <- Seq("sequence-numbers");
+          //transactionMode <- Seq("all-or-nothing")) yield {
+          //transactionMode <- Seq("all-or-nothing", "incremental")) yield {
+          transactionMode <- Seq("incremental")) yield {
+          new DynamicSimulatorDesc(
+            generateDynamicSchedulerDescs(numDynamicServiceScheds,
+              numDynamicBatchScheds),
+            runTime = globalRunTime,
+            conflictMode,
+            transactionMode,
+            strategies = strategiesToSwitch,
+            allocatorConstantThinkTime = 0.001)
+        }
+
+        val dynamicSchedulerWorkloadMap =
+          generateSchedulerWorkloadMap("Dynamic",
+            numDynamicServiceScheds,
+            numDynamicBatchScheds)
+
+        val dynamicSchedulerWorkloadsToSweep =
+          generateSchedulerWorkloadsToSweep("Dynamic",
+            numServiceScheds = 0,
+            numDynamicBatchScheds)
+        (dynamicSimulatorDescs, dynamicSchedulerWorkloadMap, dynamicSchedulerWorkloadsToSweep)
+      }
+
+
     // ------------------Omega------------------
     val numOmegaServiceSchedsRange = Seq(1)
     val numOmegaBatchSchedsRange = Seq(4)
@@ -390,9 +454,10 @@ object Simulation {
      val mesosWorkloadToSweep = "Batch"
     // val mesosWorkloadToSweep = "Service"
 
-    val runMonolithic = true
-    val runMesos = true
-    val runOmega = true
+    val runMonolithic = false
+    val runMesos = false
+    val runOmega = false
+    val runDynamic = true
 
 
     val runStackelberg = false
@@ -941,7 +1006,7 @@ object Simulation {
     // val lambdaRange = fullLambdaRange
     val interArrivalScaleRange = 0.009 :: 0.01 :: 0.02 :: 0.1 :: 0.2 :: 1.0 :: Nil
     // val interArrivalScaleRange = lambdaRange.map(1/_)
-    val prefillRange = (0.3 to 0.8 by 0.1).toList
+    val prefillRange = (0.3 to 0.3 by 0.1).toList
     //sval prefillRange = (0.25 to 0.4 by 0.05).toList
     var prefillCpuLim = List[Map[String, Double]]()
     for (prefillPerc <- prefillRange) {prefillCpuLim ::= Map("PrefillBatch" -> prefillPerc, "PrefillService" -> prefillPerc, "PrefillBatchService" -> prefillPerc)}
@@ -1012,6 +1077,170 @@ object Simulation {
         }),*/
         globalRunTime)
     println("outputDirName is %s".format(outputDirName))
+
+
+
+    //----DYNAMIC----
+
+    if (runDynamic) {
+      // Set up Omega Experiments
+      dynamicSimulatorSetups.foreach {
+        case (simDescs, schedWLMap, schedWLToSweep) => {
+          for (simDesc <- simDescs) {
+            val numServiceScheds =
+              simDesc.schedulerDescs.filter(_.name.contains("Service")).size
+            val numBatchScheds =
+              simDesc.schedulerDescs.filter(_.name.contains("Batch")).size
+            if (sweepC) {
+              allExperiments ::= new Experiment(
+                name = "dynamic-%s-%s-%d_service-%d_batch-single_path-vary_c"
+                  .format(simDesc.conflictMode,
+                    simDesc.transactionMode,
+                    numServiceScheds,
+                    numBatchScheds),
+                workloadToSweepOver = "Service",
+                workloadDescs = wlDescs,
+                schedulerWorkloadsToSweepOver = schedWLToSweep,
+                constantThinkTimeRange = constantRange,
+                perTaskThinkTimeRange = (0.005 :: Nil),
+                blackListPercentRange = (0.0 :: Nil),
+                schedulerWorkloadMap = schedWLMap,
+                simulatorDesc = simDesc,
+                logging = doLogging,
+                outputDirectory = outputDirName,
+                prefillCpuLimits = prefillCpuLim,
+                simulationTimeout = timeout,
+                cellStateResourcesSorterList = defaultSortingPolicy,
+                cellStateResourcesPickerList = defaultPickingPolicy,
+                powerOnPolicies = defaultPowerOnPolicy,
+                powerOffPolicies = defaultPowerOffPolicy,
+                level1SecurityTimes = security1Range,
+                level2SecurityTimes = security2Range,
+                level3SecurityTimes = security3Range
+              )
+            }
+
+            if (sweepCL) {
+              allExperiments ::= new Experiment(
+                name = "dynamic-%s-%s-%d_service-%d_batch-single_path-vary_cl"
+                  .format(simDesc.conflictMode,
+                    simDesc.transactionMode,
+                    numServiceScheds,
+                    numBatchScheds),
+                workloadToSweepOver = "Service",
+                workloadDescs = wlDescs,
+                schedulerWorkloadsToSweepOver = schedWLToSweep,
+                constantThinkTimeRange = constantRange,
+                perTaskThinkTimeRange = perTaskRange,
+                blackListPercentRange = (0.0 :: Nil),
+                schedulerWorkloadMap = schedWLMap,
+                simulatorDesc = simDesc,
+                logging = doLogging,
+                outputDirectory = outputDirName,
+                prefillCpuLimits = prefillCpuLim,
+                simulationTimeout = timeout,
+                cellStateResourcesSorterList = defaultSortingPolicy,
+                cellStateResourcesPickerList = defaultPickingPolicy,
+                powerOnPolicies = defaultPowerOnPolicy,
+                powerOffPolicies = defaultPowerOffPolicy,
+                level1SecurityTimes = security1Range,
+                level2SecurityTimes = security2Range,
+                level3SecurityTimes = security3Range,stackelbergStrategies = stackelbergStrategies)
+            }
+
+            if (sweepL) {
+              allExperiments ::= new Experiment(
+                name = "dynamic-%s-%s-%d_service-%d_batch-single_path-vary_l"
+                  .format(simDesc.conflictMode,
+                    simDesc.transactionMode,
+                    numServiceScheds,
+                    numBatchScheds),
+                workloadToSweepOver = "Service",
+                workloadDescs = wlDescs,
+                schedulerWorkloadsToSweepOver = schedWLToSweep,
+                constantThinkTimeRange = (0.1 :: Nil),
+                perTaskThinkTimeRange = perTaskRange,
+                blackListPercentRange = (0.0 :: Nil),
+                schedulerWorkloadMap = schedWLMap,
+                simulatorDesc = simDesc,
+                logging = doLogging,
+                outputDirectory = outputDirName,
+                prefillCpuLimits = prefillCpuLim,
+                simulationTimeout = timeout,
+                cellStateResourcesSorterList = defaultSortingPolicy,
+                cellStateResourcesPickerList = defaultPickingPolicy,
+                powerOnPolicies = defaultPowerOnPolicy,
+                powerOffPolicies = defaultPowerOffPolicy,
+                level1SecurityTimes = security1Range,
+                level2SecurityTimes = security2Range,
+                level3SecurityTimes = security3Range,stackelbergStrategies = stackelbergStrategies)
+            }
+
+            if (sweepPickiness) {
+              allExperiments ::= new Experiment(
+                name = "dynamic-%s-%s-%d_service-%d_batch-single_path-vary_pickiness"
+                  .format(simDesc.conflictMode,
+                    simDesc.transactionMode,
+                    numServiceScheds,
+                    numBatchScheds),
+                workloadToSweepOver = "Service",
+                workloadDescs = wlDescs,
+                schedulerWorkloadsToSweepOver = schedWLToSweep,
+                constantThinkTimeRange = (0.1 :: Nil),
+                perTaskThinkTimeRange = (0.005 :: Nil),
+                blackListPercentRange = pickinessRange,
+                schedulerWorkloadMap = schedWLMap,
+                simulatorDesc = simDesc,
+                logging = doLogging,
+                outputDirectory = outputDirName,
+                prefillCpuLimits = prefillCpuLim,
+                simulationTimeout = timeout,
+                cellStateResourcesSorterList = defaultSortingPolicy,
+                cellStateResourcesPickerList = defaultPickingPolicy,
+                powerOnPolicies = defaultPowerOnPolicy,
+                powerOffPolicies = defaultPowerOffPolicy,
+                level1SecurityTimes = security1Range,
+                level2SecurityTimes = security2Range,
+                level3SecurityTimes = security3Range,stackelbergStrategies = stackelbergStrategies)
+            }
+
+            if (sweepLambda) {
+              allExperiments ::= new Experiment(
+                name = "dynamic-%s-%s-%d_service-%d_batch-single_path-vary_lambda"
+                  .format(simDesc.conflictMode,
+                    simDesc.transactionMode,
+                    numServiceScheds,
+                    numBatchScheds),
+                workloadToSweepOver = "Service",
+                workloadDescs = wlDescs,
+                schedulerWorkloadsToSweepOver = schedWLToSweep,
+                avgJobInterarrivalTimeRange = Some(interArrivalScaleRange),
+                constantThinkTimeRange = (0.1 :: Nil),
+                perTaskThinkTimeRange = (0.005 :: Nil),
+                blackListPercentRange = (0.0 :: Nil),
+                schedulerWorkloadMap = schedWLMap,
+                simulatorDesc = simDesc,
+                logging = doLogging,
+                outputDirectory = outputDirName,
+                prefillCpuLimits = prefillCpuLim,
+                simulationTimeout = timeout,
+                cellStateResourcesSorterList = defaultSortingPolicy,
+                cellStateResourcesPickerList = defaultPickingPolicy,
+                powerOnPolicies = defaultPowerOnPolicy,
+                powerOffPolicies = defaultPowerOffPolicy,
+                level1SecurityTimes = security1Range,
+                level2SecurityTimes = security2Range,
+                level3SecurityTimes = security3Range,stackelbergStrategies = stackelbergStrategies)
+            }
+          }
+        }
+      }
+    }
+
+
+
+    //------OMEGA-----
+
 
     if (runOmega) {
       // Set up Omega Experiments

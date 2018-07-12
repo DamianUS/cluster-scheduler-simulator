@@ -26,6 +26,7 @@
 
 package ClusterSchedulingSimulation
 
+import dynamic.normalization.MesosCapableScheduler
 import efficiency.ordering_cellstate_resources_policies.CellStateResourcesSorter
 import efficiency.pick_cellstate_resources.CellStateResourcesPicker
 import efficiency.power_off_policies.PowerOffPolicy
@@ -179,7 +180,7 @@ class MesosSchedulerDesc(name: String,
     constantThinkTimes,
     perTaskThinkTimes)
 
-class MesosScheduler(name: String,
+class MesosScheduler (name: String,
                      constantThinkTimes: Map[String, Double],
                      perTaskThinkTimes: Map[String, Double],
                      val schedulePartialJobs: Boolean,
@@ -187,7 +188,7 @@ class MesosScheduler(name: String,
   extends Scheduler(name,
     constantThinkTimes,
     perTaskThinkTimes,
-    numMachinesToBlackList) {
+    numMachinesToBlackList) with MesosCapableScheduler {
   println("scheduler-id-info: %d, %s, %d, %s, %s"
     .format(Thread.currentThread().getId(),
       name,
@@ -420,9 +421,9 @@ class MesosAllocator(constantThinkTime: Double,
                      // Min time, in seconds, to batch up resources
                      // before making an offer.
                      val offerBatchInterval: Double = 1.0) {
-  var simulator: MesosSimulator = null
+  var simulator: ClusterSimulator = null
   var allocating: Boolean = false
-  var schedulersRequestingResources = collection.mutable.Set[MesosScheduler]()
+  var schedulersRequestingResources = collection.mutable.Set[MesosCapableScheduler]()
   var timeSpentAllocating: Double = 0.0
   var nextOfferId: Long = 0
   val offeredDeltas = HashMap[Long, Seq[ClaimDelta]]()
@@ -439,7 +440,7 @@ class MesosAllocator(constantThinkTime: Double,
     constantThinkTime
   }
 
-  def requestOffer(needySched: MesosScheduler) {
+  def requestOffer(needySched: MesosCapableScheduler) {
     checkRegistered
     simulator.log("Received an offerRequest from %s.".format(needySched.name))
     // Adding a scheduler to this list will ensure that it gets included
@@ -448,7 +449,7 @@ class MesosAllocator(constantThinkTime: Double,
     schedBuildAndSendOffer()
   }
 
-  def cancelOfferRequest(needySched: MesosScheduler) = {
+  def cancelOfferRequest(needySched: MesosCapableScheduler) = {
     simulator.log("Canceling the outstanding resourceRequest for scheduler %s.".format(
       needySched.name))
     schedulersRequestingResources -= needySched
@@ -649,7 +650,7 @@ class MesosAllocator(constantThinkTime: Double,
   /**
     * 1/N multi-resource fair sharing.
     */
-  def drfSortSchedulers(schedulers: Seq[MesosScheduler]): Seq[MesosScheduler] = {
+  def drfSortSchedulers(schedulers: Seq[MesosCapableScheduler]): Seq[MesosCapableScheduler] = {
     val schedulerDominantShares = schedulers.map(scheduler => {
       val shareOfCpus =
         simulator.cellState.occupiedCpus.getOrElse(scheduler.name, 0.0)
@@ -668,4 +669,4 @@ class MesosAllocator(constantThinkTime: Double,
   }
 }
 
-case class Offer(id: Long, scheduler: MesosScheduler, cellState: CellState)
+case class Offer(id: Long, scheduler: MesosCapableScheduler, cellState: CellState)
