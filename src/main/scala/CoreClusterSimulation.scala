@@ -341,6 +341,8 @@ class ClusterSimulator(val cellState: CellState,
   def avgMachinesOn: Double = (sumMachinesOn.toDouble / numMonitoringMeasurements.toDouble)
 
   var sumCpuUtilization: Double = 0.0
+  //Used in the measurement Dynamic Scheduling
+  var measuredSchedulingStrategy: Array[String] = Array[String]()
   //Used in the measurement
   var measuredCpuUtilization: Array[Double] = Array[Double]()
   //Cpu on totally idle machines
@@ -574,6 +576,7 @@ class ClusterSimulator(val cellState: CellState,
 
   def measureUtilization: Unit = {
     if(this.isInstanceOf[DynamicSimulator]){
+      measuredSchedulingStrategy = measuredSchedulingStrategy :+ schedulers.values.head.asInstanceOf[DynamicScheduler].chosenStrategy.name
       changeResourcerManager
     }
     val totalOccupiedCpus = cellState.totalOccupiedCpus

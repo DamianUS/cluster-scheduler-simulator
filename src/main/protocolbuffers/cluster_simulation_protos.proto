@@ -205,6 +205,7 @@ message ExperimentResultSet {
         optional double machinesTurningOn = 10;
         optional double mpuLocked = 11;
         optional double memLocked = 12;
+        optional string strategy = 13;
       }
     }
   }
