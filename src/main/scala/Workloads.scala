@@ -91,7 +91,7 @@ object Workloads {
   //Primer elemento de la tupla Batch, segundo Service
   //val interArrival = ((90, 900) :: (100, 1000) :: Nil)
   //90/10%
-  val interArrival = ((80.0, 800.0) :: Nil)
+  val interArrival = ((30.0, 300.0) :: Nil)
   /*val interArrival1 = for (elem <- (1 to 18 by 2).toList) yield (elem, elem*10)
   val interArrival2 = for (elem <- (20 to 50 by 10).toList) yield (elem, elem*10)
   val interArrival3 = for (elem <- (60 to 100 by 20).toList) yield (elem, elem*10)
@@ -102,8 +102,8 @@ object Workloads {
   val cpusTask = ((0.3, 0.5) :: Nil)
   val memTask = ((0.5, 1.2) :: Nil)
   val tasksHeterogeneity = false
-  val runFlatPattern = true
-  val runDayNightPattern = false
+  val runFlatPattern = false
+  val runDayNightPattern = true
 
   // example pre-fill workload generators.
   val examplePrefillTraceFileName = "traces/initial-traces/example-init-cluster-state.log"

@@ -215,16 +215,23 @@ class DynamicScheduler(name: String,
   val offerQueue = new collection.mutable.Queue[Offer]
   //TODO: Inicializar
   var chosenStrategy: RMStrategy = null
+  val omegaStrategy: OmegaStrategy = new OmegaStrategy(this)
+  val mesosStrategy: MesosStrategy = new MesosStrategy(this)
 
   def chooseStrategy(name: String): Unit ={
     assert(name == "Omega" || name == "Mesos", "The dynamic strategies supported are Mesos or Omega")
-    if(name=="Omega"){
-      chosenStrategy = new OmegaStrategy(this)
+    if(name=="Omega") {
+      if (chosenStrategy!=null && chosenStrategy.name == "Mesos") {
+        removeOffers();
+      }
+
+      chosenStrategy = omegaStrategy
     }
-    else if(name=="Mesos"){
-      chosenStrategy = new MesosStrategy(this)
+    else if (name == "Mesos") {
+      chosenStrategy = mesosStrategy
     }
   }
+
 
   override
   def checkRegistered = {
@@ -233,10 +240,27 @@ class DynamicScheduler(name: String,
       "simulator yet.")
   }
 
+  def removeOffers(): Unit = {
+    offerQueue.filter(_.scheduler == this)
+
+      for (offer <- offerQueue) {
+        simulator.asInstanceOf[DynamicSimulator].allocator.offeredDeltas.remove(offer.id).foreach(savedDeltas => {
+          savedDeltas.foreach(_.unApply(cellState = simulator.cellState,
+            locked = true))
+        })
+      }
+    //}
+  }
+
 
   def resourceOffer(offer: Offer): Unit = {
     offerQueue.enqueue(offer)
-    handleNextResourceOffer()
+    if(chosenStrategy == "Mesos") {
+      handleNextResourceOffer()
+    }
+    else{
+      removeOffers()
+    }
   }
 
   def handleNextResourceOffer(): Unit = {
@@ -394,7 +418,12 @@ class DynamicScheduler(name: String,
       }
       // Done with this offer, see if we have another one to handle.
       scheduling = false
-      handleNextResourceOffer()
+      if(chosenStrategy.name == "Mesos"){
+        handleNextResourceOffer()
+      }
+      else{
+        removeOffers();
+      }
     }
   }
 
