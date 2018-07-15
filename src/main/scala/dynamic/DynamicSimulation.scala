@@ -241,9 +241,11 @@ class DynamicScheduler(name: String,
   }
 
   def removeOffers(): Unit = {
+    //println("Entra en removeOffers "+simulator.currentTime.toString)
     offerQueue.filter(_.scheduler == this)
 
       for (offer <- offerQueue) {
+        //println("Había offers pendientes "+simulator.currentTime.toString)
         simulator.asInstanceOf[DynamicSimulator].allocator.offeredDeltas.remove(offer.id).foreach(savedDeltas => {
           savedDeltas.foreach(_.unApply(cellState = simulator.cellState,
             locked = true))

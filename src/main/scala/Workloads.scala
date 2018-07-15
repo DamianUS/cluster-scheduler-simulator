@@ -91,7 +91,7 @@ object Workloads {
   //Primer elemento de la tupla Batch, segundo Service
   //val interArrival = ((90, 900) :: (100, 1000) :: Nil)
   //90/10%
-  val interArrival = ((30.0, 300.0) :: Nil)
+  val interArrival = ((20.0, 200.0) :: Nil)
   /*val interArrival1 = for (elem <- (1 to 18 by 2).toList) yield (elem, elem*10)
   val interArrival2 = for (elem <- (20 to 50 by 10).toList) yield (elem, elem*10)
   val interArrival3 = for (elem <- (60 to 100 by 20).toList) yield (elem, elem*10)
