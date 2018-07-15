@@ -575,12 +575,11 @@ class ClusterSimulator(val cellState: CellState,
   }
 
   def measureUtilization: Unit = {
-    println(this.currentTime)
+    //println(this.currentTime)
     if(this.isInstanceOf[DynamicSimulator]){
       measuredSchedulingStrategy = measuredSchedulingStrategy :+ schedulers.values.head.asInstanceOf[DynamicScheduler].chosenStrategy.name
       changeResourcerManager
-      println("post " + this.currentTime.toString)
-
+      //println("post " + this.currentTime.toString)
     }
     val totalOccupiedCpus = cellState.totalOccupiedCpus
     val totalOccupiedMem = cellState.totalOccupiedMem
@@ -2497,7 +2496,7 @@ class DailyExpExpExpWorkloadGenerator(val workloadName: String,
   }
 
   def getCoeff(submissionTime: Double): Double = {
-    var timeCofficients = (0.1 :: 0.2 :: 0.2 :: 0.2 :: 0.3 :: 0.2 :: 1.1 :: 2.1 :: 2.4 :: 2.8 :: 3.4 :: 2.8 :: 1.1 :: 0.9 :: 2.4 :: 0.8 :: 0.7 :: 0.6 :: 0.5 :: 0.4 :: 0.3 :: 0.2 :: 0.1 :: 0.1 :: Nil)
+    var timeCofficients = (0.1 :: 0.2 :: 0.2 :: 0.2 :: 0.3 :: 0.2 :: 0.5 :: 2.6 :: 2.4 :: 3.3 :: 4.5 :: 3.1 :: 0.6 :: 0.4 :: 3.2 :: 0.6 :: 0.5 :: 0.4 :: 0.3 :: 0.2 :: 0.2 :: 0.1 :: 0.1 :: 0.1 :: Nil)
     //timeCofficients = modifyAmplitude(timeCofficients, 2)
     val secondsSubmission = submissionTime % 86400.0
     val coeffIndex = (secondsSubmission / 3600.0).floor.toInt

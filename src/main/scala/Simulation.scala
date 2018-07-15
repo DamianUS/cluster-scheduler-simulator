@@ -455,8 +455,8 @@ object Simulation {
     // val mesosWorkloadToSweep = "Service"
 
     val runMonolithic = false
-    val runMesos = false
-    val runOmega = false
+    val runMesos = true
+    val runOmega = true
     val runDynamic = true
 
 
@@ -467,7 +467,6 @@ object Simulation {
     //val pickingPolicies = List[CellStateResourcesPicker] (RandomPicker)
     //val pickingPolicies = List[CellStateResourcesPicker] (BasicReversePickerCandidatePower)
     //val pickingPolicies = List[CellStateResourcesPicker](RandomPicker, BasicReversePickerCandidatePower, new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.01))
-    //val pickingPolicies = List[CellStateResourcesPicker](new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.07))
     //Krakow
     //val pickingPolicies = List[CellStateResourcesPicker](RandomPicker, GASimplePickerCandidatePower, GreedyMakespanPickerCandidatePower)
     //val pickingPolicies = List[CellStateResourcesPicker](new GeneticStandardPickerCandidatePower(populationSize=20, mutationProbability=0.01, crossingSelector=Agnieszka, fitnessFunction = Makespan, epochNumber = 500))
@@ -477,10 +476,11 @@ object Simulation {
     //val pickingPolicies = List[CellStateResourcesPicker](GeneticNoCrossingMutatingWorstPicker)
     //val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaWithRandom) //This one is the best so far
     //val pickingPolicies = List[CellStateResourcesPicker](new NewGeneticStandardPicker(populationSize=10, mutationProbability=0.5, crossoverProbability = 0.7, crossingSelector=TwoBest, fitnessFunction = Makespan, epochNumber = 2000, crossingFunction = CrossGenes, mutatingFunction = WorstRandom))
-    val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaSecurityWithRandom)
     //val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaSecurityWithRandom,AgnieszkaEnergySecurityWithRandom)
     //val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaSecurityWithRandom, new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.07), RandomPicker, AgnieszkaEnergySecurityWithRandom)
     //val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaEnergySecurityWithRandom)
+    //val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaSecurityWithRandom)
+    val pickingPolicies = List[CellStateResourcesPicker](new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.07))
     val powerOnPolicies = List[PowerOnPolicy](new ComposedPowerOnPolicy(DefaultPowerOnAction, NoPowerOnDecision))
     val powerOffPolicies = List[PowerOffPolicy](new ComposedPowerOffPolicy(DefaultPowerOffAction, NoPowerOffDecision))
 
