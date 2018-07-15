@@ -479,8 +479,8 @@ object Simulation {
     //val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaSecurityWithRandom,AgnieszkaEnergySecurityWithRandom)
     //val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaSecurityWithRandom, new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.07), RandomPicker, AgnieszkaEnergySecurityWithRandom)
     //val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaEnergySecurityWithRandom)
-    //val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaSecurityWithRandom)
-    val pickingPolicies = List[CellStateResourcesPicker](new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.07))
+    val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaSecurityWithRandom)
+    //val pickingPolicies = List[CellStateResourcesPicker](new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.07))
     val powerOnPolicies = List[PowerOnPolicy](new ComposedPowerOnPolicy(DefaultPowerOnAction, NoPowerOnDecision))
     val powerOffPolicies = List[PowerOffPolicy](new ComposedPowerOffPolicy(DefaultPowerOffAction, NoPowerOffDecision))
 
