@@ -255,7 +255,7 @@ class DynamicScheduler(name: String,
 
   def resourceOffer(offer: Offer): Unit = {
     offerQueue.enqueue(offer)
-    if(chosenStrategy == "Mesos") {
+    if(chosenStrategy.name == "Mesos") {
       handleNextResourceOffer()
     }
     else{

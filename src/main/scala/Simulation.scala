@@ -364,6 +364,7 @@ object Simulation {
     val numDynamicBatchSchedsRange = Seq(4)
     //val numOmegaBatchSchedsRange = Seq(1)
     val strategiesToSwitch = ("Omega" :: "Mesos" :: Nil)
+    //val strategiesToSwitch = ("Mesos" :: "Omega" :: Nil)
     val dynamicSimulatorSetups =
       for (numDynamicServiceScheds <- numDynamicServiceSchedsRange;
            numDynamicBatchScheds <- numDynamicBatchSchedsRange) yield {

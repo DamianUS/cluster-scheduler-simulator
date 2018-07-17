@@ -575,12 +575,6 @@ class ClusterSimulator(val cellState: CellState,
   }
 
   def measureUtilization: Unit = {
-    //println(this.currentTime)
-    if(this.isInstanceOf[DynamicSimulator]){
-      measuredSchedulingStrategy = measuredSchedulingStrategy :+ schedulers.values.head.asInstanceOf[DynamicScheduler].chosenStrategy.name
-      changeResourcerManager
-      //println("post " + this.currentTime.toString)
-    }
     val totalOccupiedCpus = cellState.totalOccupiedCpus
     val totalOccupiedMem = cellState.totalOccupiedMem
     val numMachinesOccupied = cellState.numMachinesOccupied
@@ -633,6 +627,12 @@ class ClusterSimulator(val cellState: CellState,
       }
       totalPower(machineID)(numMonitoringMeasurements.toInt) = totalMachinePower
       currentPower(machineID)(numMonitoringMeasurements.toInt) = currentMachinePower
+    }
+    //println(this.currentTime)
+    if(this.isInstanceOf[DynamicSimulator]){
+      measuredSchedulingStrategy = measuredSchedulingStrategy :+ schedulers.values.head.asInstanceOf[DynamicScheduler].chosenStrategy.name
+      changeResourcerManager
+      //println("post " + this.currentTime.toString)
     }
     numMonitoringMeasurements += 1
     //totalMachinePowerStates = totalMachinePowerStates :+ cellState.machinePowerState
