@@ -222,12 +222,14 @@ class DynamicScheduler(name: String,
     assert(name == "Omega" || name == "Mesos", "The dynamic strategies supported are Mesos or Omega")
     if(name=="Omega") {
       if (chosenStrategy!=null && chosenStrategy.name == "Mesos") {
+        println("Entro en removeOffers de chooseStrategy en "+this.name)
         removeOffers();
       }
-
+      println("Pongo Omega en el scheduler "+this.name)
       chosenStrategy = omegaStrategy
     }
     else if (name == "Mesos") {
+      println("Pongo Mesos en el scheduler "+this.name)
       chosenStrategy = mesosStrategy
     }
   }
@@ -255,12 +257,12 @@ class DynamicScheduler(name: String,
 
   def resourceOffer(offer: Offer): Unit = {
     offerQueue.enqueue(offer)
-    if(chosenStrategy.name == "Mesos") {
+    //if(chosenStrategy.name == "Mesos") {
       handleNextResourceOffer()
-    }
+    /*}
     else{
       removeOffers()
-    }
+    }*/
   }
 
   def handleNextResourceOffer(): Unit = {
@@ -418,12 +420,12 @@ class DynamicScheduler(name: String,
       }
       // Done with this offer, see if we have another one to handle.
       scheduling = false
-      if(chosenStrategy.name == "Mesos"){
+      //if(chosenStrategy.name == "Mesos"){
         handleNextResourceOffer()
-      }
+      /*}
       else{
         removeOffers();
-      }
+      }*/
     }
   }
 

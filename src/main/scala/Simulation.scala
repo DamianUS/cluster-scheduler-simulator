@@ -363,8 +363,8 @@ object Simulation {
     val numDynamicServiceSchedsRange = Seq(1)
     val numDynamicBatchSchedsRange = Seq(4)
     //val numOmegaBatchSchedsRange = Seq(1)
-    val strategiesToSwitch = ("Omega" :: "Mesos" :: Nil)
-    //val strategiesToSwitch = ("Mesos" :: "Omega" :: Nil)
+    //val strategiesToSwitch = ("Omega" :: "Mesos" :: Nil)
+    val strategiesToSwitch = ("Mesos" :: "Omega" :: Nil)
     val dynamicSimulatorSetups =
       for (numDynamicServiceScheds <- numDynamicServiceSchedsRange;
            numDynamicBatchScheds <- numDynamicBatchSchedsRange) yield {
@@ -456,8 +456,8 @@ object Simulation {
     // val mesosWorkloadToSweep = "Service"
 
     val runMonolithic = false
-    val runMesos = true
-    val runOmega = true
+    val runMesos = false
+    val runOmega = false
     val runDynamic = true
 
 
