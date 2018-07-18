@@ -394,7 +394,7 @@ object Simulation {
 
         val dynamicSchedulerWorkloadsToSweep =
           generateSchedulerWorkloadsToSweep("Dynamic",
-            numServiceScheds = 0,
+            numServiceScheds = 1,
             numDynamicBatchScheds)
         (dynamicSimulatorDescs, dynamicSchedulerWorkloadMap, dynamicSchedulerWorkloadsToSweep)
       }
@@ -432,7 +432,7 @@ object Simulation {
 
         val omegaSchedulerWorkloadsToSweep =
           generateSchedulerWorkloadsToSweep("Omega",
-            numServiceScheds = 0,
+            numServiceScheds = 1,
             numOmegaBatchScheds)
         (omegaSimulatorDescs, omegaSchedulerWorkloadMap, omegaSchedulerWorkloadsToSweep)
       }
@@ -449,16 +449,19 @@ object Simulation {
     //                                      "MesosBatch-3" -> List("Batch"),
     //                                      "MesosBatch-4" -> List("Batch"))
     //val mesosSchedWorkloadsToSweep = Map("MesosService" -> List("Service"))
+    //val mesosSchedWorkloadsToSweep = Map("MesosBatch" -> List("Batch"), "MesosService" -> List("Service"))
     val mesosSchedWorkloadsToSweep = Map("MesosBatch" -> List("Batch"),
-      "MesosService" -> List("Service"))
+                                          "MesosBatch-2" -> List("Batch"),
+                                          "MesosBatch-3" -> List("Batch"),
+                                          "MesosBatch-4" -> List("Batch"), "MesosService" -> List("Service"))
 
      val mesosWorkloadToSweep = "Batch"
     // val mesosWorkloadToSweep = "Service"
 
     val runMonolithic = false
     val runMesos = false
-    val runOmega = false
-    val runDynamic = true
+    val runOmega = true
+    val runDynamic = false
 
 
     val runStackelberg = false

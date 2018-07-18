@@ -631,7 +631,7 @@ class ClusterSimulator(val cellState: CellState,
     //println(this.currentTime)
     if(this.isInstanceOf[DynamicSimulator]){
       measuredSchedulingStrategy = measuredSchedulingStrategy :+ schedulers.values.head.asInstanceOf[DynamicScheduler].chosenStrategy.name
-      //changeResourcerManager
+      changeResourcerManager
       //println("post " + this.currentTime.toString)
     }
     numMonitoringMeasurements += 1
