@@ -420,7 +420,7 @@ class MesosAllocator(constantThinkTime: Double,
                      minMemOffer: Double = 100.0,
                      // Min time, in seconds, to batch up resources
                      // before making an offer.
-                     val offerBatchInterval: Double = 0.5) {
+                     val offerBatchInterval: Double = 0.01) {
   var simulator: ClusterSimulator = null
   var allocating: Boolean = false
   var schedulersRequestingResources = collection.mutable.Set[MesosCapableScheduler]()
