@@ -26,7 +26,9 @@
 
 package ClusterSchedulingSimulation
 
+import dynamic.neuralnetwork.SimpleNN
 import dynamic.{DynamicScheduler, DynamicSimulator}
+import efficiency.DistributionCache
 import efficiency.ordering_cellstate_resources_policies.{BasicLoadSorter, CellStateResourcesSorter, NoSorter}
 import efficiency.pick_cellstate_resources._
 import efficiency.power_off_policies.PowerOffPolicy
@@ -373,7 +375,7 @@ class ClusterSimulator(val cellState: CellState,
   var sumCpuIdle = 0.0
   var sumMemIdle = 0.0
   //Heterogeneous machines power profile
-  val totalMeasurements = (86400.0 * 7 / monitoringPeriod).toInt + 2
+  val totalMeasurements = (86400.0 * 15 / monitoringPeriod).toInt + 2
   val totalPower = Array.ofDim[Double](cellState.numMachines, totalMeasurements) //Matrix of numMachines
   val currentPower = Array.ofDim[Double](cellState.numMachines, totalMeasurements) //Matrix of numMachines
 
@@ -568,10 +570,28 @@ class ClusterSimulator(val cellState: CellState,
     }
   }
 
-  def changeResourcerManager: Unit = {
-    //Random strategy, change for the actual neural network
-    val chosenStrategy = this.asInstanceOf[DynamicSimulator].strategies(Random.nextInt(this.asInstanceOf[DynamicSimulator].strategies.length))
-    schedulers.values.foreach(scheduler => scheduler.asInstanceOf[DynamicScheduler].chooseStrategy(chosenStrategy))
+  def changeResourceManager: Unit = {
+    val windowSize = 10
+    val jobCacheLength = cellState.simulator.jobCache.length
+    if(jobCacheLength > 1){
+      val pastTuples = if (jobCacheLength > windowSize+1) jobCache.slice(jobCacheLength-(windowSize+1), jobCacheLength) else jobCache
+      val arraySize = if (pastTuples.length > 0) pastTuples.length-1 else 0
+      val interArrival = new Array[Double](arraySize)
+      for(i <- 1 to pastTuples.length-1){
+        interArrival(i-1) = (pastTuples(i)._1 - pastTuples(i-1)._1)
+      }
+      val interArrivalMean = interArrival.sum / interArrival.size.toDouble
+      //val chosenStrategy = this.asInstanceOf[DynamicSimulator].strategies(Random.nextInt(this.asInstanceOf[DynamicSimulator].strategies.length))
+      val chosenStrategy = SimpleNN.classify(cellState.totalOccupiedCpus / cellState.totalCpus, interArrivalMean)
+      //println("strategy: "+chosenStrategy+" inter: "+interArrivalMean )
+      //val chosenStrategy = "Mesos"
+      schedulers.values.foreach(scheduler => scheduler.asInstanceOf[DynamicScheduler].chooseStrategy(chosenStrategy))
+      /*if(numMonitoringMeasurements % 100 == 0){
+        println("Changes: "+ schedulers.values.head.asInstanceOf[DynamicScheduler].iter)
+      }*/
+      //schedulers.values.foreach(scheduler => scheduler.asInstanceOf[DynamicScheduler].markedStrategy=chosenStrategy)
+    }
+
   }
 
   def measureUtilization: Unit = {
@@ -631,7 +651,7 @@ class ClusterSimulator(val cellState: CellState,
     //println(this.currentTime)
     if(this.isInstanceOf[DynamicSimulator]){
       measuredSchedulingStrategy = measuredSchedulingStrategy :+ schedulers.values.head.asInstanceOf[DynamicScheduler].chosenStrategy.name
-      //changeResourcerManager
+      changeResourceManager
       //println("post " + this.currentTime.toString)
     }
     numMonitoringMeasurements += 1
@@ -2496,7 +2516,7 @@ class DailyExpExpExpWorkloadGenerator(val workloadName: String,
   }
 
   def getCoeff(submissionTime: Double): Double = {
-    var timeCofficients = (0.1 :: 0.2 :: 0.2 :: 0.2 :: 0.3 :: 0.2 :: 0.5 :: 2.6 :: 2.4 :: 3.3 :: 4.5 :: 3.1 :: 0.6 :: 0.4 :: 3.2 :: 0.6 :: 0.5 :: 0.4 :: 0.3 :: 0.2 :: 0.2 :: 0.1 :: 0.1 :: 0.1 :: Nil)
+    var timeCofficients = (1.0 :: 0.7 :: 0.6 :: 0.5 :: 0.5 :: 0.5 :: 0.4 :: 0.4 :: 0.4 :: 2.6 :: 1.8 :: 0.7 :: 0.4 :: 1.8 :: 2.1 :: 2.5 :: 0.7 :: 0.4 :: 2.4 :: 1.8 :: 2.1 :: 1.6 :: 1.3 :: 0.9 :: Nil)
     //timeCofficients = modifyAmplitude(timeCofficients, 2)
     val secondsSubmission = submissionTime % 86400.0
     val coeffIndex = (secondsSubmission / 3600.0).floor.toInt
@@ -2510,6 +2530,184 @@ class DailyExpExpExpWorkloadGenerator(val workloadName: String,
     correctedCoeff
   }
 }
+
+
+class WeeklyExpExpExpWorkloadGenerator(val workloadName: String,
+                                      initAvgJobInterarrivalTime: Double,
+                                      avgTasksPerJob: Double,
+                                      avgJobDuration: Double,
+                                      avgCpusPerTask: Double,
+                                      avgMemPerTask: Double,
+                                      heterogeneousTasks: Boolean = false)
+  extends WorkloadGenerator {
+  val numTasksGenerator =
+    new ExponentialDistributionImpl(avgTasksPerJob.toFloat)
+  val durationGenerator = new ExponentialDistributionImpl(avgJobDuration)
+
+  def newJob(submissionTime: Double): Job = {
+    // Don't allow jobs with zero tasks.
+    var dur = durationGenerator.sample()
+    while (dur <= 0.0)
+      dur = durationGenerator.sample()
+    Job(UniqueIDGenerator.getUniqueID(),
+      submissionTime,
+      // Use ceil to avoid jobs with 0 tasks.
+      math.ceil(numTasksGenerator.sample().toFloat).toInt,
+      dur,
+      workloadName,
+      avgCpusPerTask,
+      avgMemPerTask,
+      heterogeneousTasks)
+  }
+
+  /**
+    * Synchronized so that Experiments, which can share this WorkloadGenerator,
+    * can safely call newWorkload concurrently.
+    */
+  def newWorkload(timeWindow: Double,
+                  maxCpus: Option[Double] = None,
+                  maxMem: Option[Double] = None,
+                  updatedAvgJobInterarrivalTime: Option[Double] = None)
+  : Workload = this.synchronized {
+    assert(maxCpus == None)
+    assert(maxMem == None)
+    assert(timeWindow >= 0)
+    // Create the job-interarrival-time number generator using the
+    // parameter passed in, if any, else use the default parameter.
+    val avgJobInterarrivalTime =
+    updatedAvgJobInterarrivalTime.getOrElse(initAvgJobInterarrivalTime)
+    var interarrivalTimeGenerator =
+      new ExponentialDistributionImpl(avgJobInterarrivalTime)
+    val workload = new Workload(workloadName)
+    // create a new list of jobs for the experiment runTime window
+    // using the current WorkloadGenerator.
+    val interArrivalSample = interarrivalTimeGenerator.sample()
+    var nextJobSubmissionTime = interArrivalSample / (getCoeff(interArrivalSample))
+    while (nextJobSubmissionTime < timeWindow) {
+      val job = newJob(nextJobSubmissionTime)
+      assert(job.workloadName == workload.name)
+      workload.addJob(job)
+      val interArrivalSampleIter = interarrivalTimeGenerator.sample()
+      nextJobSubmissionTime += interArrivalSampleIter / (getCoeff(nextJobSubmissionTime + interArrivalSample))
+    }
+    workload
+  }
+
+  def modifyAmplitude(timeCoefficients: List[Double], amplitude: Double): List[Double] = {
+    timeCoefficients.map(x => if (x < 1) x/amplitude else x * amplitude)
+  }
+
+  def getCoeff(submissionTime: Double): Double = {
+    //var timeCofficients = (0.2 :: 0.2 :: 0.2 :: 2.2 :: 2.2 :: 2.2 :: 2.2 :: Nil)
+    var timeCofficients = (2.2 :: 2.2 :: 0.7 :: 0.5 :: 0.4 :: 0.6 :: 0.6 :: Nil)
+    //var timeCofficients = (2.2 :: 0.6 :: 2.2 :: 0.6 :: 2.2 :: 0.6 :: 0.6 :: Nil)
+    //timeCofficients = modifyAmplitude(timeCofficients, 2)
+    val secondsSubmission = submissionTime % 604800.0
+    val coeffIndex = (secondsSubmission / 86400.0).floor.toInt
+    /*val random = new Random();
+    var correctedCoeff = random.nextGaussian()*(timeCofficients(coeffIndex)/1.3)+timeCofficients(coeffIndex);
+    while (correctedCoeff <= 0.0){
+      correctedCoeff = random.nextGaussian()*(timeCofficients(coeffIndex)/1.3)+timeCofficients(coeffIndex);
+    }*/
+    val correctedCoeff = timeCofficients(coeffIndex);
+
+    correctedCoeff
+  }
+}
+
+
+
+class WeeklyDailyExpExpExpWorkloadGenerator(val workloadName: String,
+                                       initAvgJobInterarrivalTime: Double,
+                                       avgTasksPerJob: Double,
+                                       avgJobDuration: Double,
+                                       avgCpusPerTask: Double,
+                                       avgMemPerTask: Double,
+                                       heterogeneousTasks: Boolean = false)
+  extends WorkloadGenerator {
+  val numTasksGenerator =
+    new ExponentialDistributionImpl(avgTasksPerJob.toFloat)
+  val durationGenerator = new ExponentialDistributionImpl(avgJobDuration)
+
+  def newJob(submissionTime: Double): Job = {
+    // Don't allow jobs with zero tasks.
+    var dur = durationGenerator.sample()
+    while (dur <= 0.0)
+      dur = durationGenerator.sample()
+    Job(UniqueIDGenerator.getUniqueID(),
+      submissionTime,
+      // Use ceil to avoid jobs with 0 tasks.
+      math.ceil(numTasksGenerator.sample().toFloat).toInt,
+      dur,
+      workloadName,
+      avgCpusPerTask,
+      avgMemPerTask,
+      heterogeneousTasks)
+  }
+
+  /**
+    * Synchronized so that Experiments, which can share this WorkloadGenerator,
+    * can safely call newWorkload concurrently.
+    */
+  def newWorkload(timeWindow: Double,
+                  maxCpus: Option[Double] = None,
+                  maxMem: Option[Double] = None,
+                  updatedAvgJobInterarrivalTime: Option[Double] = None)
+  : Workload = this.synchronized {
+    assert(maxCpus == None)
+    assert(maxMem == None)
+    assert(timeWindow >= 0)
+    // Create the job-interarrival-time number generator using the
+    // parameter passed in, if any, else use the default parameter.
+    val avgJobInterarrivalTime =
+    updatedAvgJobInterarrivalTime.getOrElse(initAvgJobInterarrivalTime)
+    var interarrivalTimeGenerator =
+      new ExponentialDistributionImpl(avgJobInterarrivalTime)
+    val workload = new Workload(workloadName)
+    // create a new list of jobs for the experiment runTime window
+    // using the current WorkloadGenerator.
+    val interArrivalSample = interarrivalTimeGenerator.sample()
+    var nextJobSubmissionTime = interArrivalSample / (getCoeff(interArrivalSample))
+    while (nextJobSubmissionTime < timeWindow) {
+      val job = newJob(nextJobSubmissionTime)
+      assert(job.workloadName == workload.name)
+      workload.addJob(job)
+      val interArrivalSampleIter = interarrivalTimeGenerator.sample()
+      nextJobSubmissionTime += interArrivalSampleIter / (getCoeff(nextJobSubmissionTime + interArrivalSample))
+    }
+    workload
+  }
+
+  def modifyAmplitude(timeCoefficients: List[Double], amplitude: Double): List[Double] = {
+    timeCoefficients.map(x => if (x < 1) x/amplitude else x * amplitude)
+  }
+
+  def getCoeff(submissionTime: Double): Double = {
+    //var timeCofficients = (0.2 :: 0.2 :: 0.2 :: 2.2 :: 2.2 :: 2.2 :: 2.2 :: Nil)
+    var timeCofficientsWeek = (2.2 :: 2.2 :: 0.7 :: 0.5 :: 0.4 :: 0.6 :: 0.6 :: Nil)
+    //var timeCofficients = (2.2 :: 0.6 :: 2.2 :: 0.6 :: 2.2 :: 0.6 :: 0.6 :: Nil)
+    //timeCofficients = modifyAmplitude(timeCofficients, 2)
+    val secondsSubmissionWeek = submissionTime % 604800.0
+    val coeffIndexWeek = (secondsSubmissionWeek / 86400.0).floor.toInt
+
+
+    var timeCofficientsDay = (1.0 :: 0.7 :: 0.6 :: 0.5 :: 0.5 :: 0.5 :: 0.4 :: 0.4 :: 0.4 :: 2.6 :: 1.8 :: 0.7 :: 0.4 :: 1.8 :: 2.1 :: 2.5 :: 0.7 :: 0.4 :: 2.4 :: 1.8 :: 2.1 :: 1.6 :: 1.3 :: 0.9 :: Nil)
+    //timeCofficients = modifyAmplitude(timeCofficients, 2)
+    val secondsSubmissionDay = submissionTime % 86400.0
+    val coeffIndexDay = (secondsSubmissionDay / 3600.0).floor.toInt
+
+
+    /*val random = new Random();
+    var correctedCoeff = random.nextGaussian()*(timeCofficients(coeffIndex)/1.3)+timeCofficients(coeffIndex);
+    while (correctedCoeff <= 0.0){
+      correctedCoeff = random.nextGaussian()*(timeCofficients(coeffIndex)/1.3)+timeCofficients(coeffIndex);
+    }*/
+    val correctedCoeff = timeCofficientsWeek(coeffIndexWeek) * timeCofficientsDay(coeffIndexDay);
+    correctedCoeff
+  }
+}
+
+
 
 object PrefillJobListsCache {
   // Map from (workloadname, traceFileName) -> list of jobs.

@@ -217,27 +217,53 @@ class DynamicScheduler(name: String,
   var chosenStrategy: RMStrategy = null
   val omegaStrategy: OmegaStrategy = new OmegaStrategy(this)
   val mesosStrategy: MesosStrategy = new MesosStrategy(this)
+  var markedStrategy: String = null
+  var iter = 0
 
   def chooseStrategy(name: String): Unit ={
-    assert(name == "Omega" || name == "Mesos", "The dynamic strategies supported are Mesos or Omega")
-    if(name=="Omega") {
-      if(chosenStrategy == null){
-        chosenStrategy = omegaStrategy
+      assert(name == "Omega" || name == "Mesos", "The dynamic strategies supported are Mesos or Omega")
+      if(name=="Omega") {
+        if(chosenStrategy == null){
+          chosenStrategy = omegaStrategy
+        }
+        else if (chosenStrategy.name == "Mesos") {
+          chosenStrategy.asInstanceOf[MesosStrategy].removeOffers();
+          chosenStrategy = omegaStrategy
+          scheduling=false
+          start();
+          iter+=1
+        }
+        //println("Pongo Omega en el scheduler "+this.name)
       }
-      else if (chosenStrategy.name == "Mesos") {
-        removeOffers();
-        chosenStrategy = omegaStrategy
+      else if (name == "Mesos") {
+        if(chosenStrategy == null){
+          chosenStrategy = mesosStrategy
+        }
+        else if (chosenStrategy.name == "Omega") {
+          chosenStrategy = mesosStrategy
+          scheduling=false
+          start();
+          iter+=1
+        }
       }
-      //println("Pongo Omega en el scheduler "+this.name)
+
+
+    /*if(chosenStrategy == null){
+      chosenStrategy = omegaStrategy
     }
-    else if (name == "Mesos") {
-      if(chosenStrategy == null){
+    else if(iter%100 == 0){
+      if(chosenStrategy.name == "Omega"){
         chosenStrategy = mesosStrategy
+        //scheduling=false
+        //start();
       }
-      else if (chosenStrategy.name == "Omega") {
-        chosenStrategy = mesosStrategy
+      else{
+        chosenStrategy.asInstanceOf[MesosStrategy].removeOffers();
+        chosenStrategy = omegaStrategy
+        //scheduling=false
+        //start();
       }
-    }
+    }*/
   }
 
 
@@ -248,193 +274,17 @@ class DynamicScheduler(name: String,
       "simulator yet.")
   }
 
-  def removeOffers(): Unit = {
-    //println("Entra en removeOffers "+simulator.currentTime.toString)
-    //for (offer <- offerQueue.filter(_.scheduler == this)) {
-    for (offer <- offerQueue.dequeueAll(_.scheduler == this)) {
-      //println("Había offers pendientes "+simulator.currentTime.toString)
-      simulator.asInstanceOf[DynamicSimulator].allocator.offeredDeltas.remove(offer.id).foreach(savedDeltas => {
-        savedDeltas.foreach(_.unApply(cellState = simulator.cellState,
-          locked = true))
-      })
-    }
-    dynamicSimulator.allocator.cancelOfferRequest(this)
-  }
-
 
   def resourceOffer(offer: Offer): Unit = {
     offerQueue.enqueue(offer)
     if(chosenStrategy.name == "Mesos") {
-      handleNextResourceOffer()
+      chosenStrategy.asInstanceOf[MesosStrategy].handleNextResourceOffer()
     }
     else{
-      removeOffers()
+      mesosStrategy.removeOffers()
     }
   }
 
-  def handleNextResourceOffer(): Unit = {
-    // We essentially synchronize access to this scheduling logic
-    // via the scheduling variable. We aren't protecting this from real
-    // parallelism, but rather from discrete-event-simlation style parallelism.
-    if(!scheduling && !offerQueue.isEmpty) {
-      scheduling = true
-      val offer = offerQueue.dequeue()
-      // Use this offer to attempt to schedule jobs.
-      simulator.log("------ In %s.resourceOffer(offer %d).".format(name, offer.id))
-      val offerResponse = collection.mutable.ListBuffer[ClaimDelta]()
-      var aggThinkTime: Double = 0.0
-      var lastJobScheduled : Option[Job] = None
-      // TODO(andyk): add an efficient method to CellState that allows us to
-      //              check the largest slice of available resources to decode
-      //              if we should keep trying to schedule or not.
-      while (offer.cellState.availableCpus > 0.000001 &&
-        offer.cellState.availableMem > 0.000001 &&
-        !pendingQueue.isEmpty) {
-        val job = pendingQueue.dequeue
-        lastJobScheduled = Some(job)
-        job.updateTimeInQueueStats(simulator.currentTime)
-        val jobThinkTime = getThinkTime(job)
-        aggThinkTime += jobThinkTime
-        job.numSchedulingAttempts += 1
-        job.numTaskSchedulingAttempts += job.unscheduledTasks
-
-        // Before calling the expensive scheduleJob() function, check
-        // to see if one of this job's tasks could fit into the sum of
-        // *all* the currently free resources in the offers' cell state.
-        // If one can't, then there is no need to call scheduleJob(). If
-        // one can, we call scheduleJob(), though we still might not fit
-        // any tasks due to fragmentation.
-        if (offer.cellState.availableCpus > job.cpusPerTask &&
-          offer.cellState.availableMem > job.cpusPerTask) {
-          // Schedule the job using the cellstate in the ResourceOffer.
-          val claimDeltas = scheduleJob(job, offer.cellState)
-          if(claimDeltas.length > 0) {
-            numSuccessfulTransactions += 1
-            recordUsefulTimeScheduling(job,
-              jobThinkTime,
-              job.numSchedulingAttempts == 1)
-            dynamicSimulator.log(("Setting up job %d to accept at least " +
-              "part of offer %d. About to spend %f seconds " +
-              "scheduling it. Assigning %d tasks to it.")
-              .format(job.id, offer.id, jobThinkTime,
-                claimDeltas.length))
-            offerResponse ++= claimDeltas
-            job.unscheduledTasks -= claimDeltas.length
-          } else {
-            dynamicSimulator.log(("Rejecting all of offer %d for job %d, " +
-              "which requires tasks with %f cpu, %f mem. " +
-              "Not counting busy time for this sched attempt.")
-              .format(offer.id,
-                job.id,
-                job.cpusPerTask,
-                job.memPerTask))
-            numNoResourcesFoundSchedulingAttempts += 1
-          }
-        } else {
-          dynamicSimulator.log(("Short-path rejecting all of offer %d for " +
-            "job %d because a single one of its tasks " +
-            "(%f cpu, %f mem) wouldn't fit into the sum " +
-            "of the offer's private cell state's " +
-            "remaining resources (%f cpu, %f mem).")
-            .format(offer.id,
-              job.id,
-              job.cpusPerTask,
-              job.memPerTask,
-              offer.cellState.availableCpus,
-              offer.cellState.availableMem))
-        }
-
-        var jobEventType = "" // Set this conditionally below; used in logging.
-        // If job is only partially scheduled, put it back in the pendingQueue.
-        if (job.unscheduledTasks > 0) {
-          dynamicSimulator.log(("Job %d is [still] only partially scheduled, " +
-            "(%d out of %d its tasks remain unscheduled) so " +
-            "putting it back in the queue.")
-            .format(job.id,
-              job.unscheduledTasks,
-              job.numTasks))
-          // Give up on a job if (a) it hasn't scheduled a single task in
-          // 100 tries or (b) it hasn't finished scheduling after 1000 tries.
-          if ((job.numSchedulingAttempts > 100 &&
-            job.unscheduledTasks == job.numTasks) ||
-            job.numSchedulingAttempts > 1000) {
-            println(("Abandoning job %d (%f cpu %f mem) with %d/%d " +
-              "remaining tasks, after %d scheduling " +
-              "attempts.").format(job.id,
-              job.cpusPerTask,
-              job.memPerTask,
-              job.unscheduledTasks,
-              job.numTasks,
-              job.numSchedulingAttempts))
-            numJobsTimedOutScheduling += 1
-            jobEventType = "abandoned"
-          } else {
-            //FIXME: Tenemos que tener en cuenta las máquinas que se están encendiendo?
-            if((simulator.cellState.numberOfMachinesOn) < simulator.cellState.numMachines){
-              recordWastedTimeSchedulingPowering(job, simulator.cellState.powerOnTime/4+0.1)
-              simulator.afterDelay(simulator.cellState.powerOnTime/4+0.1) {
-                addJob(job)
-              }
-            }
-            else{
-              simulator.afterDelay(1) {
-                addJob(job)
-              }
-            }
-          }
-          job.lastEnqueued = simulator.currentTime
-        } else {
-          // All tasks in job scheduled so not putting it back in pendingQueue.
-          jobEventType = "fully-scheduled"
-        }
-        if (!jobEventType.equals("")) {
-          // Print some stats that we can use to generate CDFs of the job
-          // # scheduling attempts and job-time-till-scheduled.
-          // println("%s %s %d %s %d %d %f"
-          //         .format(Thread.currentThread().getId(),
-          //                 name,
-          //                 hashCode(),
-          //                 jobEventType,
-          //                 job.id,
-          //                 job.numSchedulingAttempts,
-          //                 simulator.currentTime - job.submitted))
-        }
-      }
-
-      if (pendingQueue.isEmpty) {
-        // If we have scheduled everything, notify the allocator that we
-        // don't need resources offers until we request them again (which
-        // we will do when another job is added to our pendingQueue.
-        // Do this before we reply to the offer since the allocator may make
-        // its next round of offers shortly after we respond to this offer.
-        dynamicSimulator.log(("After scheduling, %s's pending queue is " +
-          "empty, canceling outstanding " +
-          "resource request.").format(name))
-        dynamicSimulator.allocator.cancelOfferRequest(this)
-      } else {
-        dynamicSimulator.log(("%s's pending queue still has %d jobs in it, but " +
-          "for some reason, they didn't fit into this " +
-          "offer, so it will patiently wait for more " +
-          "resource offers.").format(name, pendingQueue.size))
-      }
-
-      // Send our response to this offer.
-      dynamicSimulator.afterDelay(aggThinkTime) {
-        dynamicSimulator.log(("Waited %f seconds of aggThinkTime, now " +
-          "responding to offer %d with %d responses after.")
-          .format(aggThinkTime, offer.id, offerResponse.length))
-        dynamicSimulator.allocator.respondToOffer(offer, offerResponse, lastJobScheduled.getOrElse(null))
-      }
-      // Done with this offer, see if we have another one to handle.
-      scheduling = false
-      if(chosenStrategy.name == "Mesos"){
-        handleNextResourceOffer()
-      }
-      else{
-        removeOffers();
-      }
-    }
-  }
 
   // We define this method to because mesosallocator needs to know hoy many resources must power on depending on job's needs
   def nextJob() : Job = {
@@ -454,6 +304,17 @@ class DynamicScheduler(name: String,
       "simulator yet.")
     super.addJob(job)
     chosenStrategy.addJob(job)
+  }
+
+  def start() = {
+    if(pendingQueue.length > 0){
+      if(chosenStrategy.name == "Mesos"){
+        dynamicSimulator.allocator.requestOffer(this)
+      }
+      else if(chosenStrategy.name == "Omega"){
+        chosenStrategy.asInstanceOf[OmegaStrategy].handleJob(pendingQueue.dequeue)
+      }
+    }
   }
 
   /**

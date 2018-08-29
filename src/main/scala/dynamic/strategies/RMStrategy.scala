@@ -8,4 +8,5 @@ trait RMStrategy {
   val name : String
 
   def addJob(job: Job)
+  def start()
 }

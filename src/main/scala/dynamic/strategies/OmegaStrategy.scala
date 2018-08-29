@@ -1,7 +1,7 @@
 package dynamic.strategies
 
 import ClusterSchedulingSimulation.{CellState, ClaimDelta, Job}
-import dynamic.{DynamicScheduler}
+import dynamic.DynamicScheduler
 
 class OmegaStrategy(sched : DynamicScheduler) extends RMStrategy {
   override val name: String = "Omega"
@@ -115,12 +115,12 @@ class OmegaStrategy(sched : DynamicScheduler) extends RMStrategy {
           if((scheduler.simulator.cellState.numberOfMachinesOn) < scheduler.simulator.cellState.numMachines){
             scheduler.recordWastedTimeSchedulingPowering(job, jobThinkTime + (scheduler.simulator.cellState.powerOnTime/4+0.1))
             scheduler.simulator.afterDelay(scheduler.simulator.cellState.powerOnTime/4+0.1) {
-              addJob(job)
+              scheduler.addJob(job)
             }
           }
           else{
             scheduler.simulator.afterDelay(1) {
-              addJob(job)
+              scheduler.addJob(job)
             }
           }
         }
@@ -146,10 +146,13 @@ class OmegaStrategy(sched : DynamicScheduler) extends RMStrategy {
       scheduler.dynamicSimulator.log("Set " + name + " scheduling to FALSE")
       scheduler.scheduling = false
       // Keep trying to schedule as long as we have jobs in the queue.
-      if (!scheduler.pendingQueue.isEmpty) {
+      if (scheduler.chosenStrategy.name=="Omega" && !scheduler.pendingQueue.isEmpty) {
         scheduler.scheduling = true
         handleJob(scheduler.pendingQueue.dequeue)
       }
+      /*else if(scheduler.chosenStrategy.name == "Mesos"){
+        scheduler.chosenStrategy.start()
+      }*/
     }
   }
 
@@ -159,6 +162,12 @@ class OmegaStrategy(sched : DynamicScheduler) extends RMStrategy {
     scheduler.simulator.log("%s synced private cellstate.".format(name))
     // println("Scheduler %s (%d) has new private cell state %d"
     //         .format(name, hashCode, privateCellState.hashCode))
+  }
+
+  override def start(): Unit = {
+    if(!scheduler.pendingQueue.isEmpty){
+      handleJob(scheduler.pendingQueue.dequeue)
+    }
   }
 
 }

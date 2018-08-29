@@ -72,7 +72,7 @@ object Workloads {
     * numbers are provided as an example. Enter numbers based on your
     * own clusters instead.
     */
-  val numMach = 5000
+  val numMach = 1000
   val machinesPerformance = Array.fill[Double](numMach)(Random.nextDouble() * (1.5) + 0.5)
   //val machinesSecurity = Array.fill[Int](numMach)(Random.nextInt(4))
   val machinesSecurity = Array.fill[Int](numMach)(4) //Every machine has the highest level so it can execute every task. We need to disable the performance penalty of the security
@@ -91,11 +91,15 @@ object Workloads {
   //Primer elemento de la tupla Batch, segundo Service
   //val interArrival = ((90, 900) :: (100, 1000) :: Nil)
   //90/10%
-  //val interArrival = ((200.0, 2000.0) :: Nil)
-  val interArrival1 = for (elem <- (1 to 10 by 2).toList) yield (elem, elem*10)
-  val interArrival2 = for (elem <- (20 to 50 by 10).toList) yield (elem, elem*10)
-  val interArrival3 = for (elem <- (60 to 100 by 20).toList) yield (elem, elem*10)
-  val interArrival = interArrival1 ::: interArrival2 ::: interArrival3
+  val interArrival = ((110.0, 1100.0) :: Nil)
+  /*val interArrival0 = for (elem <- (1 to 10 by 5).toList) yield (elem, elem*10)
+  val interArrival1 = for (elem <- (10 to 25 by 2).toList) yield (elem, elem*10)
+  val interArrival2 = for (elem <- (25 to 55 by 1).toList) yield (elem, elem*10)
+  val interArrival3 = for (elem <- (55 to 80 by 2).toList) yield (elem, elem*10)
+  val interArrival4 = for (elem <- (80 to 120 by 5).toList) yield (elem, elem*10)
+  val interArrival5 = for (elem <- (120 to 200 by 10).toList) yield (elem, elem*10)
+
+  val interArrival = interArrival0 ::: interArrival1 ::: interArrival2 ::: interArrival3 ::: interArrival4 ::: interArrival5*/
   //val interArrival = for (elem <- (80 to 95 by 5).toList) yield (elem, elem*10)
   //val interArrival = for (elem <- (50 to 100 by 15).toList) yield (elem, elem*10)
   //val interArrival = for (elem <- (1 to 10 by 2).toList) yield (elem, elem*10)
@@ -104,8 +108,9 @@ object Workloads {
   val cpusTask = ((0.3, 0.5) :: Nil)
   val memTask = ((0.5, 1.2) :: Nil)
   val tasksHeterogeneity = false
-  val runFlatPattern = true
-  val runDayNightPattern = false
+  val runFlatPattern = false
+  val runDayNightPattern = true
+  val runWeekPattern = false
 
   // example pre-fill workload generators.
   val examplePrefillTraceFileName = "traces/initial-traces/example-init-cluster-state.log"
@@ -127,6 +132,35 @@ object Workloads {
       for( duration <- jobDuration ){
         for( cpu <- cpusTask ){
           for( mem <- memTask ){
+            if(runWeekPattern) {
+              val workloadGeneratorBatch =
+                new WeeklyExpExpExpWorkloadGenerator(workloadName = "Batch".intern(),
+                  initAvgJobInterarrivalTime = inter._1,
+                  avgTasksPerJob = tasks._1,
+                  avgJobDuration = duration._1,
+                  avgCpusPerTask = cpu._1,
+                  avgMemPerTask = mem._1,
+                  heterogeneousTasks = tasksHeterogeneity)
+              val workloadGeneratorService =
+                new WeeklyExpExpExpWorkloadGenerator(workloadName = "Service".intern(),
+                  initAvgJobInterarrivalTime = inter._2,
+                  avgTasksPerJob = tasks._2,
+                  avgJobDuration = duration._2,
+                  avgCpusPerTask = cpu._1,
+                  avgMemPerTask = cpu._2,
+                  heterogeneousTasks = tasksHeterogeneity)
+              val workloadDesc =
+                WorkloadDesc(cell = "example",
+                  assignmentPolicy = "CMB_PBB",
+                  workloadGenerators =
+                    workloadGeneratorBatch ::
+                      workloadGeneratorService ::
+                      Nil,
+                  cellStateDesc = exampleCellStateDesc,
+                  prefillWorkloadGenerators =
+                    List(exampleBatchServicePrefillTraceWLGenerator))
+              workloadGenerators ::= workloadDesc
+            }
             if(runDayNightPattern) {
               val workloadGeneratorBatch =
                 new DailyExpExpExpWorkloadGenerator(workloadName = "Batch".intern(),

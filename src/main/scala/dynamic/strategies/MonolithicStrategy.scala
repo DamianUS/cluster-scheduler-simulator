@@ -116,4 +116,7 @@ class MonolithicStrategy(sched : DynamicScheduler) extends RMStrategy {
         .format(name, job.id))
     }
   }
+
+  override def start(): Unit = {}
+
 }

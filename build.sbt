@@ -22,11 +22,11 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-name := "Omega Simulator"
+name := "SCORE simulator"
 
 version := "0.1"
 
-organization := "edu.berkeley.cs"
+organization := "University of Seville"
 
 mainClass := Some("Simulation")
 
@@ -40,4 +40,6 @@ libraryDependencies += "org.apache.commons" % "commons-math" % "2.2"
 libraryDependencies += "org.scalatest" % "scalatest_2.11" % "2.2.4" % "test"
 
 libraryDependencies += "com.google.protobuf" % "protobuf-java" % "2.6.1"
+
+libraryDependencies += "org.scalanlp" % "breeze_2.10" % "0.5.2"
 

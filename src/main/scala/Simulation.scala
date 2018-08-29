@@ -69,7 +69,7 @@ object Simulation {
       }
     }
     val pp = new ParseParms(helpString)
-    pp.parm("--thread-pool-size", "4").rex("^\\d*") // optional_arg
+    pp.parm("--thread-pool-size", "1").rex("^\\d*") // optional_arg
     pp.parm("--random-seed").rex("^\\d*") // optional_arg
 
     var inputArgs = Map[String, String]()
@@ -184,9 +184,9 @@ object Simulation {
       Map[String, Seq[String]]("Batch" -> Seq("Monolithic"),
                              "Service" -> Seq("Monolithic"))
 
-    var mesos1BatchSchedulerWorkloadMap =
+    /*var mesos1BatchSchedulerWorkloadMap =
       Map[String, Seq[String]]("Batch" -> Seq("MesosBatch"),
-                             "Service" -> Seq("MesosService"))
+                             "Service" -> Seq("MesosService"))*/
 
     var mesos4BatchSchedulerWorkloadMap =
       Map[String, Seq[String]]("Batch" -> Seq("MesosBatch",
@@ -246,7 +246,7 @@ object Simulation {
     /**
      * Set up a simulatorDesc-s.
      */
-    val globalRunTime = 86400.0 / 12
+    val globalRunTime = 86400.0 * 15
     //val globalRunTime = 86400.0 * 30 // 1 Day
     val monolithicSimulatorDesc =
       new MonolithicSimulatorDesc(Array(monolithicSchedulerDesc),
@@ -374,9 +374,9 @@ object Simulation {
           //conflictMode <- Seq("sequence-numbers", "resource-fit");
           conflictMode <- Seq("resource-fit");
           //conflictMode <- Seq("sequence-numbers");
-          //transactionMode <- Seq("all-or-nothing")) yield {
+          transactionMode <- Seq("all-or-nothing")) yield {
           //transactionMode <- Seq("all-or-nothing", "incremental")) yield {
-          transactionMode <- Seq("incremental")) yield {
+          //transactionMode <- Seq("incremental")) yield {
           new DynamicSimulatorDesc(
             generateDynamicSchedulerDescs(numDynamicServiceScheds,
               numDynamicBatchScheds),
@@ -414,9 +414,9 @@ object Simulation {
           //conflictMode <- Seq("sequence-numbers", "resource-fit");
           conflictMode <- Seq("resource-fit");
           //conflictMode <- Seq("sequence-numbers");
-          //transactionMode <- Seq("all-or-nothing")) yield {
+          transactionMode <- Seq("all-or-nothing")) yield {
           //transactionMode <- Seq("all-or-nothing", "incremental")) yield {
-          transactionMode <- Seq("incremental")) yield {
+          //transactionMode <- Seq("incremental")) yield {
             new OmegaSimulatorDesc(
               generateOmegaSchedulerDescs(numOmegaServiceScheds,
                 numOmegaBatchScheds),
@@ -461,14 +461,14 @@ object Simulation {
     val runMonolithic = false
     val runMesos = true
     val runOmega = true
-    val runDynamic = false
+    val runDynamic = true
 
 
     val runStackelberg = false
 
     //All sorting and picking policies
     val sortingPolicies = List[CellStateResourcesSorter](NoSorter,BasicLoadSorter)
-    val pickingPolicies = List[CellStateResourcesPicker] (RandomPicker)
+    //val pickingPolicies = List[CellStateResourcesPicker] (RandomPicker)
     //val pickingPolicies = List[CellStateResourcesPicker] (BasicReversePickerCandidatePower)
     //val pickingPolicies = List[CellStateResourcesPicker](RandomPicker, BasicReversePickerCandidatePower, new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.01))
     //Krakow
@@ -484,7 +484,7 @@ object Simulation {
     //val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaSecurityWithRandom, new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.07), RandomPicker, AgnieszkaEnergySecurityWithRandom)
     //val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaEnergySecurityWithRandom)
     //val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaSecurityWithRandom)
-    //val pickingPolicies = List[CellStateResourcesPicker](new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.07))
+    val pickingPolicies = List[CellStateResourcesPicker](new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.07))
     //val pickingPolicies = List[CellStateResourcesPicker](new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.07), AgnieszkaSecurityWithRandom)
     val powerOnPolicies = List[PowerOnPolicy](new ComposedPowerOnPolicy(DefaultPowerOnAction, NoPowerOnDecision))
     val powerOffPolicies = List[PowerOffPolicy](new ComposedPowerOffPolicy(DefaultPowerOffAction, NoPowerOffDecision))
@@ -1004,7 +1004,7 @@ object Simulation {
     //val constantRange = medConstantRange
     // val constantRange = fullConstantRange
     //val perTaskRange = (0.01 :: 0.1 :: 1.0 :: Nil)
-    val perTaskRange = (0.6 :: Nil)
+    val perTaskRange = (0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: Nil)
     // val perTaskRange = medPerTaskRange
     // val perTaskRange = fullPerTaskRange
     val pickinessRange = fullPickinessRange
@@ -1012,8 +1012,9 @@ object Simulation {
     val interArrivalScaleRange = 0.009 :: 0.01 :: 0.02 :: 0.1 :: 0.2 :: 1.0 :: Nil
     // val interArrivalScaleRange = lambdaRange.map(1/_)
     //val prefillRange = (0.3 to 0.3 by 0.1).toList
-    val prefillRange = (0.2 to 0.8 by 0.05).toList
+    //val prefillRange = (0.2 to 0.8 by 0.05).toList
     //val prefillRange = (0.2 ::0.6 :: 0.8 :: Nil)
+    val prefillRange = (0.3 :: Nil)
     var prefillCpuLim = List[Map[String, Double]]()
     for (prefillPerc <- prefillRange) {prefillCpuLim ::= Map("PrefillBatch" -> prefillPerc, "PrefillService" -> prefillPerc, "PrefillBatchService" -> prefillPerc)}
     //val prefillCpuLim = Map("PrefillBatch" -> 0.3, "PrefillService" -> 0.3, "PrefillBatchService" -> 0.3)
