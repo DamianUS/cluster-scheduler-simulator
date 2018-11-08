@@ -2516,7 +2516,7 @@ class DailyExpExpExpWorkloadGenerator(val workloadName: String,
   }
 
   def getCoeff(submissionTime: Double): Double = {
-    var timeCofficients = (1.0 :: 0.7 :: 0.6 :: 0.5 :: 0.5 :: 0.5 :: 0.4 :: 0.4 :: 0.4 :: 2.6 :: 1.8 :: 0.7 :: 0.4 :: 1.8 :: 2.1 :: 2.5 :: 0.7 :: 0.4 :: 2.4 :: 1.8 :: 2.1 :: 1.6 :: 1.3 :: 0.9 :: Nil)
+    var timeCofficients = (0.7 :: 0.5 :: 0.4 :: 0.5 :: 0.5 :: 0.5 :: 0.4 :: 0.4 :: 0.4 :: 2.6 :: 1.8 :: 0.7 :: 0.4 :: 1.8 :: 2.1 :: 2.5 :: 0.7 :: 0.4 :: 0.7 :: 1.8 :: 2.1 :: 1.6 :: 1.7 :: 0.9 :: Nil)
     //timeCofficients = modifyAmplitude(timeCofficients, 2)
     val secondsSubmission = submissionTime % 86400.0
     val coeffIndex = (secondsSubmission / 3600.0).floor.toInt
@@ -2691,7 +2691,7 @@ class WeeklyDailyExpExpExpWorkloadGenerator(val workloadName: String,
     val coeffIndexWeek = (secondsSubmissionWeek / 86400.0).floor.toInt
 
 
-    var timeCofficientsDay = (1.0 :: 0.7 :: 0.6 :: 0.5 :: 0.5 :: 0.5 :: 0.4 :: 0.4 :: 0.4 :: 2.6 :: 1.8 :: 0.7 :: 0.4 :: 1.8 :: 2.1 :: 2.5 :: 0.7 :: 0.4 :: 2.4 :: 1.8 :: 2.1 :: 1.6 :: 1.3 :: 0.9 :: Nil)
+    var timeCofficientsDay = (0.7 :: 0.5 :: 0.4 :: 0.5 :: 0.5 :: 0.5 :: 0.4 :: 0.4 :: 0.4 :: 2.6 :: 1.8 :: 0.7 :: 0.4 :: 1.8 :: 2.1 :: 2.5 :: 0.7 :: 0.4 :: 0.7 :: 1.8 :: 2.1 :: 1.6 :: 1.7 :: 0.9 :: Nil)
     //timeCofficients = modifyAmplitude(timeCofficients, 2)
     val secondsSubmissionDay = submissionTime % 86400.0
     val coeffIndexDay = (secondsSubmissionDay / 3600.0).floor.toInt

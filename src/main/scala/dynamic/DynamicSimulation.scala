@@ -217,7 +217,6 @@ class DynamicScheduler(name: String,
   var chosenStrategy: RMStrategy = null
   val omegaStrategy: OmegaStrategy = new OmegaStrategy(this)
   val mesosStrategy: MesosStrategy = new MesosStrategy(this)
-  var markedStrategy: String = null
   var iter = 0
 
   def chooseStrategy(name: String): Unit ={
