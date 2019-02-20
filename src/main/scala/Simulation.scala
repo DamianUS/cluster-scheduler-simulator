@@ -31,15 +31,9 @@ import java.util.Locale
 import ClusterSchedulingSimulation.Workloads._
 import ClusterSchedulingSimulation._
 import ca.zmatrix.utils._
-import com.sun.xml.internal.ws.policy.jaxws.SafePolicyReader
 import dynamic.{DynamicSchedulerDesc, DynamicSimulatorDesc}
 import efficiency.ordering_cellstate_resources_policies.{BasicLoadSorter, CellStateResourcesSorter, NoSorter, PowerStateLoadSorter}
 import efficiency.pick_cellstate_resources._
-import efficiency.pick_cellstate_resources.genetic.crossing_functions.CrossGenes
-import efficiency.pick_cellstate_resources.genetic.crossing_selectors.{Agnieszka, RouletteWheel, TwoBest}
-import efficiency.pick_cellstate_resources.genetic.fitness_functions.{Makespan, MakespanMedian}
-import efficiency.pick_cellstate_resources.genetic._
-import efficiency.pick_cellstate_resources.genetic.mutating_functions.{Random, WorstRandom}
 import efficiency.power_off_policies.action.DefaultPowerOffAction
 import efficiency.power_off_policies.decision.deterministic.load.{LoadMaxPowerOffDecision, LoadMeanPowerOffDecision}
 import efficiency.power_off_policies.decision.deterministic.security_margin.{FreeCapacityMeanMarginPowerOffDecision, FreeCapacityMinMarginPowerOffDecision, WeightedFreeCapacityMarginPowerOffDecision}
@@ -458,10 +452,10 @@ object Simulation {
      val mesosWorkloadToSweep = "Batch"
     // val mesosWorkloadToSweep = "Service"
 
-    val runMonolithic = false
-    val runMesos = true
-    val runOmega = true
-    val runDynamic = true
+    val runMonolithic = true
+    val runMesos = false
+    val runOmega = false
+    val runDynamic = false
 
 
     val runStackelberg = false
@@ -999,12 +993,15 @@ object Simulation {
     var security3Range = (360.0 :: 1080.0 :: Nil) //seconds added to tasks of this security level
     security3Range = (0.0 :: Nil) //disable
     //val constantRange = (0.1 :: 1.0 :: Nil)
-    val constantRange = (1.0 :: Nil)
+    //TODO: Primera prueba resultados edge para no separar entre las dos generacione de experimentos, 1.0 es cloud, 0.7 edge, luego descartamos
+    val constantRange = (0.4 :: 0.7 :: Nil)
     //val constantRange = (0.1 :: 1.0 :: 10.0 :: Nil)
     //val constantRange = medConstantRange
     // val constantRange = fullConstantRange
     //val perTaskRange = (0.01 :: 0.1 :: 1.0 :: Nil)
-    val perTaskRange = (0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: Nil)
+    val perTaskRange = (0.1 :: Nil)
+    //Para los test anova
+    //val perTaskRange = (0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: Nil)
     // val perTaskRange = medPerTaskRange
     // val perTaskRange = fullPerTaskRange
     val pickinessRange = fullPickinessRange
@@ -1014,7 +1011,7 @@ object Simulation {
     //val prefillRange = (0.3 to 0.3 by 0.1).toList
     //val prefillRange = (0.2 to 0.8 by 0.05).toList
     //val prefillRange = (0.2 ::0.6 :: 0.8 :: Nil)
-    val prefillRange = (0.3 :: Nil)
+    val prefillRange = (0.2 :: Nil)
     var prefillCpuLim = List[Map[String, Double]]()
     for (prefillPerc <- prefillRange) {prefillCpuLim ::= Map("PrefillBatch" -> prefillPerc, "PrefillService" -> prefillPerc, "PrefillBatchService" -> prefillPerc)}
     //val prefillCpuLim = Map("PrefillBatch" -> 0.3, "PrefillService" -> 0.3, "PrefillBatchService" -> 0.3)
