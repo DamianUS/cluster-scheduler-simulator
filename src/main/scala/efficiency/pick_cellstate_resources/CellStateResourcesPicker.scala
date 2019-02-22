@@ -34,7 +34,7 @@ trait CellStateResourcesPicker {
           currMachID,
           cellState.machineSeqNums(currMachID),
           //TODO: IMPORTANTE: AHORA MISMO LAS TAREAS SON CONSIDERADAS HOMOGÉNEAS EN TODOS LOS PICKERS QUE HEREDAN DE ESTE SCHEDULE SIN SOBREESCRIBIRLO
-          if (cellState.machinesHeterogeneous /*&& job.workloadName == "Batch"*/) ((job.taskDuration * cellState.machinesPerformance(currMachID)) +  (securityTime * cellState.machinesPerformance(currMachID))) else job.taskDuration + securityTime,
+          if (cellState.machinesHeterogeneous && job.workloadName == "Batch") ((job.taskDuration * cellState.machinesPerformance(currMachID)) +  (securityTime * cellState.machinesPerformance(currMachID))) else job.taskDuration + securityTime,
           job.cpusPerTask,
           job.memPerTask,
           job = job)

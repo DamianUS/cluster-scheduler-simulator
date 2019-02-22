@@ -240,7 +240,7 @@ object Simulation {
     /**
      * Set up a simulatorDesc-s.
      */
-    val globalRunTime = 86400.0 * 15
+    val globalRunTime = 86400.0 * 7
     //val globalRunTime = 86400.0 * 30 // 1 Day
     val monolithicSimulatorDesc =
       new MonolithicSimulatorDesc(Array(monolithicSchedulerDesc),
@@ -994,12 +994,13 @@ object Simulation {
     security3Range = (0.0 :: Nil) //disable
     //val constantRange = (0.1 :: 1.0 :: Nil)
     //TODO: Primera prueba resultados edge para no separar entre las dos generacione de experimentos, 1.0 es cloud, 0.7 edge, luego descartamos
-    val constantRange = (0.4 :: 0.7 :: Nil)
+    //val constantRange = (0.5 :: 1.0 :: 1.5 :: 2.0 :: 2.5 :: 3.0 :: Nil)
+    val constantRange = (0.2 :: 0.7 :: Nil)
     //val constantRange = (0.1 :: 1.0 :: 10.0 :: Nil)
     //val constantRange = medConstantRange
     // val constantRange = fullConstantRange
     //val perTaskRange = (0.01 :: 0.1 :: 1.0 :: Nil)
-    val perTaskRange = (0.1 :: Nil)
+    val perTaskRange = (0.1 :: 0.1 :: 0.1 :: 0.1 :: 0.1 :: Nil)
     //Para los test anova
     //val perTaskRange = (0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: Nil)
     // val perTaskRange = medPerTaskRange

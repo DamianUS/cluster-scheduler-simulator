@@ -74,7 +74,7 @@ object Workloads {
     */
 
   //Cloud
-  val numMach = 1000
+  val numMach = 500
   val machinesPerformance = Array.fill[Double](numMach)(Random.nextDouble() * (1.5) + 0.5)
   //val machinesSecurity = Array.fill[Int](numMach)(Random.nextInt(4))
   val machinesSecurity = Array.fill[Int](numMach)(4) //Every machine has the highest level so it can execute every task. We need to disable the performance penalty of the security
@@ -95,7 +95,7 @@ object Workloads {
   //Primer elemento de la tupla Batch, segundo Service
   //val interArrival = ((90, 900) :: (100, 1000) :: Nil)
   //90/10%
-  val interArrival = ((110.0, 1100.0) :: Nil)
+  val interArrival = ((110.0/0.45, 1100.0/0.45) :: Nil)
   /*val interArrival0 = for (elem <- (1 to 10 by 5).toList) yield (elem, elem*10)
   val interArrival1 = for (elem <- (10 to 25 by 2).toList) yield (elem, elem*10)
   val interArrival2 = for (elem <- (25 to 55 by 1).toList) yield (elem, elem*10)
@@ -241,12 +241,12 @@ object Workloads {
   val maxRangePerformanceEdge = 0.5
   val minRangePerformanceEdge = 0.1
   //val machinesPerformanceEdge = Array.fill[Double](numMachEdge)(minRangePerformanceEdge + (maxRangePerformanceEdge - minRangePerformanceEdge) * Random.nextDouble())
-  val machinesPerformanceEdge = Array.fill[Double](numMachEdge)(2.5)
+  val machinesPerformanceEdge = Array.fill[Double](numMachEdge)(5)
   //val machinesSecurity = Array.fill[Int](numMach)(Random.nextInt(4))
   val machinesSecurityEdge = Array.fill[Int](numMachEdge)(4) //Every machine has the highest level so it can execute every task. We need to disable the performance penalty of the security
   //val machinesEnergyEdge = Array.fill[Double](numMach)(minRangePerformanceEdge + (maxRangePerformanceEdge - minRangePerformanceEdge) * Random.nextDouble())
-  val machinesEnergyEdge = Array.fill[Double](numMachEdge)(0.6)
-  val machineHeterogeneityEdge = false
+  val machinesEnergyEdge = Array.fill[Double](numMachEdge)(0.1)
+  val machineHeterogeneityEdge = true
 
 
   val exampleCellStateEdgeDesc = new CellStateDesc(numMachines = numMachEdge,
@@ -261,7 +261,7 @@ object Workloads {
   //Primer elemento de la tupla Batch, segundo Service
   //val interArrival = ((90, 900) :: (100, 1000) :: Nil)
   //90/10%
-  val interArrivalEdge = ((110.0, 1100.0) :: Nil)
+  var interArrivalEdge = ((110.0*numEdgeClusters/0.6, 1100.0*numEdgeClusters/0.6) :: Nil)
   /*val interArrival0 = for (elem <- (1 to 10 by 5).toList) yield (elem, elem*10)
   val interArrival1 = for (elem <- (10 to 25 by 2).toList) yield (elem, elem*10)
   val interArrival2 = for (elem <- (25 to 55 by 1).toList) yield (elem, elem*10)
@@ -385,6 +385,8 @@ object Workloads {
   }
 
   val workloadGenerators = workloadGeneratorsCloud ::: workloadGeneratorsEdge
+
+
 
   /*
     /**
