@@ -452,10 +452,11 @@ object Simulation {
      val mesosWorkloadToSweep = "Batch"
     // val mesosWorkloadToSweep = "Service"
 
-    val runMonolithic = true
+    val runMonolithic = false
     val runMesos = false
     val runOmega = false
     val runDynamic = false
+    val runEdge = true
 
 
     val runStackelberg = false
@@ -994,13 +995,20 @@ object Simulation {
     security3Range = (0.0 :: Nil) //disable
     //val constantRange = (0.1 :: 1.0 :: Nil)
     //TODO: Primera prueba resultados edge para no separar entre las dos generacione de experimentos, 1.0 es cloud, 0.7 edge, luego descartamos
-    //val constantRange = (0.5 :: 1.0 :: 1.5 :: 2.0 :: 2.5 :: 3.0 :: Nil)
-    val constantRange = (0.2 :: 0.7 :: Nil)
-    //val constantRange = (0.1 :: 1.0 :: 10.0 :: Nil)
+    //val constantRange = (0.5 :: 1.0 :: 1.5 :: 2.0 :: 2.5 :: 3.0 :: 4.0 :: 4.5 :: 5.0 :: 5.5 :: 6.0 :: 6.5 :: 7.0 :: 7.5 :: 8.0 :: 8.5 :: 9.0 :: 9.5 :: 10.0 :: Nil)
+    //val constantRange = (0.2 :: Nil)
+    //  0.25 latencia =  0.25 --> latencia 50 ms, 0.3 --> latencia 100 ms, 0.35 --> lat. 150ms, 0.4 --> lat. 200ms, 0.45 --> lat 250ms, 0.5 --> lat. 300
+    //val constantRange = (0.25 :: 0.3 :: 0.35 :: 0.4 :: 0.45 :: 0.5 :: Nil)
+    val constantRange = (0.25 :: 0.35 :: 0.5 :: Nil)
+    // 0.16--> latencia 10ms, 0.18 --> latencia 30ms, 0.2 --> latencia 50ms
+    val constantRangeEdge = (0.16 :: 0.18 :: 0.2 :: Nil)
+    val constantUnificado = (0.25 :: 0.3 :: 0.35 :: 0.4 :: 0.45 :: 0.5 :: Nil)
+
     //val constantRange = medConstantRange
     // val constantRange = fullConstantRange
     //val perTaskRange = (0.01 :: 0.1 :: 1.0 :: Nil)
-    val perTaskRange = (0.1 :: 0.1 :: 0.1 :: 0.1 :: 0.1 :: Nil)
+    val perTaskRange = (0.1 :: Nil)
+    //val perTaskRange = (0.1 :: Nil)
     //Para los test anova
     //val perTaskRange = (0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: Nil)
     // val perTaskRange = medPerTaskRange
@@ -1085,7 +1093,127 @@ object Simulation {
 
 
 
+
+
+    if (runEdge) {
+      // Loop over both a single and multi path Monolithic scheduler.
+      // Emulate a single path scheduler by making the parameter sweep
+      // apply to both the "Service" and "Batch" workload types for it.
+      val multiPathSetup = ("multi", Map("Monolithic" -> List("Service")))
+      val singlePathSetup =
+        ("single", Map("Monolithic" -> List("Service", "Batch")))
+      //List(singlePathSetup, multiPathSetup).foreach {
+      //Now only the single path is run
+      List(singlePathSetup).foreach {
+        case (multiOrSingle, schedulerWorkloadsMap) => {
+          //Tres workload generator: workloadGEneratorsCloud: Cloud only
+          // workloadGeneratorsEdge: tanto para los cloudlet sbc como los high end
+          // workloadGeneratorsEdgeCloud: para el cloud cuando colabora con cloudlets
+/*
+          //Isolated strategies: cloud only
+            allExperiments ::= new Experiment(
+              name = "google-monolithic-%s_path-cloud-only"
+                .format(multiOrSingle),
+              workloadToSweepOver = "Service",
+              workloadDescs = workloadGeneratorsCloud,
+              schedulerWorkloadsToSweepOver = schedulerWorkloadsMap,
+              constantThinkTimeRange = constantRange,
+              perTaskThinkTimeRange = perTaskRange,
+              blackListPercentRange = (0.0 :: Nil),
+              schedulerWorkloadMap = monolithicSchedulerWorkloadMap,
+              simulatorDesc = monolithicSimulatorDesc,
+              logging = doLogging,
+              outputDirectory = outputDirName,
+              prefillCpuLimits = prefillCpuLim,
+              simulationTimeout = timeout,
+              cellStateResourcesSorterList = defaultSortingPolicy,
+              cellStateResourcesPickerList = defaultPickingPolicy,
+              powerOnPolicies = defaultPowerOnPolicy,
+              powerOffPolicies = defaultPowerOffPolicy,
+              level1SecurityTimes = security1Range,
+              level2SecurityTimes = security2Range,
+              level3SecurityTimes = security3Range, stackelbergStrategies = stackelbergStrategies)
+
+          //Isolated strategies: cloudlet only
+          allExperiments ::= new Experiment(
+            name = "google-monolithic-%s_path-cloudlet-only"
+              .format(multiOrSingle),
+            workloadToSweepOver = "Service",
+            workloadDescs = workloadGeneratorsIsolatedCloudlet,
+            schedulerWorkloadsToSweepOver = schedulerWorkloadsMap,
+            constantThinkTimeRange = constantRangeEdge,
+            perTaskThinkTimeRange = perTaskRange,
+            blackListPercentRange = (0.0 :: Nil),
+            schedulerWorkloadMap = monolithicSchedulerWorkloadMap,
+            simulatorDesc = monolithicSimulatorDesc,
+            logging = doLogging,
+            outputDirectory = outputDirName,
+            prefillCpuLimits = prefillCpuLim,
+            simulationTimeout = timeout,
+            cellStateResourcesSorterList = defaultSortingPolicy,
+            cellStateResourcesPickerList = defaultPickingPolicy,
+            powerOnPolicies = defaultPowerOnPolicy,
+            powerOffPolicies = defaultPowerOffPolicy,
+            level1SecurityTimes = security1Range,
+            level2SecurityTimes = security2Range,
+            level3SecurityTimes = security3Range, stackelbergStrategies = stackelbergStrategies)
+*/
+          //Collaborative experiments - Cloud side
+          allExperiments ::= new Experiment(
+            name = "google-monolithic-%s_path-collaborative-cloud"
+              .format(multiOrSingle),
+            workloadToSweepOver = "Service",
+            workloadDescs = workloadGeneratorsEdgeCloud,
+            schedulerWorkloadsToSweepOver = schedulerWorkloadsMap,
+            constantThinkTimeRange = constantRange,
+            perTaskThinkTimeRange = perTaskRange,
+            blackListPercentRange = (0.0 :: Nil),
+            schedulerWorkloadMap = monolithicSchedulerWorkloadMap,
+            simulatorDesc = monolithicSimulatorDesc,
+            logging = doLogging,
+            outputDirectory = outputDirName,
+            prefillCpuLimits = prefillCpuLim,
+            simulationTimeout = timeout,
+            cellStateResourcesSorterList = defaultSortingPolicy,
+            cellStateResourcesPickerList = defaultPickingPolicy,
+            powerOnPolicies = defaultPowerOnPolicy,
+            powerOffPolicies = defaultPowerOffPolicy,
+            level1SecurityTimes = security1Range,
+            level2SecurityTimes = security2Range,
+            level3SecurityTimes = security3Range, stackelbergStrategies = stackelbergStrategies)
+
+          //Collaborative experiments - Cloudlet side
+
+          allExperiments ::= new Experiment(
+            name = "google-monolithic-%s_path-collaborative-cloudlet"
+              .format(multiOrSingle),
+            workloadToSweepOver = "Service",
+            workloadDescs = workloadGeneratorsEdge,
+            schedulerWorkloadsToSweepOver = schedulerWorkloadsMap,
+            constantThinkTimeRange = constantRangeEdge,
+            perTaskThinkTimeRange = perTaskRange,
+            blackListPercentRange = (0.0 :: Nil),
+            schedulerWorkloadMap = monolithicSchedulerWorkloadMap,
+            simulatorDesc = monolithicSimulatorDesc,
+            logging = doLogging,
+            outputDirectory = outputDirName,
+            prefillCpuLimits = prefillCpuLim,
+            simulationTimeout = timeout,
+            cellStateResourcesSorterList = defaultSortingPolicy,
+            cellStateResourcesPickerList = defaultPickingPolicy,
+            powerOnPolicies = defaultPowerOnPolicy,
+            powerOffPolicies = defaultPowerOffPolicy,
+            level1SecurityTimes = security1Range,
+            level2SecurityTimes = security2Range,
+            level3SecurityTimes = security3Range, stackelbergStrategies = stackelbergStrategies)
+
+
+        }
+      }
+    }
+
     //----DYNAMIC----
+
 
     if (runDynamic) {
       // Set up Omega Experiments
