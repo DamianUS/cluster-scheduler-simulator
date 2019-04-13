@@ -45,7 +45,7 @@ import efficiency.power_on_policies.action.margin.PowerOnMarginPercAvailableActi
 import efficiency.power_on_policies.action.probabilistic.{GammaNormalPowerOnAction, GammaPowerOnAction}
 import efficiency.power_on_policies.action.unsatisfied.DefaultPowerOnAction
 import efficiency.power_on_policies.decision.probabilistic.{ExponentialPowerOnDecision, GammaNormalPowerOnDecision}
-import efficiency.power_on_policies.decision.{CombinedPowerOnDecision, DefaultPowerOnDecision, MarginPowerOnDecision, NoPowerOnDecision}
+import efficiency.power_on_policies.decision._
 import efficiency.power_on_policies.{ComposedPowerOnPolicy, PowerOnPolicy}
 import stackelberg.{NoStackelberg, StackelbergAgent, SwitchBetweenCurrentAndSpecified}
 
@@ -453,7 +453,7 @@ object Simulation {
     // val mesosWorkloadToSweep = "Service"
 
     val runMonolithic = true
-    val runMesos = false
+    val runMesos = true
     val runOmega = true
     val runDynamic = false
     val runEdge = false
@@ -551,11 +551,11 @@ object Simulation {
     val dataCenterLostFactorDefault = 0.35
 
 
-    val javierOrtegaNumSimulationsRange = (1 :: 3 :: 5 :: Nil)
+    val javierOrtegaNumSimulationsRange = (1 /*:: 3*/ :: 5 :: Nil)
     val javierOrtegaNumSimulationsDefault = 1
     val javierOrtegaThresholdRange = (0.1 :: 0.3 :: 0.5 :: 0.7 :: 0.9 :: Nil)
     val javierOrtegaThresholdDefault = 0.5
-    val javierOrtegaTsRange = (15.0 :: 30.0 :: 45.0 :: 60.0 :: Nil)
+    val javierOrtegaTsRange = (15.0 :: 30.0 :: /*45.0 ::*/ 60.0 :: Nil)
     val javierOrtegaTsDefault = 30.0
 
     val sweepMaxLoadOffRange = false
@@ -580,9 +580,9 @@ object Simulation {
     val sweepExponentialLostFactor = false
     val sweepGammaNormalLostFactor = false
     val sweepExponentialNormalLostFactor = false
-    val sweepJavierOrtegaNumSimulatios = false
+    val sweepJavierOrtegaNumSimulatios = true
     val sweepJavierOrtegaThreshold = false
-    val sweepJavierOrtegaTs = false
+    val sweepJavierOrtegaTs = true
     //Power Off
     val runMaxLoadOff = false
     val runMeanLoadOff = false
@@ -591,16 +591,22 @@ object Simulation {
     val runMinFreeCapacityPonderated = false
     val runNeverOff = true
     val runAlwzOff = true
-    val runRandom = false
-    val runGamma = false
-    val runExp = false
+    val runRandom = true
+    val runGamma = true
+    val runExp = true
     val runExpNormal = false
     val runGammaNormal = false
     val runJavierOrtega = true
 
+
+    val availabilityFactorRange = (1.0 :: 1.5 :: 2.0 :: 3.0 :: Nil)
+    val availabilityFactorDefault = 1.0
+    val sweepAvailabilityFactorOn = true
+
     //PowerOn
     val runNoPowerOn = false
-    val runDefault = true
+    val runDefault = false
+    val runAvailableCapacityOn = true
     val runGammaNormalOn = false
     val runCombinedDefaultOrGammaNormal = false
     val runCombinedDefaultOrMargin = false
@@ -922,6 +928,17 @@ object Simulation {
 
     if(runDefault){
       defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(DefaultPowerOnAction, DefaultPowerOnDecision)
+    }
+
+    if(runAvailableCapacityOn){
+      if(sweepAvailabilityFactorOn){
+        for(availabilityFactor <- availabilityFactorRange) {
+          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(DefaultPowerOnAction, new AvailableCapacityPowerOnDecision(availabilityFactor))
+        }
+      }
+      else{
+        defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(DefaultPowerOnAction, new AvailableCapacityPowerOnDecision(availabilityFactorDefault))
+      }
     }
 
     if(runGammaNormalOn){
