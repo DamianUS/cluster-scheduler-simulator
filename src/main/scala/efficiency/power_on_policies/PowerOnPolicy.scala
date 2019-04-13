@@ -16,6 +16,7 @@ trait PowerOnPolicy {
   def powerOn(cellState: CellState, job: Job, schedType: String, commitedDelta: Seq[ClaimDelta] = Seq[ClaimDelta](), conflictedDelta: Seq[ClaimDelta] =Seq[ClaimDelta]()) = {
     assertSchedulerName(schedType)
     if(powerOnDecisionPolicy.shouldPowerOn(cellState, job, schedType, commitedDelta, conflictedDelta)){
+      job.turnOnRequests :+= cellState.simulator.currentTime
       var numberOfMachinesToPowerOn = powerOnAction.numberOfMachinesToPowerOn(cellState,job,schedType,commitedDelta,conflictedDelta)
       if (cellState.numberOfMachinesOff < numberOfMachinesToPowerOn && cellState.numberOfMachinesOff > 0) {
         cellState.simulator.log(("There are not enough machines turned off, turning on %d machines on %s policy").format(cellState.numberOfMachinesOff, name))

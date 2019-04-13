@@ -408,9 +408,9 @@ object Simulation {
           //conflictMode <- Seq("sequence-numbers", "resource-fit");
           conflictMode <- Seq("resource-fit");
           //conflictMode <- Seq("sequence-numbers");
-          transactionMode <- Seq("all-or-nothing")) yield {
+          //transactionMode <- Seq("all-or-nothing")) yield {
           //transactionMode <- Seq("all-or-nothing", "incremental")) yield {
-          //transactionMode <- Seq("incremental")) yield {
+          transactionMode <- Seq("incremental")) yield {
             new OmegaSimulatorDesc(
               generateOmegaSchedulerDescs(numOmegaServiceScheds,
                 numOmegaBatchScheds),
@@ -452,11 +452,11 @@ object Simulation {
      val mesosWorkloadToSweep = "Batch"
     // val mesosWorkloadToSweep = "Service"
 
-    val runMonolithic = false
+    val runMonolithic = true
     val runMesos = false
-    val runOmega = false
+    val runOmega = true
     val runDynamic = false
-    val runEdge = true
+    val runEdge = false
 
 
     val runStackelberg = false
@@ -481,6 +481,7 @@ object Simulation {
     //val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaSecurityWithRandom)
     val pickingPolicies = List[CellStateResourcesPicker](new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.07))
     //val pickingPolicies = List[CellStateResourcesPicker](new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.07), AgnieszkaSecurityWithRandom)
+    //val pickingPolicies = List[CellStateResourcesPicker](BasicReversePickerCandidatePower)
     val powerOnPolicies = List[PowerOnPolicy](new ComposedPowerOnPolicy(DefaultPowerOnAction, NoPowerOnDecision))
     val powerOffPolicies = List[PowerOffPolicy](new ComposedPowerOffPolicy(DefaultPowerOffAction, NoPowerOffDecision))
 
@@ -507,11 +508,11 @@ object Simulation {
     //val loadRange = (0.1 to 0.99 by 0.2).toList
     val defaultLoadRange = 0.5
 
-    val freeCapacityRange = (0.35 /*:: 0.4 :: 0.45*/ ::  Nil)
+    val freeCapacityRange = (0.35 :: 0.4 :: 0.45 ::  Nil)
     val freeCapacityOnRange = (0.05 :: 0.1 :: Nil)
 
     //val freeCapacityRange = (0.1 to 0.99 by 0.2).toList
-    val defaultFreeCapacityRange = 0.2
+    val defaultFreeCapacityRange = 0.45
     val defaultFreeCapacityOnRange = 0.1
 
     val randomRange = (0.1 to 0.99 by 0.2).toList
@@ -529,65 +530,77 @@ object Simulation {
     val distributionOnThresholdRange = (0.01 :: 0.1 :: 0.9 :: 0.99 ::Nil)
     val defaultOnDistributionThreshold = 0.5
 */
-    val distributionWindowRange = (100 :: Nil)
-    val defaultWindowSize = 100
+    val distributionWindowRange = (25 :: Nil)
+    val defaultWindowSize = 25
 
     //val exponentialOffDistributionThresholdRange = (0.1 :: 0.3 :: 0.5 :: 0.7 :: 0.9 :: Nil)
-    val exponentialOffDistributionThresholdRange = (0.1 /*:: 0.9*/ ::Nil)
+    val exponentialOffDistributionThresholdRange = (0.1 :: 0.9 ::Nil)
     val exponentialOnDistributionThresholdRange = (0.2 :: 0.5 :: 0.8 ::Nil)
-    val defaultExponentialOffDistributionThreshold = 0.05
+    val defaultExponentialOffDistributionThreshold = 0.1
     val defaultExponentialOnDistributionThreshold = 0.5
 
     //val gammaOffDistributionThresholdRange = (0.1 :: 0.3 :: 0.5 :: 0.7 :: 0.9 ::Nil)
-    val gammaOffDistributionThresholdRange = (0.1 /*:: 0.9*/ ::Nil)
+    val gammaOffDistributionThresholdRange = (0.1 :: 0.9 ::Nil)
     val gammaOnDistributionThresholdRange = (0.2 :: 0.5 :: 0.8 ::Nil)
-    val defaultGammaOffDistributionThreshold = 0.05
+    val defaultGammaOffDistributionThreshold = 0.1
     val defaultGammaOnDistributionThreshold = 0.5
 
     //val dataCenterLostFactorRange = (0.15 :: 0.2 :: 0.25 :: 0.3 :: Nil)
     //val dataCenterLostFactorRange = (0.15 :: 0.16 :: 0.17 :: 0.18 :: 0.19 :: 0.20 :: Nil)
-    val dataCenterLostFactorRange = (0.4 /*:: 0.6*/ :: Nil)
-    val dataCenterLostFactorDefault = 0.2
+    val dataCenterLostFactorRange = (0.25 :: 0.3 :: 0.35 :: Nil)
+    val dataCenterLostFactorDefault = 0.35
 
-    val sweepMaxLoadOffRange = true
+
+    val javierOrtegaNumSimulationsRange = (1 :: 3 :: 5 :: Nil)
+    val javierOrtegaNumSimulationsDefault = 1
+    val javierOrtegaThresholdRange = (0.1 :: 0.3 :: 0.5 :: 0.7 :: 0.9 :: Nil)
+    val javierOrtegaThresholdDefault = 0.5
+    val javierOrtegaTsRange = (15.0 :: 30.0 :: 45.0 :: 60.0 :: Nil)
+    val javierOrtegaTsDefault = 30.0
+
+    val sweepMaxLoadOffRange = false
     val sweepMeanLoadOffRange = false
-    val sweepMinFreeCapacityRange = true
+    val sweepMinFreeCapacityRange = false
     val sweepFreeCapacityRangeOn = false
     val sweepMeanFreeCapacityRange = false
     val sweepMinFreeCapacityPonderatedRange = false
     val sweepMinFreeCapacityPonderatedWindowSize = false
     val sweepRandomThreshold = false
-    val sweepExponentialOffDistributionThreshold = true
+    val sweepExponentialOffDistributionThreshold = false
     val sweepExponentialOnDistributionThreshold = false
     val sweepExponentialNormalDistributionThreshold = false
     val sweepExponentialNormalNormalThreshold = false
     val sweepdNormalThreshold = false
     val sweepdOnNormalThreshold = false
-    val sweepDistributionThreshold = true // Gamma Off distribution threshold
+    val sweepDistributionThreshold = false // Gamma Off distribution threshold
     val sweepOnDistributionThreshold = false
-    val sweepWindowSize = true
+    val sweepWindowSize = false
     val sweepOnWindowSize = false
-    val sweepGammaLostFactor = true
-    val sweepExponentialLostFactor = true
-    val sweepGammaNormalLostFactor = true
-    val sweepExponentialNormalLostFactor = true
+    val sweepGammaLostFactor = false
+    val sweepExponentialLostFactor = false
+    val sweepGammaNormalLostFactor = false
+    val sweepExponentialNormalLostFactor = false
+    val sweepJavierOrtegaNumSimulatios = false
+    val sweepJavierOrtegaThreshold = false
+    val sweepJavierOrtegaTs = false
     //Power Off
     val runMaxLoadOff = false
     val runMeanLoadOff = false
-    val runMinFreeCapacity = false
+    val runMinFreeCapacity = true
     val runMeanFreeCapacity = false
     val runMinFreeCapacityPonderated = false
     val runNeverOff = true
-    val runAlwzOff = false
+    val runAlwzOff = true
     val runRandom = false
     val runGamma = false
     val runExp = false
     val runExpNormal = false
     val runGammaNormal = false
+    val runJavierOrtega = true
 
     //PowerOn
-    val runNoPowerOn = true
-    val runDefault = false
+    val runNoPowerOn = false
+    val runDefault = true
     val runGammaNormalOn = false
     val runCombinedDefaultOrGammaNormal = false
     val runCombinedDefaultOrMargin = false
@@ -859,6 +872,48 @@ object Simulation {
       }
     }
 
+    if(runJavierOrtega){
+
+      if(sweepJavierOrtegaNumSimulatios && sweepJavierOrtegaThreshold && sweepJavierOrtegaTs){
+        for(numSim <- javierOrtegaNumSimulationsRange; thresh <- javierOrtegaThresholdRange; ts <-javierOrtegaTsRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new JavierOrtegaPowerOffDecision(threshold = thresh, windowSize = defaultWindowSize, ts = ts, numSimulations = numSim), doGlobalCheck = true)
+        }
+      }
+      else if(sweepJavierOrtegaNumSimulatios && sweepJavierOrtegaThreshold){
+        for(numSim <- javierOrtegaNumSimulationsRange; thresh <- javierOrtegaThresholdRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new JavierOrtegaPowerOffDecision(threshold = thresh, windowSize = defaultWindowSize, ts = javierOrtegaTsDefault, numSimulations = numSim), doGlobalCheck = true)
+        }
+      }
+      else if(sweepJavierOrtegaNumSimulatios && sweepJavierOrtegaTs){
+        for(numSim <- javierOrtegaNumSimulationsRange; ts <-javierOrtegaTsRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new JavierOrtegaPowerOffDecision(threshold = javierOrtegaThresholdDefault, windowSize = defaultWindowSize, ts = ts, numSimulations = numSim), doGlobalCheck = true)
+        }
+      }
+      else if(sweepJavierOrtegaThreshold && sweepJavierOrtegaTs){
+        for(thresh <- javierOrtegaThresholdRange; ts <-javierOrtegaTsRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new JavierOrtegaPowerOffDecision(threshold = thresh, windowSize = defaultWindowSize, ts = ts, numSimulations = javierOrtegaNumSimulationsDefault), doGlobalCheck = true)
+        }
+      }
+      else if(sweepJavierOrtegaNumSimulatios){
+        for(numSim <- javierOrtegaNumSimulationsRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new JavierOrtegaPowerOffDecision(threshold = javierOrtegaThresholdDefault, windowSize = defaultWindowSize, ts = javierOrtegaTsDefault, numSimulations = numSim), doGlobalCheck = true)
+        }
+      }
+      else if(sweepJavierOrtegaThreshold){
+        for(thresh <- javierOrtegaThresholdRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new JavierOrtegaPowerOffDecision(threshold = thresh, windowSize = defaultWindowSize, ts = javierOrtegaTsDefault, numSimulations = javierOrtegaNumSimulationsDefault), doGlobalCheck = true)
+        }
+      }
+      else if(sweepJavierOrtegaTs){
+        for(ts <-javierOrtegaTsRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new JavierOrtegaPowerOffDecision(threshold = javierOrtegaThresholdDefault, windowSize = defaultWindowSize, ts = ts, numSimulations = javierOrtegaNumSimulationsDefault), doGlobalCheck = true)
+        }
+      }
+      else{
+        defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new JavierOrtegaPowerOffDecision(threshold = javierOrtegaThresholdDefault, windowSize = defaultWindowSize, ts = javierOrtegaTsDefault, numSimulations = javierOrtegaNumSimulationsDefault), doGlobalCheck = true)
+      }
+    }
+
     //Power on
 
     if(runNoPowerOn){
@@ -999,15 +1054,14 @@ object Simulation {
     //val constantRange = (0.2 :: Nil)
     //  0.25 latencia =  0.25 --> latencia 50 ms, 0.3 --> latencia 100 ms, 0.35 --> lat. 150ms, 0.4 --> lat. 200ms, 0.45 --> lat 250ms, 0.5 --> lat. 300
     //val constantRange = (0.25 :: 0.3 :: 0.35 :: 0.4 :: 0.45 :: 0.5 :: Nil)
-    val constantRange = (0.25 :: 0.35 :: 0.5 :: Nil)
+    val constantRange = (0.1 :: Nil)
     // 0.16--> latencia 10ms, 0.18 --> latencia 30ms, 0.2 --> latencia 50ms
     val constantRangeEdge = (0.16 :: 0.18 :: 0.2 :: Nil)
-    val constantUnificado = (0.25 :: 0.3 :: 0.35 :: 0.4 :: 0.45 :: 0.5 :: Nil)
 
     //val constantRange = medConstantRange
     // val constantRange = fullConstantRange
     //val perTaskRange = (0.01 :: 0.1 :: 1.0 :: Nil)
-    val perTaskRange = (0.1 :: Nil)
+    val perTaskRange = (0.01 :: Nil)
     //val perTaskRange = (0.1 :: Nil)
     //Para los test anova
     //val perTaskRange = (0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: Nil)

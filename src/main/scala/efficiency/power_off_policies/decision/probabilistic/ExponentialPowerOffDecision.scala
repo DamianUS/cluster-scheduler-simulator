@@ -11,7 +11,7 @@ import scala.collection.mutable.ListBuffer
 /**
  * Created by dfernandez on 22/1/16.
  */
-class ExponentialPowerOffDecision(threshold : Double, windowSize: Int, lostFactor : Double, ts : Double = 130.0) extends PowerOffDecision with DistributionUtils{
+class ExponentialPowerOffDecision(threshold : Double, windowSize: Int, lostFactor : Double, ts : Double = 30.0) extends PowerOffDecision with DistributionUtils{
   override def shouldPowerOff(cellState: CellState, machineID: Int): Boolean = {
     var should = false
     val allPastTuples = getPastTuples(cellState, windowSize)

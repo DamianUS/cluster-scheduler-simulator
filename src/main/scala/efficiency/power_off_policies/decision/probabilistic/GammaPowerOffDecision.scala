@@ -8,7 +8,7 @@ import org.apache.commons.math.distribution.{GammaDistributionImpl, ExponentialD
 /**
  * Created by dfernandez on 22/1/16.
  */
-class GammaPowerOffDecision(threshold : Double, windowSize: Int, lostFactor : Double, ts : Double = 130.0) extends PowerOffDecision with DistributionUtils{
+class GammaPowerOffDecision(threshold : Double, windowSize: Int, lostFactor : Double, ts : Double = 30.0) extends PowerOffDecision with DistributionUtils{
   override def shouldPowerOff(cellState: CellState, machineID: Int): Boolean = {
     //println(("On : %f y ocupadas: %f").format(cellState.numberOfMachinesOn.toDouble/cellState.numMachines, cellState.numMachinesOccupied.toDouble/cellState.numMachines))
     //FIXME: Esto no calcula bien

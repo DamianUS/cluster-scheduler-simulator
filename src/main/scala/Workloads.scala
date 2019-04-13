@@ -74,16 +74,17 @@ object Workloads {
     */
 
   //Cloud
-  val numMach = 500
+  val numMach = 1000
   val min = 1.0
   val max = 1.3
   //val machinesPerformance = Array.fill[Double](numMach)(Random.nextDouble() * (1.5) + 0.5)
-  val machinesPerformance = Array.fill[Double](numMach)({
+  /*val machinesPerformance = Array.fill[Double](numMach)({
     var penalty = 1.0
     if(Random.nextDouble() > 0.5)
       penalty = min + (max-min) * Random.nextDouble()
     penalty
-  })
+  })*/
+  val machinesPerformance = Array.fill[Double](numMach)(1.0)
   //val machinesSecurity = Array.fill[Int](numMach)(Random.nextInt(4))
   val machinesSecurity = Array.fill[Int](numMach)(4) //Every machine has the highest level so it can execute every task. We need to disable the performance penalty of the security
   //val machinesEnergy = Array.fill[Double](numMach)(Random.nextDouble() * (1.5) + 0.5)
@@ -157,7 +158,7 @@ object Workloads {
   //Primer elemento de la tupla Batch, segundo Service
   //val interArrival = ((90, 900) :: (100, 1000) :: Nil)
   //90/10%
-  val interArrival = ((110.0, 1100.0) :: Nil)
+  val interArrival = ((25.0, 300.0) :: Nil)
   /*val interArrival0 = for (elem <- (1 to 10 by 5).toList) yield (elem, elem*10)
   val interArrival1 = for (elem <- (10 to 25 by 2).toList) yield (elem, elem*10)
   val interArrival2 = for (elem <- (25 to 55 by 1).toList) yield (elem, elem*10)
@@ -170,7 +171,7 @@ object Workloads {
   //val interArrival = for (elem <- (50 to 100 by 15).toList) yield (elem, elem*10)
   //val interArrival = for (elem <- (1 to 10 by 2).toList) yield (elem, elem*10)
   val tasksPerJob = ((180.0, 30.0)  :: Nil)
-  val jobDuration = ((90.0, 2000.0) :: Nil)
+  val jobDuration = ((40.0, 1000.0) :: Nil)
   val cpusTask = ((0.3, 0.5) :: Nil)
   //val memTask = ((0.5, 1.2) :: Nil)
   val memTask = ((0.2, 0.7) :: Nil)
@@ -178,6 +179,7 @@ object Workloads {
   val runFlatPattern = false
   val runDayNightPattern = true
   val runWeekPattern = false
+  val alphas = (/*(0.25, 24.0) :: */(0.5, 2.0) :: (0.75, 1.12064) :: Nil)
 
   // example pre-fill workload generators.
   val examplePrefillTraceFileName = "traces/initial-traces/example-init-cluster-state.log"
@@ -193,102 +195,105 @@ object Workloads {
       examplePrefillTraceFileName)
 
   var workloadGeneratorsCloud = List[WorkloadDesc]()
-  val numRepetitionAnova = 5
+  val numRepetitionAnova = 1
   var workloadGeneratorsIsolatedCloudlet = List[WorkloadDesc]()
+  val runExponential = false
+  val runWeibull = true
 
-
-  for (i <- 1 to numRepetitionAnova) {
-    for (inter <- interArrival) {
-      for (tasks <- tasksPerJob) {
-        for (duration <- jobDuration) {
-          for (cpu <- cpusTask) {
-            for (mem <- memTask) {
-              if (runWeekPattern) {
-                val workloadGeneratorBatch =
-                  new WeeklyExpExpExpWorkloadGenerator(workloadName = "Batch".intern(),
-                    initAvgJobInterarrivalTime = inter._1,
-                    avgTasksPerJob = tasks._1,
-                    avgJobDuration = duration._1,
-                    avgCpusPerTask = cpu._1,
-                    avgMemPerTask = mem._1,
-                    heterogeneousTasks = tasksHeterogeneity)
-                val workloadGeneratorService =
-                  new WeeklyExpExpExpWorkloadGenerator(workloadName = "Service".intern(),
-                    initAvgJobInterarrivalTime = inter._2,
-                    avgTasksPerJob = tasks._2,
-                    avgJobDuration = duration._2,
-                    avgCpusPerTask = cpu._1,
-                    avgMemPerTask = cpu._2,
-                    heterogeneousTasks = tasksHeterogeneity)
-                val workloadDesc =
-                  WorkloadDesc(cell = "cloud",
-                    assignmentPolicy = "CMB_PBB",
-                    workloadGenerators =
-                      workloadGeneratorBatch ::
-                        workloadGeneratorService ::
-                        Nil,
-                    cellStateDesc = cloudCellStateDesc,
-                    prefillWorkloadGenerators =
-                      List(exampleBatchServicePrefillTraceWLGenerator))
-                workloadGeneratorsCloud ::= workloadDesc
-              }
-              if (runDayNightPattern) {
-                val workloadGeneratorBatch =
-                  new DailyExpExpExpWorkloadGenerator(workloadName = "Batch".intern(),
-                    initAvgJobInterarrivalTime = inter._1,
-                    avgTasksPerJob = tasks._1,
-                    avgJobDuration = duration._1,
-                    avgCpusPerTask = cpu._1,
-                    avgMemPerTask = mem._1,
-                    heterogeneousTasks = tasksHeterogeneity)
-                val workloadGeneratorService =
-                  new DailyExpExpExpWorkloadGenerator(workloadName = "Service".intern(),
-                    initAvgJobInterarrivalTime = inter._2,
-                    avgTasksPerJob = tasks._2,
-                    avgJobDuration = duration._2,
-                    avgCpusPerTask = cpu._1,
-                    avgMemPerTask = cpu._2,
-                    heterogeneousTasks = tasksHeterogeneity)
-                val workloadDesc =
-                  WorkloadDesc(cell = "cloud",
-                    assignmentPolicy = "CMB_PBB",
-                    workloadGenerators =
-                      workloadGeneratorBatch ::
-                        workloadGeneratorService ::
-                        Nil,
-                    cellStateDesc = cloudCellStateDesc,
-                    prefillWorkloadGenerators =
-                      List(exampleBatchServicePrefillTraceWLGenerator))
-                workloadGeneratorsCloud ::= workloadDesc
-              }
-              if (runFlatPattern) {
-                val workloadGeneratorBatch =
-                  new ExpExpExpWorkloadGenerator(workloadName = "Batch".intern(),
-                    initAvgJobInterarrivalTime = inter._1,
-                    avgTasksPerJob = tasks._1,
-                    avgJobDuration = duration._1,
-                    avgCpusPerTask = cpu._1,
-                    avgMemPerTask = mem._1,
-                    heterogeneousTasks = tasksHeterogeneity)
-                val workloadGeneratorService =
-                  new ExpExpExpWorkloadGenerator(workloadName = "Service".intern(),
-                    initAvgJobInterarrivalTime = inter._2,
-                    avgTasksPerJob = tasks._2,
-                    avgJobDuration = duration._2,
-                    avgCpusPerTask = cpu._1,
-                    avgMemPerTask = cpu._2,
-                    heterogeneousTasks = tasksHeterogeneity)
-                val workloadDesc =
-                  WorkloadDesc(cell = "cloud",
-                    assignmentPolicy = "CMB_PBB",
-                    workloadGenerators =
-                      workloadGeneratorBatch ::
-                        workloadGeneratorService ::
-                        Nil,
-                    cellStateDesc = cloudCellStateDesc,
-                    prefillWorkloadGenerators =
-                      List(exampleBatchServicePrefillTraceWLGenerator))
-                workloadGeneratorsCloud ::= workloadDesc
+  if(runExponential) {
+    for (i <- 1 to numRepetitionAnova) {
+      for (inter <- interArrival) {
+        for (tasks <- tasksPerJob) {
+          for (duration <- jobDuration) {
+            for (cpu <- cpusTask) {
+              for (mem <- memTask) {
+                if (runWeekPattern) {
+                  val workloadGeneratorBatch =
+                    new WeeklyExpExpExpWorkloadGenerator(workloadName = "Batch".intern(),
+                      initAvgJobInterarrivalTime = inter._1,
+                      avgTasksPerJob = tasks._1,
+                      avgJobDuration = duration._1,
+                      avgCpusPerTask = cpu._1,
+                      avgMemPerTask = mem._1,
+                      heterogeneousTasks = tasksHeterogeneity)
+                  val workloadGeneratorService =
+                    new WeeklyExpExpExpWorkloadGenerator(workloadName = "Service".intern(),
+                      initAvgJobInterarrivalTime = inter._2,
+                      avgTasksPerJob = tasks._2,
+                      avgJobDuration = duration._2,
+                      avgCpusPerTask = cpu._1,
+                      avgMemPerTask = cpu._2,
+                      heterogeneousTasks = tasksHeterogeneity)
+                  val workloadDesc =
+                    WorkloadDesc(cell = "cloud",
+                      assignmentPolicy = "CMB_PBB",
+                      workloadGenerators =
+                        workloadGeneratorBatch ::
+                          workloadGeneratorService ::
+                          Nil,
+                      cellStateDesc = cloudCellStateDesc,
+                      prefillWorkloadGenerators =
+                        List(exampleBatchServicePrefillTraceWLGenerator))
+                  workloadGeneratorsCloud ::= workloadDesc
+                }
+                if (runDayNightPattern) {
+                  val workloadGeneratorBatch =
+                    new DailyExpExpExpWorkloadGenerator(workloadName = "Batch".intern(),
+                      initAvgJobInterarrivalTime = inter._1,
+                      avgTasksPerJob = tasks._1,
+                      avgJobDuration = duration._1,
+                      avgCpusPerTask = cpu._1,
+                      avgMemPerTask = mem._1,
+                      heterogeneousTasks = tasksHeterogeneity)
+                  val workloadGeneratorService =
+                    new DailyExpExpExpWorkloadGenerator(workloadName = "Service".intern(),
+                      initAvgJobInterarrivalTime = inter._2,
+                      avgTasksPerJob = tasks._2,
+                      avgJobDuration = duration._2,
+                      avgCpusPerTask = cpu._1,
+                      avgMemPerTask = cpu._2,
+                      heterogeneousTasks = tasksHeterogeneity)
+                  val workloadDesc =
+                    WorkloadDesc(cell = "cloud",
+                      assignmentPolicy = "CMB_PBB",
+                      workloadGenerators =
+                        workloadGeneratorBatch ::
+                          workloadGeneratorService ::
+                          Nil,
+                      cellStateDesc = cloudCellStateDesc,
+                      prefillWorkloadGenerators =
+                        List(exampleBatchServicePrefillTraceWLGenerator))
+                  workloadGeneratorsCloud ::= workloadDesc
+                }
+                if (runFlatPattern) {
+                  val workloadGeneratorBatch =
+                    new ExpExpExpWorkloadGenerator(workloadName = "Batch".intern(),
+                      initAvgJobInterarrivalTime = inter._1,
+                      avgTasksPerJob = tasks._1,
+                      avgJobDuration = duration._1,
+                      avgCpusPerTask = cpu._1,
+                      avgMemPerTask = mem._1,
+                      heterogeneousTasks = tasksHeterogeneity)
+                  val workloadGeneratorService =
+                    new ExpExpExpWorkloadGenerator(workloadName = "Service".intern(),
+                      initAvgJobInterarrivalTime = inter._2,
+                      avgTasksPerJob = tasks._2,
+                      avgJobDuration = duration._2,
+                      avgCpusPerTask = cpu._1,
+                      avgMemPerTask = cpu._2,
+                      heterogeneousTasks = tasksHeterogeneity)
+                  val workloadDesc =
+                    WorkloadDesc(cell = "cloud",
+                      assignmentPolicy = "CMB_PBB",
+                      workloadGenerators =
+                        workloadGeneratorBatch ::
+                          workloadGeneratorService ::
+                          Nil,
+                      cellStateDesc = cloudCellStateDesc,
+                      prefillWorkloadGenerators =
+                        List(exampleBatchServicePrefillTraceWLGenerator))
+                  workloadGeneratorsCloud ::= workloadDesc
+                }
               }
             }
           }
@@ -297,6 +302,112 @@ object Workloads {
     }
   }
 
+
+  if(runWeibull) {
+    for (i <- 1 to numRepetitionAnova) {
+      for (inter <- interArrival) {
+        for (tasks <- tasksPerJob) {
+          for (duration <- jobDuration) {
+            for (cpu <- cpusTask) {
+              for (mem <- memTask) {
+                for (a <- alphas) {
+                  if (runWeekPattern) {
+                    val workloadGeneratorBatch =
+                      new WeeklyExpExpExpWorkloadGenerator(workloadName = "Batch".intern(),
+                        initAvgJobInterarrivalTime = inter._1,
+                        avgTasksPerJob = tasks._1,
+                        avgJobDuration = duration._1,
+                        avgCpusPerTask = cpu._1,
+                        avgMemPerTask = mem._1,
+                        heterogeneousTasks = tasksHeterogeneity)
+                    val workloadGeneratorService =
+                      new WeeklyExpExpExpWorkloadGenerator(workloadName = "Service".intern(),
+                        initAvgJobInterarrivalTime = inter._2,
+                        avgTasksPerJob = tasks._2,
+                        avgJobDuration = duration._2,
+                        avgCpusPerTask = cpu._1,
+                        avgMemPerTask = cpu._2,
+                        heterogeneousTasks = tasksHeterogeneity)
+                    val workloadDesc =
+                      WorkloadDesc(cell = "cloud",
+                        assignmentPolicy = "CMB_PBB",
+                        workloadGenerators =
+                          workloadGeneratorBatch ::
+                            workloadGeneratorService ::
+                            Nil,
+                        cellStateDesc = cloudCellStateDesc,
+                        prefillWorkloadGenerators =
+                          List(exampleBatchServicePrefillTraceWLGenerator))
+                    workloadGeneratorsCloud ::= workloadDesc
+                  }
+                  if (runDayNightPattern) {
+                    val workloadGeneratorBatch =
+                      new DailyWeiWeiWeiWorkloadGenerator(workloadName = "Batch".intern(),
+                        initAvgJobInterarrivalTime = inter._1,
+                        avgTasksPerJob = tasks._1,
+                        avgJobDuration = duration._1,
+                        avgCpusPerTask = cpu._1,
+                        avgMemPerTask = mem._1,
+                        alpha = a,
+                        heterogeneousTasks = tasksHeterogeneity)
+                    val workloadGeneratorService =
+                      new DailyWeiWeiWeiWorkloadGenerator(workloadName = "Service".intern(),
+                        initAvgJobInterarrivalTime = inter._2,
+                        avgTasksPerJob = tasks._2,
+                        avgJobDuration = duration._2,
+                        avgCpusPerTask = cpu._1,
+                        avgMemPerTask = cpu._2,
+                        alpha = a,
+                        heterogeneousTasks = tasksHeterogeneity)
+                    val workloadDesc =
+                      WorkloadDesc(cell = "cloud",
+                        assignmentPolicy = "CMB_PBB",
+                        workloadGenerators =
+                          workloadGeneratorBatch ::
+                            workloadGeneratorService ::
+                            Nil,
+                        cellStateDesc = cloudCellStateDesc,
+                        prefillWorkloadGenerators =
+                          List(exampleBatchServicePrefillTraceWLGenerator))
+                    workloadGeneratorsCloud ::= workloadDesc
+                  }
+                  if (runFlatPattern) {
+                    val workloadGeneratorBatch =
+                      new ExpExpExpWorkloadGenerator(workloadName = "Batch".intern(),
+                        initAvgJobInterarrivalTime = inter._1,
+                        avgTasksPerJob = tasks._1,
+                        avgJobDuration = duration._1,
+                        avgCpusPerTask = cpu._1,
+                        avgMemPerTask = mem._1,
+                        heterogeneousTasks = tasksHeterogeneity)
+                    val workloadGeneratorService =
+                      new ExpExpExpWorkloadGenerator(workloadName = "Service".intern(),
+                        initAvgJobInterarrivalTime = inter._2,
+                        avgTasksPerJob = tasks._2,
+                        avgJobDuration = duration._2,
+                        avgCpusPerTask = cpu._1,
+                        avgMemPerTask = cpu._2,
+                        heterogeneousTasks = tasksHeterogeneity)
+                    val workloadDesc =
+                      WorkloadDesc(cell = "cloud",
+                        assignmentPolicy = "CMB_PBB",
+                        workloadGenerators =
+                          workloadGeneratorBatch ::
+                            workloadGeneratorService ::
+                            Nil,
+                        cellStateDesc = cloudCellStateDesc,
+                        prefillWorkloadGenerators =
+                          List(exampleBatchServicePrefillTraceWLGenerator))
+                    workloadGeneratorsCloud ::= workloadDesc
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 
   //Para el caso Isolated cloudlets
   var interArrivalEdgeIsolated = ((110.0*numEdgeClusters, 1100.0*numEdgeClusters) :: Nil)

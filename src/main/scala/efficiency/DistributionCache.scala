@@ -25,7 +25,7 @@ object DistributionCache {
   def gammaDistributionCacheHits = gammaDistributionCacheCalls - gammaDistributionCacheMiss
   // Key: List[Long], Tuple6[Double] 1- Interarrival avg, 2- Interarrival stddev, 3 - mem avg, 4 - mem stddev
   // 5 - cpu avg, 6- cpu stddev
-  var jobAttributesCache = Collections.synchronizedMap(new LFUCache[Seq[Long], Tuple6[Double, Double, Double, Double, Double, Double]](1500, 0.3f))
+  var jobAttributesCache = Collections.synchronizedMap(new LFUCache[Seq[Long], Tuple10[Double, Double, Double, Double, Double, Double, Double, Double, Double, Double]](1500, 0.3f))
   var jobAttributesCacheCalls = 0
   var jobAttributesCacheMiss = 0
   def jobAttributesCacheHits = jobAttributesCacheCalls - jobAttributesCacheMiss

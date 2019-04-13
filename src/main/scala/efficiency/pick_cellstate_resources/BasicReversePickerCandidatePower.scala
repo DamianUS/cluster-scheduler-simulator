@@ -32,7 +32,9 @@ object BasicReversePickerCandidatePower extends CellStateResourcesPicker{
 
       }
     }
-
+    if(machineID == -1){
+      assert(remainingCandidatesVar == 0, ("No ha encontrado un candidato en %s y sin embargo dice que hay %d candidatos aún disponibles").format(name, remainingCandidatesVar))
+    }
     new Tuple4(machineID, numTries, remainingCandidatesVar, candidatePool)
   }
   override val name: String = "reverse-power-picker-candidate"

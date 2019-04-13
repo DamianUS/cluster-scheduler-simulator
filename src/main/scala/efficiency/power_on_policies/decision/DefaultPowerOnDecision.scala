@@ -13,7 +13,7 @@ object DefaultPowerOnDecision extends PowerOnDecision{
       should = job!=null && job.unscheduledTasks > 0 && (job.turnOnRequests.length <=1 || (cellState.simulator.currentTime - job.turnOnRequests(job.turnOnRequests.length-1)) > cellState.powerOnTime*1.05)
     }
     should*/
-    job!=null && job.unscheduledTasks > 0 && (job.turnOnRequests.length <=1 || (cellState.simulator.currentTime - job.turnOnRequests(job.turnOnRequests.length-1)) > cellState.powerOnTime*1.05)
+    job!=null && job.unscheduledTasks > 0 && job.cpusStillNeeded > (cellState.availableCpus/2) && (job.turnOnRequests.length <=1 || (cellState.simulator.currentTime - job.turnOnRequests(job.turnOnRequests.length-1)) > cellState.powerOnTime*1.05)
 
   }
 
