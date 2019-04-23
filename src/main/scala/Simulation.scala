@@ -453,8 +453,8 @@ object Simulation {
     // val mesosWorkloadToSweep = "Service"
 
     val runMonolithic = true
-    val runMesos = true
-    val runOmega = true
+    val runMesos = false
+    val runOmega = false
     val runDynamic = false
     val runEdge = false
 
@@ -551,11 +551,11 @@ object Simulation {
     val dataCenterLostFactorDefault = 0.35
 
 
-    val javierOrtegaNumSimulationsRange = (1 /*:: 3*/ :: 5 :: Nil)
-    val javierOrtegaNumSimulationsDefault = 1
+    val javierOrtegaNumSimulationsRange = (1 :: 3 :: 5 :: Nil)
+    val javierOrtegaNumSimulationsDefault = 3
     val javierOrtegaThresholdRange = (0.1 :: 0.3 :: 0.5 :: 0.7 :: 0.9 :: Nil)
     val javierOrtegaThresholdDefault = 0.5
-    val javierOrtegaTsRange = (15.0 :: 30.0 :: /*45.0 ::*/ 60.0 :: Nil)
+    val javierOrtegaTsRange = (15.0 :: 30.0 :: 45.0 :: 60.0 :: Nil)
     val javierOrtegaTsDefault = 30.0
 
     val sweepMaxLoadOffRange = false
@@ -581,7 +581,7 @@ object Simulation {
     val sweepGammaNormalLostFactor = false
     val sweepExponentialNormalLostFactor = false
     val sweepJavierOrtegaNumSimulatios = true
-    val sweepJavierOrtegaThreshold = false
+    val sweepJavierOrtegaThreshold = true
     val sweepJavierOrtegaTs = true
     //Power Off
     val runMaxLoadOff = false
@@ -600,8 +600,8 @@ object Simulation {
 
 
     val availabilityFactorRange = (1.0 :: 1.5 :: 2.0 :: 3.0 :: Nil)
-    val availabilityFactorDefault = 1.0
-    val sweepAvailabilityFactorOn = true
+    val availabilityFactorDefault = 2.5
+    val sweepAvailabilityFactorOn = false
 
     //PowerOn
     val runNoPowerOn = false

@@ -379,7 +379,7 @@ class ClusterSimulator(val cellState: CellState,
   var sumCpuIdle = 0.0
   var sumMemIdle = 0.0
   //Heterogeneous machines power profile
-  val totalMeasurements = (86400.0 * 15 / monitoringPeriod).toInt + 2
+  val totalMeasurements = (86400.0 * 7 / monitoringPeriod).toInt + 2
   val totalPower = Array.ofDim[Double](cellState.numMachines, totalMeasurements) //Matrix of numMachines
   val currentPower = Array.ofDim[Double](cellState.numMachines, totalMeasurements) //Matrix of numMachines
 

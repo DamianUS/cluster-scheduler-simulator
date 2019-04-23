@@ -179,7 +179,7 @@ object Workloads {
   val runFlatPattern = false
   val runDayNightPattern = true
   val runWeekPattern = false
-  val alphas = (/*(0.25, 24.0) :: */(0.5, 2.0) :: (0.75, 1.12064) :: Nil)
+  val alphas = ((0.2, 120.0) :: (0.3, 9.26053) :: (0.4, 3.32335) :: (0.5, 2.0) :: (0.6, 1.50458) :: (0.7, 1.26582) :: (0.8, 1.133) :: Nil)
 
   // example pre-fill workload generators.
   val examplePrefillTraceFileName = "traces/initial-traces/example-init-cluster-state.log"
@@ -197,8 +197,8 @@ object Workloads {
   var workloadGeneratorsCloud = List[WorkloadDesc]()
   val numRepetitionAnova = 1
   var workloadGeneratorsIsolatedCloudlet = List[WorkloadDesc]()
-  val runExponential = false
-  val runWeibull = true
+  val runExponential = true
+  val runWeibull = false
 
   if(runExponential) {
     for (i <- 1 to numRepetitionAnova) {

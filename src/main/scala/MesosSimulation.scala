@@ -568,7 +568,7 @@ class MesosAllocator(constantThinkTime: Double,
             minCpuOffer,
             minMemOffer)
         //TODO: Decidir si prescindir de esto o no. Sólo sirve para el caso en el que se encuentre todas las máquinas apagadas
-        if(simulator.cellState.numberOfMachinesOn < simulator.cellState.numMachines){
+        /*if(simulator.cellState.numberOfMachinesOn < simulator.cellState.numMachines){
           if(!schedulersRequestingResources.isEmpty){
             val nextScheduler = drfSortSchedulers(schedulersRequestingResources.toSeq)(0)
             simulator.powerOn.powerOn(simulator.cellState, nextScheduler.nextJob(), "mesos")
@@ -576,7 +576,7 @@ class MesosAllocator(constantThinkTime: Double,
           else{
             simulator.powerOn.powerOn(simulator.cellState, null, "mesos")
           }
-        }
+        }*/
       }
       simulator.log("Not sending an offer after all. %s".format(reason))
     }
