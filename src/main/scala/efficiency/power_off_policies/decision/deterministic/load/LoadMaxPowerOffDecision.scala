@@ -7,10 +7,11 @@ import efficiency.power_off_policies.decision.PowerOffDecision
    * Created by dfernandez on 15/1/16.
    */
 class LoadMaxPowerOffDecision(threshold : Double) extends PowerOffDecision{
-  //Intución: Cuando el centro de datos esté menos cargado que el threshold, apaga
+  //Intución: Cambio: Margen sobre los ocupados
     override def shouldPowerOff(cellState: CellState, machineID: Int): Boolean = {
-        threshold > Math.max(cellState.totalOccupiedCpus/cellState.totalCpus, cellState.totalOccupiedMem/cellState.totalMem)
+      assert(threshold > 0 && threshold < 1, "Security margin percentage value must be between 0.001 and 0.999")
+      cellState.availableCpus > (1+threshold)*cellState.totalOccupiedCpus && cellState.availableMem > (1+threshold)*cellState.totalOccupiedMem
     }
 
-    override val name: String = ("load-max-power-off-decision-with-threshold:%f").format(threshold)
+    override val name: String = ("load-power-off-decision-with-margin:%f").format(threshold)
   }

@@ -2,7 +2,7 @@ package efficiency
 
 import ClusterSchedulingSimulation.{CellState, Job}
 import org.apache.commons.math.distribution.{ExponentialDistributionImpl, GammaDistributionImpl, NormalDistributionImpl}
-
+import scala.util.control.Breaks._
 /**
   * Created by dfernandez on 18/2/16.
   */
@@ -99,6 +99,26 @@ trait DistributionUtils {
     else{
       cellState.simulator.jobCache
     }
+  }
+
+
+  def getPastTuplesTime(cellState: CellState, timeWindow: Double): Seq[Tuple2[Double, Job]] ={
+    val jobCacheLength = cellState.simulator.jobCache.length
+    var numElements = 0
+    breakable {
+      for (i <- jobCacheLength-1 to 0 by -1){
+        if (cellState.simulator.jobCache(i)._1 > cellState.simulator.currentTime - timeWindow){
+          numElements += 1
+        }
+        else{
+          break
+        }
+      }
+    }
+    //cellState.simulator.jobCache.filter( tuple => tuple._1 > cellState.simulator.currentTime - timeWindow)
+    //val numElements = cellState.simulator.jobCache.count(tuple => tuple._1 > cellState.simulator.currentTime - timeWindow)
+    //cellState.simulator.jobCache.takeRight(numElements)
+    cellState.simulator.jobCache.slice(jobCacheLength-(numElements+1), jobCacheLength)
   }
 
   def getJobAttributes(pastTuples : Seq[Tuple2[Double, Job]]): Tuple10[Double, Double, Double, Double, Double, Double, Double, Double, Double, Double] ={

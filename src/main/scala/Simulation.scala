@@ -36,7 +36,7 @@ import efficiency.ordering_cellstate_resources_policies.{BasicLoadSorter, CellSt
 import efficiency.pick_cellstate_resources._
 import efficiency.power_off_policies.action.DefaultPowerOffAction
 import efficiency.power_off_policies.decision.deterministic.load.{LoadMaxPowerOffDecision, LoadMeanPowerOffDecision}
-import efficiency.power_off_policies.decision.deterministic.security_margin.{FreeCapacityMeanMarginPowerOffDecision, FreeCapacityMinMarginPowerOffDecision, WeightedFreeCapacityMarginPowerOffDecision}
+import efficiency.power_off_policies.decision.deterministic.security_margin.{ConstantMarginPowerOffDecision, FreeCapacityMeanMarginPowerOffDecision, FreeCapacityMinMarginPowerOffDecision, WeightedFreeCapacityMarginPowerOffDecision}
 import efficiency.power_off_policies.decision.deterministic.{AlwzPowerOffDecision, NoPowerOffDecision}
 import efficiency.power_off_policies.decision.probabilistic._
 import efficiency.power_off_policies.{ComposedPowerOffPolicy, PowerOffPolicy}
@@ -63,7 +63,7 @@ object Simulation {
       }
     }
     val pp = new ParseParms(helpString)
-    pp.parm("--thread-pool-size", "1").rex("^\\d*") // optional_arg
+    pp.parm("--thread-pool-size", "4").rex("^\\d*") // optional_arg
     pp.parm("--random-seed").rex("^\\d*") // optional_arg
 
     var inputArgs = Map[String, String]()
@@ -453,8 +453,8 @@ object Simulation {
     // val mesosWorkloadToSweep = "Service"
 
     val runMonolithic = true
-    val runMesos = false
-    val runOmega = false
+    val runMesos = true
+    val runOmega = true
     val runDynamic = false
     val runEdge = false
 
@@ -504,22 +504,25 @@ object Simulation {
     }
 
 
-    val loadRange = (0.4 /*:: 0.7*/ :: Nil)
+    val loadRange = (0.1 :: 0.5 :: 0.9 :: Nil)
     //val loadRange = (0.1 to 0.99 by 0.2).toList
     val defaultLoadRange = 0.5
 
     val freeCapacityRange = (0.35 :: 0.4 :: 0.45 ::  Nil)
     val freeCapacityOnRange = (0.05 :: 0.1 :: Nil)
 
+    val constantCapacityRange = (0.1 :: 0.2 :: 0.3 ::  Nil)
+
     //val freeCapacityRange = (0.1 to 0.99 by 0.2).toList
     val defaultFreeCapacityRange = 0.45
+    val defaultConstantCapacityRange = 0.15
     val defaultFreeCapacityOnRange = 0.1
 
     val randomRange = (0.1 to 0.99 by 0.2).toList
     val randomDefaultThreshold = 0.5
 
     //val normalThresholdRange = (0.05 to 0.99 by 0.1).toList
-    val normalThresholdRange = (0.8 :: 0.85 :: 0.9 ::Nil)
+    val normalThresholdRange = (0.8 :: 0.85 :: 0.9 :: Nil)
    // val normalThresholdRange = (0.05 to 0.5 by 0.05).toList
     val defaultNormalThreshold = 0.85
 /*
@@ -552,15 +555,19 @@ object Simulation {
 
 
     val javierOrtegaNumSimulationsRange = (1 :: 3 :: 5 :: Nil)
-    val javierOrtegaNumSimulationsDefault = 3
-    val javierOrtegaThresholdRange = (0.1 :: 0.3 :: 0.5 :: 0.7 :: 0.9 :: Nil)
+    val javierOrtegaNumSimulationsDefault = 5
+    val javierOrtegaThresholdRange = (0.1 :: 0.5 :: 0.9 :: Nil)
     val javierOrtegaThresholdDefault = 0.5
-    val javierOrtegaTsRange = (15.0 :: 30.0 :: 45.0 :: 60.0 :: Nil)
-    val javierOrtegaTsDefault = 30.0
+    val javierOrtegaTsRange = (30.0 :: 60.0 :: Nil)
+    val javierOrtegaTsDefault = 60.0
+    val javierOrtegaTimeRange = (300.0 :: 600.0 :: Nil)
+    //val javierOrtegaTimeRange = (600.0 :: Nil)
 
-    val sweepMaxLoadOffRange = false
+
+    val sweepMaxLoadOffRange = true
     val sweepMeanLoadOffRange = false
     val sweepMinFreeCapacityRange = false
+    val sweepConstantFreeCapacityRange = true
     val sweepFreeCapacityRangeOn = false
     val sweepMeanFreeCapacityRange = false
     val sweepMinFreeCapacityPonderatedRange = false
@@ -580,23 +587,26 @@ object Simulation {
     val sweepExponentialLostFactor = false
     val sweepGammaNormalLostFactor = false
     val sweepExponentialNormalLostFactor = false
-    val sweepJavierOrtegaNumSimulatios = true
-    val sweepJavierOrtegaThreshold = true
+    val sweepJavierOrtegaNumSimulatios = false
+    val sweepJavierOrtegaThreshold = false
     val sweepJavierOrtegaTs = true
+    val sweepJavierTimeWindow = true
     //Power Off
     val runMaxLoadOff = false
     val runMeanLoadOff = false
     val runMinFreeCapacity = true
+    val runConstantFreeCapacity = false
     val runMeanFreeCapacity = false
     val runMinFreeCapacityPonderated = false
     val runNeverOff = true
     val runAlwzOff = true
     val runRandom = true
     val runGamma = true
-    val runExp = true
+    val runExp = false
     val runExpNormal = false
     val runGammaNormal = false
     val runJavierOrtega = true
+    val runJavierOrtegaTime = true
 
 
     val availabilityFactorRange = (1.0 :: 1.5 :: 2.0 :: 3.0 :: Nil)
@@ -681,6 +691,17 @@ object Simulation {
       }
       else{
         defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new FreeCapacityMinMarginPowerOffDecision(defaultFreeCapacityRange), doGlobalCheck = true)
+      }
+    }
+
+    if(runConstantFreeCapacity){
+      if(sweepConstantFreeCapacityRange){
+        for (freeThreshold <- constantCapacityRange){
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new ConstantMarginPowerOffDecision(freeThreshold), doGlobalCheck = true)
+        }
+      }
+      else{
+        defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new ConstantMarginPowerOffDecision(defaultConstantCapacityRange), doGlobalCheck = true)
       }
     }
 
@@ -917,6 +938,51 @@ object Simulation {
       }
       else{
         defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new JavierOrtegaPowerOffDecision(threshold = javierOrtegaThresholdDefault, windowSize = defaultWindowSize, ts = javierOrtegaTsDefault, numSimulations = javierOrtegaNumSimulationsDefault), doGlobalCheck = true)
+      }
+    }
+
+
+    if(runJavierOrtegaTime){
+
+      if(sweepJavierOrtegaNumSimulatios && sweepJavierOrtegaThreshold && sweepJavierOrtegaTs){
+        for(numSim <- javierOrtegaNumSimulationsRange; thresh <- javierOrtegaThresholdRange; ts <-javierOrtegaTsRange; time <- javierOrtegaTimeRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new JavierOrtegaTimePowerOffDecision(threshold = thresh, timeWindow = time, ts = ts, numSimulations = numSim), doGlobalCheck = true)
+        }
+      }
+      else if(sweepJavierOrtegaNumSimulatios && sweepJavierOrtegaThreshold){
+        for(numSim <- javierOrtegaNumSimulationsRange; thresh <- javierOrtegaThresholdRange; time <- javierOrtegaTimeRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new JavierOrtegaTimePowerOffDecision(threshold = thresh, timeWindow = time, ts = javierOrtegaTsDefault, numSimulations = numSim), doGlobalCheck = true)
+        }
+      }
+      else if(sweepJavierOrtegaNumSimulatios && sweepJavierOrtegaTs){
+        for(numSim <- javierOrtegaNumSimulationsRange; ts <-javierOrtegaTsRange; time <- javierOrtegaTimeRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new JavierOrtegaTimePowerOffDecision(threshold = javierOrtegaThresholdDefault, timeWindow = time, ts = ts, numSimulations = numSim), doGlobalCheck = true)
+        }
+      }
+      else if(sweepJavierOrtegaThreshold && sweepJavierOrtegaTs){
+        for(thresh <- javierOrtegaThresholdRange; ts <-javierOrtegaTsRange; time <- javierOrtegaTimeRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new JavierOrtegaTimePowerOffDecision(threshold = thresh, timeWindow = time, ts = ts, numSimulations = javierOrtegaNumSimulationsDefault), doGlobalCheck = true)
+        }
+      }
+      else if(sweepJavierOrtegaNumSimulatios){
+        for(numSim <- javierOrtegaNumSimulationsRange; time <- javierOrtegaTimeRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new JavierOrtegaTimePowerOffDecision(threshold = javierOrtegaThresholdDefault, timeWindow = time, ts = javierOrtegaTsDefault, numSimulations = numSim), doGlobalCheck = true)
+        }
+      }
+      else if(sweepJavierOrtegaThreshold){
+        for(thresh <- javierOrtegaThresholdRange; time <- javierOrtegaTimeRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new JavierOrtegaTimePowerOffDecision(threshold = thresh, timeWindow = time, ts = javierOrtegaTsDefault, numSimulations = javierOrtegaNumSimulationsDefault), doGlobalCheck = true)
+        }
+      }
+      else if(sweepJavierOrtegaTs){
+        for(ts <-javierOrtegaTsRange; time <- javierOrtegaTimeRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new JavierOrtegaTimePowerOffDecision(threshold = javierOrtegaThresholdDefault, timeWindow = time, ts = ts, numSimulations = javierOrtegaNumSimulationsDefault), doGlobalCheck = true)
+        }
+      }
+      else{
+        for(time <- javierOrtegaTimeRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new JavierOrtegaTimePowerOffDecision(threshold = javierOrtegaThresholdDefault, timeWindow = time, ts = javierOrtegaTsDefault, numSimulations = javierOrtegaNumSimulationsDefault), doGlobalCheck = true)
+        }
       }
     }
 
