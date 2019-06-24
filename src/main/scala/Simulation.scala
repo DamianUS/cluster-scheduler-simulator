@@ -602,7 +602,7 @@ object Simulation {
     val runAlwzOff = true
     val runRandom = true
     val runGamma = true
-    val runExp = false
+    val runExp = true
     val runExpNormal = false
     val runGammaNormal = false
     val runJavierOrtega = true
