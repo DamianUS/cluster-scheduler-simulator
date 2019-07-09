@@ -63,7 +63,7 @@ object Simulation {
       }
     }
     val pp = new ParseParms(helpString)
-    pp.parm("--thread-pool-size", "4").rex("^\\d*") // optional_arg
+    pp.parm("--thread-pool-size", "1").rex("^\\d*") // optional_arg
     pp.parm("--random-seed").rex("^\\d*") // optional_arg
 
     var inputArgs = Map[String, String]()
@@ -453,8 +453,8 @@ object Simulation {
     // val mesosWorkloadToSweep = "Service"
 
     val runMonolithic = true
-    val runMesos = true
-    val runOmega = true
+    val runMesos = false
+    val runOmega = false
     val runDynamic = false
     val runEdge = false
 
@@ -594,19 +594,19 @@ object Simulation {
     //Power Off
     val runMaxLoadOff = false
     val runMeanLoadOff = false
-    val runMinFreeCapacity = true
+    val runMinFreeCapacity = false
     val runConstantFreeCapacity = false
     val runMeanFreeCapacity = false
     val runMinFreeCapacityPonderated = false
-    val runNeverOff = true
-    val runAlwzOff = true
-    val runRandom = true
+    val runNeverOff = false
+    val runAlwzOff = false
+    val runRandom = false
     val runGamma = true
-    val runExp = true
+    val runExp = false
     val runExpNormal = false
     val runGammaNormal = false
-    val runJavierOrtega = true
-    val runJavierOrtegaTime = true
+    val runJavierOrtega = false
+    val runJavierOrtegaTime = false
 
 
     val availabilityFactorRange = (1.0 :: 1.5 :: 2.0 :: 3.0 :: Nil)

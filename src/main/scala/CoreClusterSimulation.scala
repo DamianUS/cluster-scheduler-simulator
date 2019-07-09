@@ -28,7 +28,6 @@ package ClusterSchedulingSimulation
 
 import dynamic.neuralnetwork.SimpleNN
 import dynamic.{DynamicScheduler, DynamicSimulator}
-import efficiency.DistributionCache
 import efficiency.ordering_cellstate_resources_policies.{BasicLoadSorter, CellStateResourcesSorter, NoSorter}
 import efficiency.pick_cellstate_resources._
 import efficiency.power_off_policies.PowerOffPolicy
@@ -101,7 +100,7 @@ abstract class Simulator(logging: Boolean = false) {
   def run(runTime: Option[Double] = None,
           wallClockTimeout: Option[Double] = None): Boolean = {
     afterDelay(0) {
-      println("*** Simulation started, time = " + currentTime + ". ***")
+      println("*** Simulation started, time = " + currentTime + ". ***, system time = " + Calendar.getInstance().getTime)
     }
     // Record wall clock time at beginning of simulation run.
     val startWallTime = java.util.Calendar.getInstance().getTimeInMillis()
@@ -123,7 +122,6 @@ abstract class Simulator(logging: Boolean = false) {
       case None =>
         while (!agenda.isEmpty && !timedOut) next()
     }
-    println("*** Simulation finished running, time = " + currentTime + ". ***")
     !timedOut
   }
 }

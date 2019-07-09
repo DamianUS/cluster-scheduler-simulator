@@ -74,7 +74,7 @@ object Workloads {
     */
 
   //Cloud
-  val numMach = 2000
+  val numMach = 500
   val min = 1.0
   val max = 1.3
   //val machinesPerformance = Array.fill[Double](numMach)(Random.nextDouble() * (1.5) + 0.5)
@@ -159,7 +159,7 @@ object Workloads {
   //Primer elemento de la tupla Batch, segundo Service
   //val interArrival = ((90, 900) :: (100, 1000) :: Nil)
   //90/10%
-  val interArrival = ((25.0, 300.0) :: Nil)
+  val interArrival = ((220.0, 2400.0) :: Nil)
   /*val interArrival0 = for (elem <- (1 to 10 by 5).toList) yield (elem, elem*10)
   val interArrival1 = for (elem <- (10 to 25 by 2).toList) yield (elem, elem*10)
   val interArrival2 = for (elem <- (25 to 55 by 1).toList) yield (elem, elem*10)
@@ -173,9 +173,9 @@ object Workloads {
   //val interArrival = for (elem <- (1 to 10 by 2).toList) yield (elem, elem*10)
   val tasksPerJob = ((180.0, 30.0)  :: Nil)
   val jobDuration = ((40.0, 1000.0) :: Nil)
-  val cpusTask = ((0.3, 0.5) :: Nil)
+  val cpusTask = ((0.1, 0.1) :: Nil)
   //val memTask = ((0.5, 1.2) :: Nil)
-  val memTask = ((0.2, 0.7) :: Nil)
+  val memTask = ((0.1, 0.1) :: Nil)
   val tasksHeterogeneity = false
   val runFlatPattern = false
   val runDayNightPattern = true
@@ -196,10 +196,10 @@ object Workloads {
       examplePrefillTraceFileName)
 
   var workloadGeneratorsCloud = List[WorkloadDesc]()
-  val numRepetitionAnova = 10
+  val numRepetitionAnova = 32
   var workloadGeneratorsIsolatedCloudlet = List[WorkloadDesc]()
-  val runExponential = false
-  val runWeibull = true
+  val runExponential = true
+  val runWeibull = false
 
   if(runExponential) {
     for (i <- 1 to numRepetitionAnova) {
