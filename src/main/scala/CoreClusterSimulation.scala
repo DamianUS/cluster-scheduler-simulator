@@ -26,7 +26,7 @@
 
 package ClusterSchedulingSimulation
 
-import dynamic.neuralnetwork.SimpleNN
+import dynamic.neuralnetwork.{JaviNN, SimpleNN}
 import dynamic.{DynamicScheduler, DynamicSimulator}
 import efficiency.ordering_cellstate_resources_policies.{BasicLoadSorter, CellStateResourcesSorter, NoSorter}
 import efficiency.pick_cellstate_resources._
@@ -100,7 +100,6 @@ abstract class Simulator(logging: Boolean = false) {
   def run(runTime: Option[Double] = None,
           wallClockTimeout: Option[Double] = None): Boolean = {
     afterDelay(0) {
-      println("*** Simulation started, time = " + currentTime + ". ***, system time = " + Calendar.getInstance().getTime)
     }
     // Record wall clock time at beginning of simulation run.
     val startWallTime = java.util.Calendar.getInstance().getTimeInMillis()
@@ -576,7 +575,7 @@ class ClusterSimulator(val cellState: CellState,
     val windowSize = 10
     val jobCacheLength = cellState.simulator.jobCache.length
     if(jobCacheLength > 1){
-      val pastTuples = if (jobCacheLength > windowSize+1) jobCache.slice(jobCacheLength-(windowSize+1), jobCacheLength) else jobCache
+      /*val pastTuples = if (jobCacheLength > windowSize+1) jobCache.slice(jobCacheLength-(windowSize+1), jobCacheLength) else jobCache
       val arraySize = if (pastTuples.length > 0) pastTuples.length-1 else 0
       val interArrival = new Array[Double](arraySize)
       for(i <- 1 to pastTuples.length-1){
@@ -585,6 +584,8 @@ class ClusterSimulator(val cellState: CellState,
       val interArrivalMean = interArrival.sum / interArrival.size.toDouble
       //val chosenStrategy = this.asInstanceOf[DynamicSimulator].strategies(Random.nextInt(this.asInstanceOf[DynamicSimulator].strategies.length))
       val chosenStrategy = SimpleNN.classify(cellState.totalOccupiedCpus / cellState.totalCpus, interArrivalMean)
+      println(chosenStrategy + "inter: "+interArrivalMean)*/
+      val chosenStrategy = JaviNN.classify(cellState)
       //println("strategy: "+chosenStrategy+" inter: "+interArrivalMean )
       //val chosenStrategy = "Mesos"
       schedulers.values.foreach(scheduler => scheduler.asInstanceOf[DynamicScheduler].chooseStrategy(chosenStrategy))

@@ -43,3 +43,11 @@ libraryDependencies += "com.google.protobuf" % "protobuf-java" % "2.6.1"
 
 libraryDependencies += "org.scalanlp" % "breeze_2.10" % "0.5.2"
 
+classpathTypes += "maven-plugin"
+
+libraryDependencies ++= Seq(
+  "org.nd4j" % "nd4j-native-platform" % "1.0.0-beta4",
+  "org.deeplearning4j" % "deeplearning4j-core" % "1.0.0-beta4",
+  "com.typesafe" % "config" % "1.3.3",
+  "org.deeplearning4j" % "deeplearning4j-modelimport" % "1.0.0-beta4"
+)

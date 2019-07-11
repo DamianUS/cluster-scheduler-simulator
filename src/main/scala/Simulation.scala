@@ -452,10 +452,10 @@ object Simulation {
      val mesosWorkloadToSweep = "Batch"
     // val mesosWorkloadToSweep = "Service"
 
-    val runMonolithic = true
+    val runMonolithic = false
     val runMesos = false
     val runOmega = false
-    val runDynamic = false
+    val runDynamic = true
     val runEdge = false
 
 
@@ -598,10 +598,10 @@ object Simulation {
     val runConstantFreeCapacity = false
     val runMeanFreeCapacity = false
     val runMinFreeCapacityPonderated = false
-    val runNeverOff = false
+    val runNeverOff = true
     val runAlwzOff = false
     val runRandom = false
-    val runGamma = true
+    val runGamma = false
     val runExp = false
     val runExpNormal = false
     val runGammaNormal = false
