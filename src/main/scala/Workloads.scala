@@ -74,7 +74,7 @@ object Workloads {
     */
 
   //Cloud
-  val numMach = 500
+  val numMach = 100
   val min = 1.0
   val max = 1.3
   //val machinesPerformance = Array.fill[Double](numMach)(Random.nextDouble() * (1.5) + 0.5)
@@ -93,8 +93,8 @@ object Workloads {
 
 
   val cloudCellStateDesc = new CellStateDesc(numMachines = numMach,
-    cpusPerMachine = 8,
-    memPerMachine = 16,
+    cpusPerMachine = 4,
+    memPerMachine = 8,
     machinesHet = machineHeterogeneity,
     machEn = machinesEnergy,
     machPerf = machinesPerformance,
@@ -159,7 +159,7 @@ object Workloads {
   //Primer elemento de la tupla Batch, segundo Service
   //val interArrival = ((90, 900) :: (100, 1000) :: Nil)
   //90/10%
-  val interArrival = ((200.0, 2000.0) :: Nil)
+  val interArrival = ((110.0, 1100.0) :: Nil)
   /*val interArrival0 = for (elem <- (1 to 10 by 5).toList) yield (elem, elem*10)
   val interArrival1 = for (elem <- (10 to 25 by 2).toList) yield (elem, elem*10)
   val interArrival2 = for (elem <- (25 to 55 by 1).toList) yield (elem, elem*10)
@@ -172,13 +172,13 @@ object Workloads {
   //val interArrival = for (elem <- (50 to 100 by 15).toList) yield (elem, elem*10)
   //val interArrival = for (elem <- (1 to 10 by 2).toList) yield (elem, elem*10)
   val tasksPerJob = ((180.0, 30.0)  :: Nil)
-  val jobDuration = ((40.0, 1000.0) :: Nil)
-  val cpusTask = ((0.5, 1.7) :: Nil)
+  val jobDuration = ((90.0, 2000.0) :: Nil)
+  val cpusTask = ((0.3, 0.5) :: Nil)
   //val memTask = ((0.5, 1.2) :: Nil)
   val memTask = ((0.5, 1.2) :: Nil)
   val tasksHeterogeneity = false
-  val runFlatPattern = true
-  val runDayNightPattern = false
+  val runFlatPattern = false
+  val runDayNightPattern = true
   val runWeekPattern = false
   val alphas = (/*(0.2, 120.0)  ::(0.3, 9.26053) :: */(0.4, 3.32335)/* :: (0.5, 2.0) :: (0.6, 1.50458) :: (0.7, 1.26582) :: (0.8, 1.133)*/ :: Nil)
 

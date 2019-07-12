@@ -37,38 +37,17 @@ import org.datavec.api.transform.transform.doubletransform.MinMaxNormalizer
 
 object JaviNN {
 
-  val maxUtilization = 0.8945
-  val minUtilization = 0.2741
-  val maxInterArrival = 206.6170
-  val minInterArrival = 0.9083
-  val maxInterArrivalService = 2400.0
-  val minInterArrivalService = 10.0
-  val maxInterArrivalBatch = 225.0
-  val minInterArrivalBatch = 0.1
-  val maxDurationService = 2500.0
-  val minDurationService = 10.0
-  val maxDurationBatch = 120.0
-  val minDurationBatch = 70.0
-  val maxQueueFirstService = 15000.0
-  val minQueueFirstService= 0.0001
-  val maxQueueFirstBatch = 15000.0
-  val minQueueFirstBatch = 0.0001
-  val maxQueueFullService = 15000.0
-  val minQueueFullService= 0.0001
-  val maxQueueFullBatch = 15000.0
-  val minQueueFullBatch = 0.0001
-
-  val jsonModelPath = "/Users/damianfernandez/IdeaProjects/cluster-scheduler-simulator/modelos_rrnn/training_nomakespan_cnn_model.json"
+  /*val jsonModelPath = "/Users/damianfernandez/IdeaProjects/cluster-scheduler-simulator/modelos_rrnn/training_nomakespan_cnn_model.json"
   val weightsPath = "/Users/damianfernandez/IdeaProjects/cluster-scheduler-simulator/modelos_rrnn/training_nomakespan_cnn_model.h5"
-  val model = KerasModelImport.importKerasSequentialModelAndWeights(jsonModelPath, weightsPath)
+  val model = KerasModelImport.importKerasSequentialModelAndWeights(jsonModelPath, weightsPath)*/
 
   //
 
   def classify(cellState: CellState): String = {
-    val jobCacheService = cellState.simulator.jobCache.filter( tuple => tuple._2.workloadName == "Service")
-    val jobCacheBatch = cellState.simulator.jobCache.filter( tuple => tuple._2.workloadName == "Batch")
+    val jobCacheService = cellState.simulator.jobCache.filter(tuple => tuple._2.workloadName == "Service")
+    val jobCacheBatch = cellState.simulator.jobCache.filter(tuple => tuple._2.workloadName == "Batch")
 
-    if(jobCacheService.length > 1 && jobCacheBatch.length > 1){
+    if (jobCacheService.length > 1 && jobCacheBatch.length > 1) {
       val jobCacheLength = cellState.simulator.jobCache.length
       val windowSize = 10
       //Service
@@ -91,8 +70,8 @@ object JaviNN {
         numTasksService += pastTuplesService(i)._2.numTasks
       }
       var interArrivalMeanService = interArrivalService.sum / interArrivalService.size.toDouble
-      durationService = durationService/pastTuplesService.length
-      queueFirstService = queueFirstService/pastTuplesService.length
+      durationService = durationService / pastTuplesService.length
+      queueFirstService = queueFirstService / pastTuplesService.length
       queueFullService = queueFullService / pastTuplesService.length
       cpuService = cpuService / pastTuplesService.length
       memService = memService / pastTuplesService.length
@@ -117,8 +96,8 @@ object JaviNN {
         numTasksBatch += pastTuplesBatch(i)._2.numTasks
       }
       var interArrivalMeanBatch = interArrivalBatch.sum / interArrivalBatch.size.toDouble
-      durationBatch = durationBatch/pastTuplesBatch.length
-      queueFirstBatch = queueFirstBatch/pastTuplesBatch.length
+      durationBatch = durationBatch / pastTuplesBatch.length
+      queueFirstBatch = queueFirstBatch / pastTuplesBatch.length
       queueFullBatch = queueFullBatch / pastTuplesBatch.length
       cpuBatch = cpuBatch / pastTuplesBatch.length
       memBatch = memBatch / pastTuplesBatch.length
@@ -135,9 +114,16 @@ object JaviNN {
 
       //Evaluacion
       var array = Array(pastTuplesService.length.toDouble, pastTuplesBatch.length.toDouble, interArrivalMeanService, interArrivalMeanBatch, interArrivalMean, durationService, durationBatch, queueFirstService, queueFirstBatch, queueFullService, queueFullBatch, cpuService, cpuBatch, memService, memBatch, numTasksService, numTasksBatch, cellState.totalOccupiedCpus / cellState.totalCpus)
+      val url = "http://127.0.0.1:5000/predict?" + array.mkString(",")
+      val result = scala.io.Source.fromURL(url).mkString
+      println("inter-arrival: "+ interArrivalMean + " chosen: " +result)
+      result
+    }
+    ""
+  }
 //      val array1 = Array(11.0000,   11.0000,  802.2717,  123.7450,  123.7450,  364.6690,   27.9106,    0.0100,    0.0100,    0.0100,    0.0100,    0.4545,    0.4545,    1.5455,    0.4545,   11.0000,  126.0000,    0.1749)
 //      val array2 = Array(11.0000,   11.0000,  113.0598,   20.2228,   19.7566,  513.9083,   32.6776,    0.0100,    0.0476,    0.0100,    0.0476,    0.4545,    0.4545,    1.5455,    0.4545,   16.0000,  147.0000,    0.3686)
-      val array1 = Array(0.6,   0.6,  0.5,  0.6,  0.72450,  0.4,   0.5,    0.0100,    0.0100,    0.0100,    0.0100,    0.4545,    0.7,    0.6,    0.7,   0.4,  0.50000,    0.1749)
+ /*     val array1 = Array(0.6,   0.6,  0.5,  0.6,  0.72450,  0.4,   0.5,    0.0100,    0.0100,    0.0100,    0.0100,    0.4545,    0.7,    0.6,    0.7,   0.4,  0.50000,    0.1749)
       val array2 = Array(0.6,   0.6,  0.05,   0.09,   0.077,  0.7,   0.6,    0.0100,    0.0476,    0.0100,    0.0476,    0.4545,    0.7,   0.6,    0.7,   0.62,  0.6,    0.3686)
       //var aa = Nd4j.ones(1,18)
       var ndArray = Nd4j.create(array)
@@ -185,6 +171,6 @@ object JaviNN {
     rr.initialize(new FileSplit(new ClassPathResource(csvFileClasspath).getFile()));
     val iterator = new RecordReaderDataSetIterator(rr,batchSize,labelIndex,numClasses);
     iterator.next();
-  }
+  }*/
 
 }

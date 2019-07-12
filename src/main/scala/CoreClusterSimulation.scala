@@ -376,7 +376,7 @@ class ClusterSimulator(val cellState: CellState,
   var sumCpuIdle = 0.0
   var sumMemIdle = 0.0
   //Heterogeneous machines power profile
-  val totalMeasurements = (86400.0 * 7 / monitoringPeriod).toInt + 2
+  val totalMeasurements = (86400.0 * 15 / monitoringPeriod).toInt + 2
   val totalPower = Array.ofDim[Double](cellState.numMachines, totalMeasurements) //Matrix of numMachines
   val currentPower = Array.ofDim[Double](cellState.numMachines, totalMeasurements) //Matrix of numMachines
 
@@ -575,7 +575,7 @@ class ClusterSimulator(val cellState: CellState,
     val windowSize = 10
     val jobCacheLength = cellState.simulator.jobCache.length
     if(jobCacheLength > 1){
-      /*val pastTuples = if (jobCacheLength > windowSize+1) jobCache.slice(jobCacheLength-(windowSize+1), jobCacheLength) else jobCache
+      val pastTuples = if (jobCacheLength > windowSize+1) jobCache.slice(jobCacheLength-(windowSize+1), jobCacheLength) else jobCache
       val arraySize = if (pastTuples.length > 0) pastTuples.length-1 else 0
       val interArrival = new Array[Double](arraySize)
       for(i <- 1 to pastTuples.length-1){
@@ -584,8 +584,8 @@ class ClusterSimulator(val cellState: CellState,
       val interArrivalMean = interArrival.sum / interArrival.size.toDouble
       //val chosenStrategy = this.asInstanceOf[DynamicSimulator].strategies(Random.nextInt(this.asInstanceOf[DynamicSimulator].strategies.length))
       val chosenStrategy = SimpleNN.classify(cellState.totalOccupiedCpus / cellState.totalCpus, interArrivalMean)
-      println(chosenStrategy + "inter: "+interArrivalMean)*/
-      val chosenStrategy = JaviNN.classify(cellState)
+      println(chosenStrategy + "inter: "+interArrivalMean)
+      //val chosenStrategy = JaviNN.classify(cellState)
       //println("strategy: "+chosenStrategy+" inter: "+interArrivalMean )
       //val chosenStrategy = "Mesos"
       schedulers.values.foreach(scheduler => scheduler.asInstanceOf[DynamicScheduler].chooseStrategy(chosenStrategy))
@@ -1587,7 +1587,7 @@ case class Job(id: Long,
   var timeFinished: Double = 0.0
 
   //TODO: remove this static total simulation time
-  def makespan = if (timeFinished == 0.0) 86400.0 * 7 - timeStarted else timeFinished - timeStarted
+  def makespan = if (timeFinished == 0.0) 86400.0 * 15 - timeStarted else timeFinished - timeStarted
 
   def cpusStillNeeded: Double = cpusPerTask * unscheduledTasks
 

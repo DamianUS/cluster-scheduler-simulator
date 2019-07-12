@@ -240,7 +240,7 @@ object Simulation {
     /**
      * Set up a simulatorDesc-s.
      */
-    val globalRunTime = 86400.0 * 7
+    val globalRunTime = 86400.0 * 15
     //val globalRunTime = 86400.0 * 30 // 1 Day
     val monolithicSimulatorDesc =
       new MonolithicSimulatorDesc(Array(monolithicSchedulerDesc),
@@ -454,7 +454,7 @@ object Simulation {
 
     val runMonolithic = false
     val runMesos = false
-    val runOmega = false
+    val runOmega = true
     val runDynamic = true
     val runEdge = false
 
@@ -1137,14 +1137,14 @@ object Simulation {
     //val constantRange = (0.2 :: Nil)
     //  0.25 latencia =  0.25 --> latencia 50 ms, 0.3 --> latencia 100 ms, 0.35 --> lat. 150ms, 0.4 --> lat. 200ms, 0.45 --> lat 250ms, 0.5 --> lat. 300
     //val constantRange = (0.25 :: 0.3 :: 0.35 :: 0.4 :: 0.45 :: 0.5 :: Nil)
-    val constantRange = (0.1 :: Nil)
+    val constantRange = (1.0 :: Nil)
     // 0.16--> latencia 10ms, 0.18 --> latencia 30ms, 0.2 --> latencia 50ms
     val constantRangeEdge = (0.16 :: 0.18 :: 0.2 :: Nil)
 
     //val constantRange = medConstantRange
     // val constantRange = fullConstantRange
     //val perTaskRange = (0.01 :: 0.1 :: 1.0 :: Nil)
-    val perTaskRange = (0.01 :: Nil)
+    val perTaskRange = (0.2 :: Nil)
     //val perTaskRange = (0.1 :: Nil)
     //Para los test anova
     //val perTaskRange = (0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: Nil)
@@ -1157,7 +1157,7 @@ object Simulation {
     //val prefillRange = (0.3 to 0.3 by 0.1).toList
     //val prefillRange = (0.2 to 0.8 by 0.05).toList
     //val prefillRange = (0.2 ::0.6 :: 0.8 :: Nil)
-    val prefillRange = (0.2 :: Nil)
+    val prefillRange = (0.3 :: Nil)
     var prefillCpuLim = List[Map[String, Double]]()
     for (prefillPerc <- prefillRange) {prefillCpuLim ::= Map("PrefillBatch" -> prefillPerc, "PrefillService" -> prefillPerc, "PrefillBatchService" -> prefillPerc)}
     //val prefillCpuLim = Map("PrefillBatch" -> 0.3, "PrefillService" -> 0.3, "PrefillBatchService" -> 0.3)
