@@ -220,7 +220,7 @@ class DynamicScheduler(name: String,
   var iter = 0
 
   def chooseStrategy(name: String): Unit ={
-      assert(name == "Omega" || name == "Mesos", "The dynamic strategies supported are Mesos or Omega")
+      assert(name == "" || name == "Omega" || name == "Mesos", "The dynamic strategies supported are Mesos or Omega")
       if(name=="Omega") {
         if(chosenStrategy == null){
           chosenStrategy = omegaStrategy

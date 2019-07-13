@@ -1004,7 +1004,8 @@ object Simulation {
     //val constantRange = medConstantRange
     // val constantRange = fullConstantRange
     //val perTaskRange = (0.01 :: 0.1 :: 1.0 :: Nil)
-    val perTaskRange = (0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: Nil)
+    /*val perTaskRange = (0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: 0.2 :: Nil)*/
+    val perTaskRange = (0.2 :: Nil)
     // val perTaskRange = medPerTaskRange
     // val perTaskRange = fullPerTaskRange
     val pickinessRange = fullPickinessRange

@@ -26,7 +26,7 @@
 
 package ClusterSchedulingSimulation
 
-import dynamic.neuralnetwork.SimpleNN
+import dynamic.neuralnetwork.{JaviNN, SimpleNN}
 import dynamic.{DynamicScheduler, DynamicSimulator}
 import efficiency.DistributionCache
 import efficiency.ordering_cellstate_resources_policies.{BasicLoadSorter, CellStateResourcesSorter, NoSorter}
@@ -582,7 +582,8 @@ class ClusterSimulator(val cellState: CellState,
       }
       val interArrivalMean = interArrival.sum / interArrival.size.toDouble
       //val chosenStrategy = this.asInstanceOf[DynamicSimulator].strategies(Random.nextInt(this.asInstanceOf[DynamicSimulator].strategies.length))
-      val chosenStrategy = SimpleNN.classify(cellState.totalOccupiedCpus / cellState.totalCpus, interArrivalMean)
+      //val chosenStrategy = SimpleNN.classify(cellState.totalOccupiedCpus / cellState.totalCpus, interArrivalMean)
+      val chosenStrategy = JaviNN.classify(cellState)
       //println("strategy: "+chosenStrategy+" inter: "+interArrivalMean )
       //val chosenStrategy = "Mesos"
       schedulers.values.foreach(scheduler => scheduler.asInstanceOf[DynamicScheduler].chooseStrategy(chosenStrategy))
