@@ -45,7 +45,7 @@ import cluster_simulation_protos_pb2
 logging.basicConfig(level=logging.DEBUG)
 
 def usage():
-    print "usage: generate-txt-from-protobuff.py <input_protobuff_name> <optional: base name for output files. (defaults to inputfilename)>"
+    print("usage: generate-txt-from-protobuff.py <input_protobuff_name> <optional: base name for output files. (defaults to inputfilename)>")
     sys.exit(1)
 
 logging.debug("len(sys.argv): " + str(len(sys.argv)))
@@ -73,7 +73,7 @@ def get_mad(median, data):
                  % (median, " ".join([str(i) for i in data])))
     devs = [abs(x - median) for x in data]
     mad = np.median(devs)
-    print "returning mad = %f" % mad
+    print("returning mad = %f" % mad)
     return mad
 
 # Read in the ExperimentResultSet.
@@ -177,29 +177,29 @@ for env in experiment_result_set.experiment_env:
             #TODO: Cambiar esta guarrería de for anidados, pero como son pocos workloads la complejidad da igual
             #
             # #Measurements
-            # for measurement in exp_result.measurements:
-            #     measurement_key = (env.cell_name, sched_stat.scheduler_name, exp_result.efficiency_stats.power_off_policy.name, "measurement")
-            #
-            #     #measurements_outfile_name = ("meas-" + "-off:" + exp_result.efficiency_stats.power_off_policy.name + ".txt")
-            #     #logging.info("Creating meas_output file: %s" % measurements_outfile_name)
-            #     #measurements_outfile = open(measurements_outfile_name, "w")
-            #
-            #
-            #     output_strings[measurement_key] += \
-            #         "%s%.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %s\n" % (opt_extra_newline,
-            #                                                                              measurement.cpuUtilization,
-            #                                                                              measurement.cpuTotallyIdle,
-            #                                                                              measurement.cpuPartiallyIdle,
-            #                                                                              measurement.mpuLocked,
-            #                                                                              measurement.memUtilization,
-            #                                                                              measurement.memTotallyIdle,
-            #                                                                              measurement.memPartiallyIdle,
-            #                                                                              measurement.memLocked,
-            #                                                                              measurement.machinesOff,
-            #                                                                              measurement.machinesOn,
-            #                                                                              measurement.machinesTurningOff,
-            #                                                                              measurement.machinesTurningOn,
-            #                                                                              measurement.strategy if measurement.strategy else "")
+            for measurement in exp_result.measurements:
+                measurement_key = (env.cell_name, sched_stat.scheduler_name, exp_result.efficiency_stats.power_off_policy.name, "measurement")
+
+                #measurements_outfile_name = ("meas-" + "-off:" + exp_result.efficiency_stats.power_off_policy.name + ".txt")
+                #logging.info("Creating meas_output file: %s" % measurements_outfile_name)
+                #measurements_outfile = open(measurements_outfile_name, "w")
+
+
+                output_strings[measurement_key] += \
+                    "%s%.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %s\n" % (opt_extra_newline,
+                                                                                         measurement.cpuUtilization,
+                                                                                         measurement.cpuTotallyIdle,
+                                                                                         measurement.cpuPartiallyIdle,
+                                                                                         measurement.mpuLocked,
+                                                                                         measurement.memUtilization,
+                                                                                         measurement.memTotallyIdle,
+                                                                                         measurement.memPartiallyIdle,
+                                                                                         measurement.memLocked,
+                                                                                         measurement.machinesOff,
+                                                                                         measurement.machinesOn,
+                                                                                         measurement.machinesTurningOff,
+                                                                                         measurement.machinesTurningOn,
+                                                                                         measurement.strategy if measurement.strategy else "")
 
             for workload_stat in exp_result.workload_stats:
                 #if workload_stat.workload_name == exp_result.sweep_workload:

@@ -26,7 +26,7 @@
 
 package ClusterSchedulingSimulation
 
-import dynamic.neuralnetwork.{JaviNN, SimpleNN}
+import dynamic.neuralnetwork.{JaviNN, JaviNNTodos, SimpleNN}
 import dynamic.{DynamicScheduler, DynamicSimulator}
 import efficiency.ordering_cellstate_resources_policies.{BasicLoadSorter, CellStateResourcesSorter, NoSorter}
 import efficiency.pick_cellstate_resources._
@@ -191,7 +191,7 @@ class ClusterSimulator(val cellState: CellState,
     if (jobCache.size > 0)
       assert(tuple._1 >= jobCache.last._1, "Intentando añadir un job a la cache cuyo tiempo de inicio es anterior al ultimo encontrado")
     jobCache = jobCache :+ tuple
-    if (jobCache.size > 100) {
+    if (jobCache.size > 1500) {
       jobCache = jobCache.drop(1)
     }
   }
@@ -344,6 +344,17 @@ class ClusterSimulator(val cellState: CellState,
   def avgMachinesOn: Double = (sumMachinesOn.toDouble / numMonitoringMeasurements.toDouble)
 
   var sumCpuUtilization: Double = 0.0
+  //Performance KPIs
+  var measuredInterArrivalBatch: Array[Double] = Array[Double]()
+  var measuredInterArrivalService: Array[Double] = Array[Double]()
+  var measuredInterArrivalMean: Array[Double] = Array[Double]()
+  var measuredQueueFirstBatch: Array[Double] = Array[Double]()
+  var measuredQueueFirstService: Array[Double] = Array[Double]()
+  var measuredQueueFirstMean: Array[Double] = Array[Double]()
+  var measuredQueueFullyBatch: Array[Double] = Array[Double]()
+  var measuredQueueFullyService: Array[Double] = Array[Double]()
+  var measuredQueueFullyMean: Array[Double] = Array[Double]()
+
   //Used in the measurement Dynamic Scheduling
   var measuredSchedulingStrategy: Array[String] = Array[String]()
   //Used in the measurement
@@ -583,10 +594,14 @@ class ClusterSimulator(val cellState: CellState,
       }
       val interArrivalMean = interArrival.sum / interArrival.size.toDouble
       //val chosenStrategy = this.asInstanceOf[DynamicSimulator].strategies(Random.nextInt(this.asInstanceOf[DynamicSimulator].strategies.length))
-      val chosenStrategy = SimpleNN.classify(cellState.totalOccupiedCpus / cellState.totalCpus, interArrivalMean)
-      println(chosenStrategy + "inter: "+interArrivalMean)
-      //val chosenStrategy = JaviNN.classify(cellState)
-      //println("strategy: "+chosenStrategy+" inter: "+interArrivalMean )
+      val chosenStrategySimple = SimpleNN.classify(cellState.totalOccupiedCpus / cellState.totalCpus, interArrivalMean)
+      println("SimpleNN: "+ chosenStrategySimple + "inter: "+interArrivalMean)
+      val chosenStrategy = JaviNNTodos.classify(cellState)
+      println("JaviNN: "+ chosenStrategy +" inter: "+interArrivalMean )
+      /*if(chosenStrategy != chosenStrategySimple)
+        println("diferentes")
+      else
+        println("iguales")*/
       //val chosenStrategy = "Mesos"
       schedulers.values.foreach(scheduler => scheduler.asInstanceOf[DynamicScheduler].chooseStrategy(chosenStrategy))
       /*if(numMonitoringMeasurements % 100 == 0){
@@ -657,6 +672,38 @@ class ClusterSimulator(val cellState: CellState,
       changeResourceManager
       //println("post " + this.currentTime.toString)
     }
+    //Performance KPIs
+    val windowSizeMean = 15
+    val windowSizeBatch = 10
+    val windowSizeService = 5
+    val lastServiceInterArrival = cellState.simulator.jobCache.filter(tuple => tuple._2.workloadName == "Service" && tuple._2.numSchedulingAttempts > 0).takeRight(windowSizeService)
+    val lastBatchInterArrival = cellState.simulator.jobCache.filter(tuple => tuple._2.workloadName == "Batch" && tuple._2.numSchedulingAttempts > 0).takeRight(windowSizeBatch)
+    val lastMeanInterArrival = cellState.simulator.jobCache.takeRight(windowSizeMean)
+    val lastServiceQueueFirst = cellState.simulator.jobCache.filter(tuple => tuple._2.workloadName == "Service" && tuple._2.numSchedulingAttempts > 0).takeRight(windowSizeService)
+    val lastBatchQueueFirst = cellState.simulator.jobCache.filter(tuple => tuple._2.workloadName == "Batch" && tuple._2.numSchedulingAttempts > 0).takeRight(windowSizeBatch)
+    val lastMeanQueueFirst = cellState.simulator.jobCache.filter(tuple => tuple._2.numSchedulingAttempts > 0).takeRight(windowSizeMean)
+    val lastServiceQueueFully = cellState.simulator.jobCache.filter(tuple => tuple._2.workloadName == "Service" && tuple._2.unscheduledTasks <= 0).takeRight(windowSizeService)
+    val lastBatchQueueFully = cellState.simulator.jobCache.filter(tuple => tuple._2.workloadName == "Batch" && tuple._2.unscheduledTasks <= 0).takeRight(windowSizeBatch)
+    val lastMeanQueueFully = cellState.simulator.jobCache.filter(tuple => tuple._2.unscheduledTasks <= 0).takeRight(windowSizeMean)
+    val serviceInterArrival = if (lastServiceInterArrival.isEmpty) 0.0 else  (lastServiceInterArrival.map(tuple => tuple._1) zip lastServiceInterArrival.drop(1).map(tuple => tuple._1)).map({ case (a, b) => b - a }).sum / lastServiceInterArrival.size-1
+    val batchInterArrival = if (lastBatchInterArrival.isEmpty) 0.0 else  (lastBatchInterArrival.map(tuple => tuple._1) zip lastBatchInterArrival.drop(1).map(tuple => tuple._1)).map({ case (a, b) => b - a }).sum / lastBatchInterArrival.size-1
+    val meanInterArrival = if (lastMeanInterArrival.isEmpty) 0.0 else  (lastMeanInterArrival.map(tuple => tuple._1) zip lastMeanInterArrival.drop(1).map(tuple => tuple._1)).map({ case (a, b) => b - a }).sum / lastMeanInterArrival.size-1
+    measuredInterArrivalService = measuredInterArrivalService :+ serviceInterArrival
+    measuredInterArrivalBatch = measuredInterArrivalBatch :+ batchInterArrival
+    measuredInterArrivalMean = measuredInterArrivalMean :+ meanInterArrival
+    val serviceQueueFirst = if (lastServiceQueueFirst.isEmpty) 0.0 else lastServiceQueueFirst.map(tuple => tuple._2.timeInQueueTillFirstScheduled).sum / lastServiceQueueFirst.size
+    val batchQueueFirst = if (lastBatchQueueFirst.isEmpty) 0.0 else lastBatchQueueFirst.map(tuple => tuple._2.timeInQueueTillFirstScheduled).sum / lastBatchQueueFirst.size
+    val meanQueueFirst = if (lastMeanQueueFirst.isEmpty) 0.0 else lastMeanQueueFirst.map(tuple => tuple._2.timeInQueueTillFirstScheduled).sum / lastMeanQueueFirst.size
+    measuredQueueFirstBatch = measuredQueueFirstBatch :+ batchQueueFirst
+    measuredQueueFirstService = measuredQueueFirstService :+ serviceQueueFirst
+    measuredQueueFirstMean = measuredQueueFirstMean :+ meanQueueFirst
+    val serviceQueueFull = if (lastServiceQueueFully.isEmpty) 0.0 else lastServiceQueueFully.map(tuple => tuple._2.timeInQueueTillFullyScheduled).sum / lastServiceQueueFully.size
+    val batchQueueFull = if (lastBatchQueueFully.isEmpty) 0.0 else lastBatchQueueFully.map(tuple => tuple._2.timeInQueueTillFullyScheduled).sum / lastBatchQueueFully.size
+    val meanQueueFull = if (lastMeanQueueFully.isEmpty) 0.0 else lastMeanQueueFully.map(tuple => tuple._2.timeInQueueTillFullyScheduled).sum / lastMeanQueueFully.size
+    measuredQueueFullyBatch = measuredQueueFullyBatch :+ batchQueueFull
+    measuredQueueFullyService = measuredQueueFullyService :+ serviceQueueFull
+    measuredQueueFullyMean = measuredQueueFullyMean :+ meanQueueFull
+
     numMonitoringMeasurements += 1
     //totalMachinePowerStates = totalMachinePowerStates :+ cellState.machinePowerState
     log("Avg cpu utilization (adding measurement %d of %f): %f."

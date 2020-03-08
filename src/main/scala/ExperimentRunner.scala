@@ -333,6 +333,15 @@ class Experiment(
                                     measurement.setMachinesOn(simulator.measuredMachinesOn(i))
                                     measurement.setMachinesTurningOff(simulator.measuredMachinesTurningOff(i))
                                     measurement.setMachinesTurningOn(simulator.measuredMachinesTurningOn(i))
+                                    measurement.setInterBatch(simulator.measuredInterArrivalBatch(i))
+                                    measurement.setInterService(simulator.measuredInterArrivalService(i))
+                                    measurement.setInterMean(simulator.measuredInterArrivalMean(i))
+                                    measurement.setQueuefirstBatch(simulator.measuredQueueFirstBatch(i))
+                                    measurement.setQueuefirstService(simulator.measuredQueueFirstService(i))
+                                    measurement.setQueuefirstService(simulator.measuredQueueFirstMean(i))
+                                    measurement.setQueuefullyBatch(simulator.measuredQueueFullyBatch(i))
+                                    measurement.setQueuefullyService(simulator.measuredQueueFullyService(i))
+                                    measurement.setQueuefullyMean(simulator.measuredQueueFullyMean(i))
                                     if(i < simulator.measuredSchedulingStrategy.length){
                                       measurement.setStrategy(simulator.measuredSchedulingStrategy(i))
                                     }

@@ -409,8 +409,8 @@ object Simulation {
           conflictMode <- Seq("resource-fit");
           //conflictMode <- Seq("sequence-numbers");
           //transactionMode <- Seq("all-or-nothing")) yield {
-          //transactionMode <- Seq("all-or-nothing", "incremental")) yield {
-          transactionMode <- Seq("incremental")) yield {
+          transactionMode <- Seq("all-or-nothing", "incremental")) yield {
+          //transactionMode <- Seq("incremental")) yield {
             new OmegaSimulatorDesc(
               generateOmegaSchedulerDescs(numOmegaServiceScheds,
                 numOmegaBatchScheds),
@@ -453,7 +453,7 @@ object Simulation {
     // val mesosWorkloadToSweep = "Service"
 
     val runMonolithic = false
-    val runMesos = false
+    val runMesos = true
     val runOmega = true
     val runDynamic = true
     val runEdge = false

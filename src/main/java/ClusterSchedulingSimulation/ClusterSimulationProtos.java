@@ -12527,6 +12527,87 @@ public final class ClusterSimulationProtos {
            */
           com.google.protobuf.ByteString
               getStrategyBytes();
+
+          /**
+           * <code>optional double queuefirstBatch = 14;</code>
+           */
+          boolean hasQueuefirstBatch();
+          /**
+           * <code>optional double queuefirstBatch = 14;</code>
+           */
+          double getQueuefirstBatch();
+
+          /**
+           * <code>optional double queuefirstService = 15;</code>
+           */
+          boolean hasQueuefirstService();
+          /**
+           * <code>optional double queuefirstService = 15;</code>
+           */
+          double getQueuefirstService();
+
+          /**
+           * <code>optional double queuefirstMean = 16;</code>
+           */
+          boolean hasQueuefirstMean();
+          /**
+           * <code>optional double queuefirstMean = 16;</code>
+           */
+          double getQueuefirstMean();
+
+          /**
+           * <code>optional double queuefullyBatch = 17;</code>
+           */
+          boolean hasQueuefullyBatch();
+          /**
+           * <code>optional double queuefullyBatch = 17;</code>
+           */
+          double getQueuefullyBatch();
+
+          /**
+           * <code>optional double queuefullyService = 18;</code>
+           */
+          boolean hasQueuefullyService();
+          /**
+           * <code>optional double queuefullyService = 18;</code>
+           */
+          double getQueuefullyService();
+
+          /**
+           * <code>optional double queuefullyMean = 19;</code>
+           */
+          boolean hasQueuefullyMean();
+          /**
+           * <code>optional double queuefullyMean = 19;</code>
+           */
+          double getQueuefullyMean();
+
+          /**
+           * <code>optional double interBatch = 20;</code>
+           */
+          boolean hasInterBatch();
+          /**
+           * <code>optional double interBatch = 20;</code>
+           */
+          double getInterBatch();
+
+          /**
+           * <code>optional double interService = 21;</code>
+           */
+          boolean hasInterService();
+          /**
+           * <code>optional double interService = 21;</code>
+           */
+          double getInterService();
+
+          /**
+           * <code>optional double interMean = 22;</code>
+           */
+          boolean hasInterMean();
+          /**
+           * <code>optional double interMean = 22;</code>
+           */
+          double getInterMean();
         }
         /**
          * Protobuf type {@code ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement}
@@ -12644,6 +12725,51 @@ public final class ClusterSimulationProtos {
                     com.google.protobuf.ByteString bs = input.readBytes();
                     bitField0_ |= 0x00001000;
                     strategy_ = bs;
+                    break;
+                  }
+                  case 113: {
+                    bitField0_ |= 0x00002000;
+                    queuefirstBatch_ = input.readDouble();
+                    break;
+                  }
+                  case 121: {
+                    bitField0_ |= 0x00004000;
+                    queuefirstService_ = input.readDouble();
+                    break;
+                  }
+                  case 129: {
+                    bitField0_ |= 0x00008000;
+                    queuefirstMean_ = input.readDouble();
+                    break;
+                  }
+                  case 137: {
+                    bitField0_ |= 0x00010000;
+                    queuefullyBatch_ = input.readDouble();
+                    break;
+                  }
+                  case 145: {
+                    bitField0_ |= 0x00020000;
+                    queuefullyService_ = input.readDouble();
+                    break;
+                  }
+                  case 153: {
+                    bitField0_ |= 0x00040000;
+                    queuefullyMean_ = input.readDouble();
+                    break;
+                  }
+                  case 161: {
+                    bitField0_ |= 0x00080000;
+                    interBatch_ = input.readDouble();
+                    break;
+                  }
+                  case 169: {
+                    bitField0_ |= 0x00100000;
+                    interService_ = input.readDouble();
+                    break;
+                  }
+                  case 177: {
+                    bitField0_ |= 0x00200000;
+                    interMean_ = input.readDouble();
                     break;
                   }
                 }
@@ -12908,6 +13034,141 @@ public final class ClusterSimulationProtos {
             }
           }
 
+          public static final int QUEUEFIRSTBATCH_FIELD_NUMBER = 14;
+          private double queuefirstBatch_;
+          /**
+           * <code>optional double queuefirstBatch = 14;</code>
+           */
+          public boolean hasQueuefirstBatch() {
+            return ((bitField0_ & 0x00002000) == 0x00002000);
+          }
+          /**
+           * <code>optional double queuefirstBatch = 14;</code>
+           */
+          public double getQueuefirstBatch() {
+            return queuefirstBatch_;
+          }
+
+          public static final int QUEUEFIRSTSERVICE_FIELD_NUMBER = 15;
+          private double queuefirstService_;
+          /**
+           * <code>optional double queuefirstService = 15;</code>
+           */
+          public boolean hasQueuefirstService() {
+            return ((bitField0_ & 0x00004000) == 0x00004000);
+          }
+          /**
+           * <code>optional double queuefirstService = 15;</code>
+           */
+          public double getQueuefirstService() {
+            return queuefirstService_;
+          }
+
+          public static final int QUEUEFIRSTMEAN_FIELD_NUMBER = 16;
+          private double queuefirstMean_;
+          /**
+           * <code>optional double queuefirstMean = 16;</code>
+           */
+          public boolean hasQueuefirstMean() {
+            return ((bitField0_ & 0x00008000) == 0x00008000);
+          }
+          /**
+           * <code>optional double queuefirstMean = 16;</code>
+           */
+          public double getQueuefirstMean() {
+            return queuefirstMean_;
+          }
+
+          public static final int QUEUEFULLYBATCH_FIELD_NUMBER = 17;
+          private double queuefullyBatch_;
+          /**
+           * <code>optional double queuefullyBatch = 17;</code>
+           */
+          public boolean hasQueuefullyBatch() {
+            return ((bitField0_ & 0x00010000) == 0x00010000);
+          }
+          /**
+           * <code>optional double queuefullyBatch = 17;</code>
+           */
+          public double getQueuefullyBatch() {
+            return queuefullyBatch_;
+          }
+
+          public static final int QUEUEFULLYSERVICE_FIELD_NUMBER = 18;
+          private double queuefullyService_;
+          /**
+           * <code>optional double queuefullyService = 18;</code>
+           */
+          public boolean hasQueuefullyService() {
+            return ((bitField0_ & 0x00020000) == 0x00020000);
+          }
+          /**
+           * <code>optional double queuefullyService = 18;</code>
+           */
+          public double getQueuefullyService() {
+            return queuefullyService_;
+          }
+
+          public static final int QUEUEFULLYMEAN_FIELD_NUMBER = 19;
+          private double queuefullyMean_;
+          /**
+           * <code>optional double queuefullyMean = 19;</code>
+           */
+          public boolean hasQueuefullyMean() {
+            return ((bitField0_ & 0x00040000) == 0x00040000);
+          }
+          /**
+           * <code>optional double queuefullyMean = 19;</code>
+           */
+          public double getQueuefullyMean() {
+            return queuefullyMean_;
+          }
+
+          public static final int INTERBATCH_FIELD_NUMBER = 20;
+          private double interBatch_;
+          /**
+           * <code>optional double interBatch = 20;</code>
+           */
+          public boolean hasInterBatch() {
+            return ((bitField0_ & 0x00080000) == 0x00080000);
+          }
+          /**
+           * <code>optional double interBatch = 20;</code>
+           */
+          public double getInterBatch() {
+            return interBatch_;
+          }
+
+          public static final int INTERSERVICE_FIELD_NUMBER = 21;
+          private double interService_;
+          /**
+           * <code>optional double interService = 21;</code>
+           */
+          public boolean hasInterService() {
+            return ((bitField0_ & 0x00100000) == 0x00100000);
+          }
+          /**
+           * <code>optional double interService = 21;</code>
+           */
+          public double getInterService() {
+            return interService_;
+          }
+
+          public static final int INTERMEAN_FIELD_NUMBER = 22;
+          private double interMean_;
+          /**
+           * <code>optional double interMean = 22;</code>
+           */
+          public boolean hasInterMean() {
+            return ((bitField0_ & 0x00200000) == 0x00200000);
+          }
+          /**
+           * <code>optional double interMean = 22;</code>
+           */
+          public double getInterMean() {
+            return interMean_;
+          }
+
           private void initFields() {
             cpuUtilization_ = 0D;
             cpuTotallyIdle_ = 0D;
@@ -12922,6 +13183,15 @@ public final class ClusterSimulationProtos {
             mpuLocked_ = 0D;
             memLocked_ = 0D;
             strategy_ = "";
+            queuefirstBatch_ = 0D;
+            queuefirstService_ = 0D;
+            queuefirstMean_ = 0D;
+            queuefullyBatch_ = 0D;
+            queuefullyService_ = 0D;
+            queuefullyMean_ = 0D;
+            interBatch_ = 0D;
+            interService_ = 0D;
+            interMean_ = 0D;
           }
           private byte memoizedIsInitialized = -1;
           public final boolean isInitialized() {
@@ -12974,6 +13244,33 @@ public final class ClusterSimulationProtos {
             }
             if (((bitField0_ & 0x00001000) == 0x00001000)) {
               output.writeBytes(13, getStrategyBytes());
+            }
+            if (((bitField0_ & 0x00002000) == 0x00002000)) {
+              output.writeDouble(14, queuefirstBatch_);
+            }
+            if (((bitField0_ & 0x00004000) == 0x00004000)) {
+              output.writeDouble(15, queuefirstService_);
+            }
+            if (((bitField0_ & 0x00008000) == 0x00008000)) {
+              output.writeDouble(16, queuefirstMean_);
+            }
+            if (((bitField0_ & 0x00010000) == 0x00010000)) {
+              output.writeDouble(17, queuefullyBatch_);
+            }
+            if (((bitField0_ & 0x00020000) == 0x00020000)) {
+              output.writeDouble(18, queuefullyService_);
+            }
+            if (((bitField0_ & 0x00040000) == 0x00040000)) {
+              output.writeDouble(19, queuefullyMean_);
+            }
+            if (((bitField0_ & 0x00080000) == 0x00080000)) {
+              output.writeDouble(20, interBatch_);
+            }
+            if (((bitField0_ & 0x00100000) == 0x00100000)) {
+              output.writeDouble(21, interService_);
+            }
+            if (((bitField0_ & 0x00200000) == 0x00200000)) {
+              output.writeDouble(22, interMean_);
             }
             getUnknownFields().writeTo(output);
           }
@@ -13035,6 +13332,42 @@ public final class ClusterSimulationProtos {
             if (((bitField0_ & 0x00001000) == 0x00001000)) {
               size += com.google.protobuf.CodedOutputStream
                 .computeBytesSize(13, getStrategyBytes());
+            }
+            if (((bitField0_ & 0x00002000) == 0x00002000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(14, queuefirstBatch_);
+            }
+            if (((bitField0_ & 0x00004000) == 0x00004000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(15, queuefirstService_);
+            }
+            if (((bitField0_ & 0x00008000) == 0x00008000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(16, queuefirstMean_);
+            }
+            if (((bitField0_ & 0x00010000) == 0x00010000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(17, queuefullyBatch_);
+            }
+            if (((bitField0_ & 0x00020000) == 0x00020000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(18, queuefullyService_);
+            }
+            if (((bitField0_ & 0x00040000) == 0x00040000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(19, queuefullyMean_);
+            }
+            if (((bitField0_ & 0x00080000) == 0x00080000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(20, interBatch_);
+            }
+            if (((bitField0_ & 0x00100000) == 0x00100000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(21, interService_);
+            }
+            if (((bitField0_ & 0x00200000) == 0x00200000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(22, interMean_);
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -13179,6 +13512,24 @@ public final class ClusterSimulationProtos {
               bitField0_ = (bitField0_ & ~0x00000800);
               strategy_ = "";
               bitField0_ = (bitField0_ & ~0x00001000);
+              queuefirstBatch_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00002000);
+              queuefirstService_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00004000);
+              queuefirstMean_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00008000);
+              queuefullyBatch_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00010000);
+              queuefullyService_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00020000);
+              queuefullyMean_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00040000);
+              interBatch_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00080000);
+              interService_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00100000);
+              interMean_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00200000);
               return this;
             }
 
@@ -13259,6 +13610,42 @@ public final class ClusterSimulationProtos {
                 to_bitField0_ |= 0x00001000;
               }
               result.strategy_ = strategy_;
+              if (((from_bitField0_ & 0x00002000) == 0x00002000)) {
+                to_bitField0_ |= 0x00002000;
+              }
+              result.queuefirstBatch_ = queuefirstBatch_;
+              if (((from_bitField0_ & 0x00004000) == 0x00004000)) {
+                to_bitField0_ |= 0x00004000;
+              }
+              result.queuefirstService_ = queuefirstService_;
+              if (((from_bitField0_ & 0x00008000) == 0x00008000)) {
+                to_bitField0_ |= 0x00008000;
+              }
+              result.queuefirstMean_ = queuefirstMean_;
+              if (((from_bitField0_ & 0x00010000) == 0x00010000)) {
+                to_bitField0_ |= 0x00010000;
+              }
+              result.queuefullyBatch_ = queuefullyBatch_;
+              if (((from_bitField0_ & 0x00020000) == 0x00020000)) {
+                to_bitField0_ |= 0x00020000;
+              }
+              result.queuefullyService_ = queuefullyService_;
+              if (((from_bitField0_ & 0x00040000) == 0x00040000)) {
+                to_bitField0_ |= 0x00040000;
+              }
+              result.queuefullyMean_ = queuefullyMean_;
+              if (((from_bitField0_ & 0x00080000) == 0x00080000)) {
+                to_bitField0_ |= 0x00080000;
+              }
+              result.interBatch_ = interBatch_;
+              if (((from_bitField0_ & 0x00100000) == 0x00100000)) {
+                to_bitField0_ |= 0x00100000;
+              }
+              result.interService_ = interService_;
+              if (((from_bitField0_ & 0x00200000) == 0x00200000)) {
+                to_bitField0_ |= 0x00200000;
+              }
+              result.interMean_ = interMean_;
               result.bitField0_ = to_bitField0_;
               onBuilt();
               return result;
@@ -13315,6 +13702,33 @@ public final class ClusterSimulationProtos {
                 bitField0_ |= 0x00001000;
                 strategy_ = other.strategy_;
                 onChanged();
+              }
+              if (other.hasQueuefirstBatch()) {
+                setQueuefirstBatch(other.getQueuefirstBatch());
+              }
+              if (other.hasQueuefirstService()) {
+                setQueuefirstService(other.getQueuefirstService());
+              }
+              if (other.hasQueuefirstMean()) {
+                setQueuefirstMean(other.getQueuefirstMean());
+              }
+              if (other.hasQueuefullyBatch()) {
+                setQueuefullyBatch(other.getQueuefullyBatch());
+              }
+              if (other.hasQueuefullyService()) {
+                setQueuefullyService(other.getQueuefullyService());
+              }
+              if (other.hasQueuefullyMean()) {
+                setQueuefullyMean(other.getQueuefullyMean());
+              }
+              if (other.hasInterBatch()) {
+                setInterBatch(other.getInterBatch());
+              }
+              if (other.hasInterService()) {
+                setInterService(other.getInterService());
+              }
+              if (other.hasInterMean()) {
+                setInterMean(other.getInterMean());
               }
               this.mergeUnknownFields(other.getUnknownFields());
               return this;
@@ -13799,6 +14213,294 @@ public final class ClusterSimulationProtos {
   }
   bitField0_ |= 0x00001000;
               strategy_ = value;
+              onChanged();
+              return this;
+            }
+
+            private double queuefirstBatch_ ;
+            /**
+             * <code>optional double queuefirstBatch = 14;</code>
+             */
+            public boolean hasQueuefirstBatch() {
+              return ((bitField0_ & 0x00002000) == 0x00002000);
+            }
+            /**
+             * <code>optional double queuefirstBatch = 14;</code>
+             */
+            public double getQueuefirstBatch() {
+              return queuefirstBatch_;
+            }
+            /**
+             * <code>optional double queuefirstBatch = 14;</code>
+             */
+            public Builder setQueuefirstBatch(double value) {
+              bitField0_ |= 0x00002000;
+              queuefirstBatch_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double queuefirstBatch = 14;</code>
+             */
+            public Builder clearQueuefirstBatch() {
+              bitField0_ = (bitField0_ & ~0x00002000);
+              queuefirstBatch_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double queuefirstService_ ;
+            /**
+             * <code>optional double queuefirstService = 15;</code>
+             */
+            public boolean hasQueuefirstService() {
+              return ((bitField0_ & 0x00004000) == 0x00004000);
+            }
+            /**
+             * <code>optional double queuefirstService = 15;</code>
+             */
+            public double getQueuefirstService() {
+              return queuefirstService_;
+            }
+            /**
+             * <code>optional double queuefirstService = 15;</code>
+             */
+            public Builder setQueuefirstService(double value) {
+              bitField0_ |= 0x00004000;
+              queuefirstService_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double queuefirstService = 15;</code>
+             */
+            public Builder clearQueuefirstService() {
+              bitField0_ = (bitField0_ & ~0x00004000);
+              queuefirstService_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double queuefirstMean_ ;
+            /**
+             * <code>optional double queuefirstMean = 16;</code>
+             */
+            public boolean hasQueuefirstMean() {
+              return ((bitField0_ & 0x00008000) == 0x00008000);
+            }
+            /**
+             * <code>optional double queuefirstMean = 16;</code>
+             */
+            public double getQueuefirstMean() {
+              return queuefirstMean_;
+            }
+            /**
+             * <code>optional double queuefirstMean = 16;</code>
+             */
+            public Builder setQueuefirstMean(double value) {
+              bitField0_ |= 0x00008000;
+              queuefirstMean_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double queuefirstMean = 16;</code>
+             */
+            public Builder clearQueuefirstMean() {
+              bitField0_ = (bitField0_ & ~0x00008000);
+              queuefirstMean_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double queuefullyBatch_ ;
+            /**
+             * <code>optional double queuefullyBatch = 17;</code>
+             */
+            public boolean hasQueuefullyBatch() {
+              return ((bitField0_ & 0x00010000) == 0x00010000);
+            }
+            /**
+             * <code>optional double queuefullyBatch = 17;</code>
+             */
+            public double getQueuefullyBatch() {
+              return queuefullyBatch_;
+            }
+            /**
+             * <code>optional double queuefullyBatch = 17;</code>
+             */
+            public Builder setQueuefullyBatch(double value) {
+              bitField0_ |= 0x00010000;
+              queuefullyBatch_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double queuefullyBatch = 17;</code>
+             */
+            public Builder clearQueuefullyBatch() {
+              bitField0_ = (bitField0_ & ~0x00010000);
+              queuefullyBatch_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double queuefullyService_ ;
+            /**
+             * <code>optional double queuefullyService = 18;</code>
+             */
+            public boolean hasQueuefullyService() {
+              return ((bitField0_ & 0x00020000) == 0x00020000);
+            }
+            /**
+             * <code>optional double queuefullyService = 18;</code>
+             */
+            public double getQueuefullyService() {
+              return queuefullyService_;
+            }
+            /**
+             * <code>optional double queuefullyService = 18;</code>
+             */
+            public Builder setQueuefullyService(double value) {
+              bitField0_ |= 0x00020000;
+              queuefullyService_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double queuefullyService = 18;</code>
+             */
+            public Builder clearQueuefullyService() {
+              bitField0_ = (bitField0_ & ~0x00020000);
+              queuefullyService_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double queuefullyMean_ ;
+            /**
+             * <code>optional double queuefullyMean = 19;</code>
+             */
+            public boolean hasQueuefullyMean() {
+              return ((bitField0_ & 0x00040000) == 0x00040000);
+            }
+            /**
+             * <code>optional double queuefullyMean = 19;</code>
+             */
+            public double getQueuefullyMean() {
+              return queuefullyMean_;
+            }
+            /**
+             * <code>optional double queuefullyMean = 19;</code>
+             */
+            public Builder setQueuefullyMean(double value) {
+              bitField0_ |= 0x00040000;
+              queuefullyMean_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double queuefullyMean = 19;</code>
+             */
+            public Builder clearQueuefullyMean() {
+              bitField0_ = (bitField0_ & ~0x00040000);
+              queuefullyMean_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double interBatch_ ;
+            /**
+             * <code>optional double interBatch = 20;</code>
+             */
+            public boolean hasInterBatch() {
+              return ((bitField0_ & 0x00080000) == 0x00080000);
+            }
+            /**
+             * <code>optional double interBatch = 20;</code>
+             */
+            public double getInterBatch() {
+              return interBatch_;
+            }
+            /**
+             * <code>optional double interBatch = 20;</code>
+             */
+            public Builder setInterBatch(double value) {
+              bitField0_ |= 0x00080000;
+              interBatch_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double interBatch = 20;</code>
+             */
+            public Builder clearInterBatch() {
+              bitField0_ = (bitField0_ & ~0x00080000);
+              interBatch_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double interService_ ;
+            /**
+             * <code>optional double interService = 21;</code>
+             */
+            public boolean hasInterService() {
+              return ((bitField0_ & 0x00100000) == 0x00100000);
+            }
+            /**
+             * <code>optional double interService = 21;</code>
+             */
+            public double getInterService() {
+              return interService_;
+            }
+            /**
+             * <code>optional double interService = 21;</code>
+             */
+            public Builder setInterService(double value) {
+              bitField0_ |= 0x00100000;
+              interService_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double interService = 21;</code>
+             */
+            public Builder clearInterService() {
+              bitField0_ = (bitField0_ & ~0x00100000);
+              interService_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double interMean_ ;
+            /**
+             * <code>optional double interMean = 22;</code>
+             */
+            public boolean hasInterMean() {
+              return ((bitField0_ & 0x00200000) == 0x00200000);
+            }
+            /**
+             * <code>optional double interMean = 22;</code>
+             */
+            public double getInterMean() {
+              return interMean_;
+            }
+            /**
+             * <code>optional double interMean = 22;</code>
+             */
+            public Builder setInterMean(double value) {
+              bitField0_ |= 0x00200000;
+              interMean_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double interMean = 22;</code>
+             */
+            public Builder clearInterMean() {
+              bitField0_ = (bitField0_ & ~0x00200000);
+              interMean_ = 0D;
               onChanged();
               return this;
             }
@@ -18509,17 +19211,17 @@ public final class ClusterSimulationProtos {
   static {
     java.lang.String[] descriptorData = {
       "\n\037cluster_simulation_protos.proto\022\033Clust" +
-      "erSchedulingSimulation\"\303)\n\023ExperimentRes" +
+      "erSchedulingSimulation\"\230+\n\023ExperimentRes" +
       "ultSet\022V\n\016experiment_env\030\001 \003(\0132>.Cluster" +
       "SchedulingSimulation.ExperimentResultSet" +
-      ".ExperimentEnv\032\323(\n\rExperimentEnv\022\021\n\tcell" +
+      ".ExperimentEnv\032\250*\n\rExperimentEnv\022\021\n\tcell" +
       "_name\030\001 \001(\t\022\033\n\023workload_split_type\030\002 \001(\t" +
       "\022\033\n\014is_prefilled\030\005 \001(\010:\005false\022\020\n\010run_tim" +
       "e\030\003 \001(\001\022j\n\021experiment_result\030\004 \003(\0132O.Clu" +
       "sterSchedulingSimulation.ExperimentResul" +
       "tSet.ExperimentEnv.ExperimentResult\022\024\n\014n",
       "um_machines\030\006 \001(\003\022%\n\026heterogeneous_machi" +
-      "nes\030\007 \001(\010:\005false\032\271&\n\020ExperimentResult\022&\n" +
+      "nes\030\007 \001(\010:\005false\032\216(\n\020ExperimentResult\022&\n" +
       "\036cell_state_avg_cpu_utilization\030\004 \001(\001\022&\n" +
       "\036cell_state_avg_mem_utilization\030\005 \001(\001\022!\n" +
       "\031cell_state_avg_cpu_locked\030\r \001(\001\022!\n\031cell" +
@@ -18634,7 +19336,7 @@ public final class ClusterSimulationProtos {
       "iencyStats.PowerOnPolicy\022\037\n\027current_ener" +
       "gy_consumed\030\032 \001(\001\022\026\n\016picking_policy\030\033 \001(" +
       "\t\032\036\n\016PowerOffPolicy\022\014\n\004name\030\001 \001(\t\032\035\n\rPow" +
-      "erOnPolicy\022\014\n\004name\030\001 \001(\t\032\271\002\n\013Measurement" +
+      "erOnPolicy\022\014\n\004name\030\001 \001(\t\032\216\004\n\013Measurement" +
       "\022\026\n\016cpuUtilization\030\001 \001(\001\022\026\n\016cpuTotallyId" +
       "le\030\002 \001(\001\022\030\n\020cpuPartiallyIdle\030\003 \001(\001\022\026\n\016me" +
       "mUtilization\030\004 \001(\001\022\026\n\016memTotallyIdle\030\005 \001",
@@ -18642,7 +19344,12 @@ public final class ClusterSimulationProtos {
       "Off\030\007 \001(\001\022\022\n\nmachinesOn\030\010 \001(\001\022\032\n\022machine" +
       "sTurningOff\030\t \001(\001\022\031\n\021machinesTurningOn\030\n" +
       " \001(\001\022\021\n\tmpuLocked\030\013 \001(\001\022\021\n\tmemLocked\030\014 \001" +
-      "(\001\022\020\n\010strategy\030\r \001(\t"
+      "(\001\022\020\n\010strategy\030\r \001(\t\022\027\n\017queuefirstBatch\030" +
+      "\016 \001(\001\022\031\n\021queuefirstService\030\017 \001(\001\022\026\n\016queu" +
+      "efirstMean\030\020 \001(\001\022\027\n\017queuefullyBatch\030\021 \001(" +
+      "\001\022\031\n\021queuefullyService\030\022 \001(\001\022\026\n\016queueful" +
+      "lyMean\030\023 \001(\001\022\022\n\ninterBatch\030\024 \001(\001\022\024\n\014inte" +
+      "rService\030\025 \001(\001\022\021\n\tinterMean\030\026 \001(\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -18733,7 +19440,7 @@ public final class ClusterSimulationProtos {
     internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_Measurement_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_Measurement_descriptor,
-        new java.lang.String[] { "CpuUtilization", "CpuTotallyIdle", "CpuPartiallyIdle", "MemUtilization", "MemTotallyIdle", "MemPartiallyIdle", "MachinesOff", "MachinesOn", "MachinesTurningOff", "MachinesTurningOn", "MpuLocked", "MemLocked", "Strategy", });
+        new java.lang.String[] { "CpuUtilization", "CpuTotallyIdle", "CpuPartiallyIdle", "MemUtilization", "MemTotallyIdle", "MemPartiallyIdle", "MachinesOff", "MachinesOn", "MachinesTurningOff", "MachinesTurningOn", "MpuLocked", "MemLocked", "Strategy", "QueuefirstBatch", "QueuefirstService", "QueuefirstMean", "QueuefullyBatch", "QueuefullyService", "QueuefullyMean", "InterBatch", "InterService", "InterMean", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

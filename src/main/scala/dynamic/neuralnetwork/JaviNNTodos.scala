@@ -1,41 +1,9 @@
 package dynamic.neuralnetwork
 
-import java.util
-
 import ClusterSchedulingSimulation.CellState
-import org.deeplearning4j.nn.modelimport.keras.KerasModelImport
-import org.nd4j.linalg.factory.Nd4j
-import org.apache.commons.io.IOUtils
-import org.datavec.api.records.reader.RecordReader
-import org.datavec.api.records.reader.impl.csv.CSVRecordReader
-import org.datavec.api.split.FileSplit
-import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator
-import org.deeplearning4j.nn.conf.MultiLayerConfiguration
-import org.deeplearning4j.nn.conf.NeuralNetConfiguration
-import org.deeplearning4j.nn.conf.layers.DenseLayer
-import org.deeplearning4j.nn.conf.layers.OutputLayer
-import org.deeplearning4j.nn.multilayer.MultiLayerNetwork
-import org.deeplearning4j.nn.weights.WeightInit
-import org.deeplearning4j.optimize.listeners.ScoreIterationListener
-import org.nd4j.linalg.activations.Activation
-import org.nd4j.linalg.api.ndarray.INDArray
-import org.nd4j.linalg.dataset.DataSet
-import org.nd4j.linalg.dataset.api.iterator.DataSetIterator
-import org.nd4j.linalg.dataset.api.preprocessor.{DataNormalization, MultiNormalizerMinMaxScaler, NormalizerStandardize}
-import org.nd4j.linalg.learning.config.Sgd
-import org.nd4j.linalg.lossfunctions.LossFunctions
-import org.nd4j.linalg.io.ClassPathResource
-import org.nd4j.evaluation.classification.Evaluation
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
-import java.io.IOException
-import java.nio.charset.StandardCharsets
-import java.util
-
-import org.datavec.api.transform.transform.doubletransform.MinMaxNormalizer
 
 
-object JaviNN {
+object JaviNNTodos {
 
   /*val jsonModelPath = "/Users/damianfernandez/IdeaProjects/cluster-scheduler-simulator/modelos_rrnn/training_nomakespan_cnn_model.json"
   val weightsPath = "/Users/damianfernandez/IdeaProjects/cluster-scheduler-simulator/modelos_rrnn/training_nomakespan_cnn_model.h5"
@@ -45,13 +13,11 @@ object JaviNN {
 
   def classify(cellState: CellState): String = {
     var result = ""
-    /*val jobCacheService = cellState.simulator.jobCache.filter(tuple => tuple._2.workloadName == "Service")
-    val jobCacheBatch = cellState.simulator.jobCache.filter(tuple => tuple._2.workloadName == "Batch")
-    println(jobCacheService)
-    println(jobCacheBatch)
+    val jobCacheService = cellState.simulator.jobCache.filter(tuple => tuple._2.workloadName == "Service" && tuple._2.numSchedulingAttempts > 0)
+    val jobCacheBatch = cellState.simulator.jobCache.filter(tuple => tuple._2.workloadName == "Batch" && tuple._2.numSchedulingAttempts > 0)
     if (jobCacheService.length > 1 && jobCacheBatch.length > 1) {
       val jobCacheLength = cellState.simulator.jobCache.length
-      val windowSize = 10
+      var windowSize = 3
       //Service
       val pastTuplesService = if (jobCacheService.length > windowSize + 1) jobCacheService.slice(jobCacheService.length - (windowSize + 1), jobCacheService.length) else jobCacheService
       val arraySizeService = if (pastTuplesService.length > 0) pastTuplesService.length - 1 else 0
@@ -67,8 +33,8 @@ object JaviNN {
         durationService += pastTuplesService(i)._2.taskDuration
         queueFirstService += pastTuplesService(i)._2.timeInQueueTillFirstScheduled
         queueFullService += pastTuplesService(i)._2.timeInQueueTillFullyScheduled
-        cpuService += pastTuplesService(i)._2.cpusPerTask
-        memService += pastTuplesService(i)._2.memPerTask
+        cpuService += pastTuplesService(i)._2.cpusPerTask * pastTuplesService(i)._2.numTasks
+        memService += pastTuplesService(i)._2.memPerTask * pastTuplesService(i)._2.numTasks
         numTasksService += pastTuplesService(i)._2.numTasks
       }
       var interArrivalMeanService = interArrivalService.sum / interArrivalService.size.toDouble
@@ -79,6 +45,7 @@ object JaviNN {
       memService = memService / pastTuplesService.length
       numTasksService = numTasksService / pastTuplesService.length
       //Batch
+      windowSize = 9
       val pastTuplesBatch = if (jobCacheBatch.length > windowSize + 1) jobCacheBatch.slice(jobCacheBatch.length - (windowSize + 1), jobCacheBatch.length) else jobCacheBatch
       val arraySizeBatch = if (pastTuplesBatch.length > 0) pastTuplesBatch.length - 1 else 0
       val interArrivalBatch = new Array[Double](arraySizeBatch)
@@ -93,8 +60,8 @@ object JaviNN {
         durationBatch += pastTuplesBatch(i)._2.taskDuration
         queueFirstBatch += pastTuplesBatch(i)._2.timeInQueueTillFirstScheduled
         queueFullBatch += pastTuplesBatch(i)._2.timeInQueueTillFullyScheduled
-        cpuBatch += pastTuplesBatch(i)._2.cpusPerTask
-        memBatch += pastTuplesBatch(i)._2.memPerTask
+        cpuBatch += pastTuplesBatch(i)._2.cpusPerTask * pastTuplesBatch(i)._2.numTasks
+        memBatch += pastTuplesBatch(i)._2.memPerTask * pastTuplesBatch(i)._2.numTasks
         numTasksBatch += pastTuplesBatch(i)._2.numTasks
       }
       var interArrivalMeanBatch = interArrivalBatch.sum / interArrivalBatch.size.toDouble
@@ -114,18 +81,10 @@ object JaviNN {
       }
       val interArrivalMean = interArrival.sum / interArrival.size.toDouble
       //Evaluacion
-      //var array = Array(pastTuplesService.length.toDouble, pastTuplesBatch.length.toDouble, interArrivalMeanService, interArrivalMeanBatch, interArrivalMean, durationService, durationBatch, queueFirstService, /*queueFirstBatch, queueFullService,*/ queueFullBatch, cpuService, cpuBatch, memService, memBatch, numTasksService, numTasksBatch, cellState.totalOccupiedCpus / cellState.totalCpus)*/
-    val windowSize = 10
-    val jobCacheLength = cellState.simulator.jobCache.length
-    if(jobCacheLength > 1){
-      val pastTuples = if (jobCacheLength > windowSize+1) cellState.simulator.jobCache.slice(jobCacheLength-(windowSize+1), jobCacheLength) else cellState.simulator.jobCache
-      val arraySize = if (pastTuples.length > 0) pastTuples.length-1 else 0
-      val interArrival = new Array[Double](arraySize)
-      for(i <- 1 to pastTuples.length-1){
-        interArrival(i-1) = (pastTuples(i)._1 - pastTuples(i-1)._1)
-      }
-      val interArrivalMean = interArrival.sum / interArrival.size.toDouble
-      var array = Array(cellState.totalOccupiedCpus / cellState.totalCpus, interArrivalMean)
+      //var array = Array(pastTuplesService.length.toDouble, pastTuplesBatch.length.toDouble, interArrivalMeanService, interArrivalMeanBatch, interArrivalMean, durationService, durationBatch, queueFirstService, queueFirstBatch, queueFullService, queueFullBatch, cpuService, cpuBatch, memService, memBatch, numTasksService, numTasksBatch, cellState.totalOccupiedCpus / cellState.totalCpus)
+      //var array = Array(cellState.totalOccupiedCpus / cellState.totalCpus, interArrivalMean)
+      //var array = Array(queueFirstService, queueFirstBatch, /*queueFullService, queueFullBatch,*/ cellState.totalOccupiedCpus / cellState.totalCpus)
+      var array = Array(interArrivalMeanBatch, memService, numTasksService, cellState.totalOccupiedCpus / cellState.totalCpus)
       val url = "http://127.0.0.1:5000/predict?" + array.mkString(",")
       result = scala.io.Source.fromURL(url).mkString
     }

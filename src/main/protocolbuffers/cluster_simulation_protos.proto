@@ -206,6 +206,15 @@ message ExperimentResultSet {
         optional double mpuLocked = 11;
         optional double memLocked = 12;
         optional string strategy = 13;
+        optional double queuefirstBatch = 14;
+        optional double queuefirstService = 15;
+        optional double queuefirstMean = 16;
+        optional double queuefullyBatch = 17;
+        optional double queuefullyService = 18;
+        optional double queuefullyMean = 19;
+        optional double interBatch = 20;
+        optional double interService = 21;
+        optional double interMean = 22;
       }
     }
   }
