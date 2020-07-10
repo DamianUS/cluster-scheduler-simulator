@@ -159,7 +159,7 @@ object Workloads {
   //Primer elemento de la tupla Batch, segundo Service
   //val interArrival = ((90, 900) :: (100, 1000) :: Nil)
   //90/10%
-  /*val interArrival = ((100.0, 1000.0) :: Nil)
+  //val interArrival = ((120.0, 1200.0) :: Nil)
   /*val interArrival0 = for (elem <- (1 to 10 by 5).toList) yield (elem, elem*10)
   val interArrival1 = for (elem <- (10 to 25 by 2).toList) yield (elem, elem*10)
   val interArrival2 = for (elem <- (25 to 55 by 1).toList) yield (elem, elem*10)
@@ -169,7 +169,7 @@ object Workloads {
 
   //val interArrival = interArrival0 ::: interArrival1 ::: interArrival2 ::: interArrival3 ::: interArrival4 ::: interArrival5*/
   //val interArrival = for (elem <- (80 to 95 by 5).toList) yield (elem, elem*10)
-  val interArrival = for (elem <- (40 to 180 by 20).toList) yield (elem, elem*10)
+  val interArrival = for (elem <- (80 to 120 by 20).toList) yield (elem, elem*10)
   //val interArrival = for (elem <- (1 to 10 by 2).toList) yield (elem, elem*10)
   val tasksPerJob = ((180.0, 30.0)  :: Nil)
   val jobDuration = ((90.0, 2000.0) :: Nil)
@@ -180,7 +180,7 @@ object Workloads {
   val runFlatPattern = false
   val runDayNightPattern = true
   val runWeekPattern = false
-  val alphas = (/*(0.2, 120.0)  ::*/(0.3, 9.26053) /*:: (0.4, 3.32335) :: (0.5, 2.0) :: (0.6, 1.50458) :: (0.7, 1.26582) :: (0.8, 1.133)*/:: Nil)
+  val alphas = ((0.2, 120.0)/*  :: (0.3, 9.26053) :: (0.4, 3.32335) :: (0.5, 2.0) :: (0.6, 1.50458) :: (0.7, 1.26582) :: (0.8, 1.133)*/:: Nil)
 
   // example pre-fill workload generators.
   val examplePrefillTraceFileName = "traces/initial-traces/example-init-cluster-state.log"
@@ -196,10 +196,10 @@ object Workloads {
       examplePrefillTraceFileName)
 
   var workloadGeneratorsCloud = List[WorkloadDesc]()
-  val numRepetitionAnova = 1
+  val numRepetitionAnova = 20
   var workloadGeneratorsIsolatedCloudlet = List[WorkloadDesc]()
-  val runExponential = true
-  val runWeibull = false
+  val runExponential = false
+  val runWeibull = true
 
   if(runExponential) {
     for (i <- 1 to numRepetitionAnova) {

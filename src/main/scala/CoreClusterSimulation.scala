@@ -594,10 +594,10 @@ class ClusterSimulator(val cellState: CellState,
       }
       val interArrivalMean = interArrival.sum / interArrival.size.toDouble
       //val chosenStrategy = this.asInstanceOf[DynamicSimulator].strategies(Random.nextInt(this.asInstanceOf[DynamicSimulator].strategies.length))
-      val chosenStrategySimple = SimpleNN.classify(cellState.totalOccupiedCpus / cellState.totalCpus, interArrivalMean)
-      println("SimpleNN: "+ chosenStrategySimple + "inter: "+interArrivalMean)
+      //val chosenStrategySimple = SimpleNN.classify(cellState.totalOccupiedCpus / cellState.totalCpus, interArrivalMean)
+      //println("SimpleNN: "+ chosenStrategySimple + "inter: "+interArrivalMean)
       val chosenStrategy = JaviNNTodos.classify(cellState)
-      println("JaviNN: "+ chosenStrategy +" inter: "+interArrivalMean )
+      //println("JaviNN: "+ chosenStrategy +" inter: "+interArrivalMean )
       /*if(chosenStrategy != chosenStrategySimple)
         println("diferentes")
       else

@@ -453,8 +453,8 @@ object Simulation {
     // val mesosWorkloadToSweep = "Service"
 
     val runMonolithic = false
-    val runMesos = true
-    val runOmega = true
+    val runMesos = false
+    val runOmega = false
     val runDynamic = true
     val runEdge = false
 
